@@ -620,7 +620,7 @@ export default function GamePageClient({ game }: { game: Game }) {
               <div className="w-full h-px bg-white/10 mb-6" />
 
               {game.aboutGame ? (
-                <p className="text-white/60 leading-relaxed text-sm sm:text-base italic">
+                <p className="text-white/66 leading-relaxed text-sm sm:text-base">
                   {game.aboutGame}
                 </p>
               ) : (
@@ -741,7 +741,7 @@ export default function GamePageClient({ game }: { game: Game }) {
                         )}
                       </motion.span>
 
-                      <h3 className="text-xl sm:text-[2rem] leading-tight sm:leading-none font-semibold text-white/90 break-words">
+                      <h3 className="text-lg sm:text-2xl md:text-[1.75rem] leading-tight sm:leading-none font-semibold text-white/90 break-words">
                         {stage.title}
                       </h3>
                     </div>
