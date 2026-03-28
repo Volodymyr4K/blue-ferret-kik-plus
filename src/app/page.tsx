@@ -138,7 +138,7 @@ export default function HomePage() {
             <p className="text-5xl sm:text-6xl md:text-7xl text-slate-800 mb-4 tracking-tight">
               {about.title}
             </p>
-            <h2 className="italic text-xl sm:text-2xl text-[var(--bf-accent)] mb-12">{about.subtitle}</h2>
+            <h2 className="text-xl sm:text-2xl text-[var(--bf-accent)] mb-12">{about.subtitle}</h2>
             <div className="p-10 sm:p-14 rounded-3xl bg-white border-2 border-[var(--bf-accent)]/20 shadow-[0_8px_40px_-15px_rgba(0,159,227,0.15)]">
               <p className="text-xl sm:text-2xl text-slate-600 leading-[1.9] max-w-3xl mx-auto font-medium">
                 {about.intro}
@@ -196,7 +196,7 @@ export default function HomePage() {
             >
               <div className="p-10 sm:p-14 rounded-3xl bg-white border-2 border-[var(--bf-accent)]/15 relative overflow-hidden shadow-[0_8px_40px_-15px_rgba(0,0,0,0.06)]">
                 <Quote className="absolute top-8 left-8 w-12 h-12 text-[var(--bf-accent)]/20" />
-                <p className="text-xl sm:text-2xl text-slate-600 leading-[1.8] max-w-3xl mx-auto text-center italic relative z-10">
+                <p className="text-xl sm:text-2xl text-slate-600 leading-[1.8] max-w-3xl mx-auto text-center relative z-10">
                   &ldquo;{testimonial[0].quote}&rdquo;
                 </p>
                 <p className="text-slate-500 text-center mt-6 font-medium">
@@ -358,7 +358,7 @@ export default function HomePage() {
           <p className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-slate-800 mb-5 sm:mb-8 tracking-tight leading-[0.95]">
             {cta?.title ?? 'Готові відкрити новий світ?'}
           </p>
-          <h2 className="italic text-xl sm:text-3xl md:text-4xl text-[var(--bf-accent)] mb-4">
+          <h2 className="text-xl sm:text-3xl md:text-4xl text-[var(--bf-accent)] mb-4">
             {cta?.subtitle ?? 'Відкрийте світ настільних ігор'}
           </h2>
           <p className="text-slate-600 text-base sm:text-xl mb-10 sm:mb-14 max-w-xl mx-auto">

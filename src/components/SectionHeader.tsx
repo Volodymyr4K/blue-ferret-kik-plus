@@ -31,7 +31,7 @@ export default function SectionHeader({ label, title, subtitle, centered = true,
         {title}
       </h2>
       {subtitle && (
-        <p className="text-lead max-w-2xl italic text-slate-600" style={centered ? { margin: '0 auto' } : {}}>
+        <p className="text-lead max-w-2xl text-slate-600" style={centered ? { margin: '0 auto' } : {}}>
           {subtitle}
         </p>
       )}
