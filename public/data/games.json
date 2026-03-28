@@ -1,0 +1,40 @@
+[
+  {
+    "id": "first-game",
+    "slug": "persha-gra",
+    "name": "Перша гра",
+    "shortDescription": "Атмосферна настільна гра, що переносить у світ пригод",
+    "status": "production",
+    "heroImage": "/images/game-hero.jpg",
+    "palette": "#283D57",
+    "stages": {
+      "announcement": {
+        "state": "active",
+        "title": "Анонс",
+        "content": "Ми раді представити нашу першу гру! Це незабутня подорож у світ настільних пригод.",
+        "image": "/images/announce.jpg"
+      },
+      "production": {
+        "state": "active",
+        "title": "Виробництво",
+        "content": "Зараз ми активно працюємо над виробництвом. Фото з цеху з'являться незабаром.",
+        "lastUpdate": "2026-03-15",
+        "image": "/images/production.jpg"
+      },
+      "preorder": {
+        "state": "locked",
+        "title": "Передзамовлення",
+        "content": "Скоро з'явиться можливість передзамовлення.",
+        "ctaText": "Передзамовити",
+        "ctaLink": "#"
+      },
+      "onsale": {
+        "state": "locked",
+        "title": "У вільному продажі",
+        "content": "Гра буде доступна у вільному продажі після завершення передзамовлення.",
+        "ctaText": "Придбати",
+        "ctaLink": "#"
+      }
+    }
+  }
+]
