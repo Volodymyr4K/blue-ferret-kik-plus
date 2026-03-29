@@ -31,7 +31,6 @@ export default function Footer() {
               <p className="text-slate-400 leading-[1.7] text-[15px] max-w-sm">
                 {brand.description}
               </p>
-              <p className="mt-6 text-bf/90 text-lg">Ігри з характером ✦</p>
             </div>
 
             {/* Навігація */}
@@ -115,9 +114,6 @@ export default function Footer() {
           <div className="mt-20 pt-10 border-t border-slate-800/60 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-slate-500">
               © {new Date().getFullYear()} Blue Ferret. Всі права захищені.
-            </p>
-            <p className="text-sm text-slate-500">
-              Ігри з характером ✦
             </p>
           </div>
         </div>

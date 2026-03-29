@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
@@ -14,17 +15,10 @@ const GAMES_DROPDOWN = [
   ...games.map((g) => ({ href: `/igry/${g.slug}`, label: g.name })),
 ];
 
-const KIK_DROPDOWN = [
-  { href: '/kik', label: 'KIK' },
-  { href: '/kik/pro-kik', label: 'Про КІК' },
-  { href: '/kik/proekty', label: 'Проєкти' },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
-  const [kikOpen, setKikOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,7 +31,6 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setGamesOpen(false);
-    setKikOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -150,46 +143,29 @@ export default function Navbar() {
 
             <div
               className={`relative ml-4 pl-4 border-l ${isGamePage ? 'border-white/20' : 'border-slate-200'}`}
-              onMouseEnter={() => setKikOpen(true)}
-              onMouseLeave={() => setKikOpen(false)}
             >
-              <button
-                className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border ${
+              <Link
+                href="/kik"
+                className={`group flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl text-sm font-medium transition-all duration-300 border min-w-[126px] ${
                   isGamePage
                     ? pathname.startsWith('/kik')
                       ? 'border-[var(--kik-accent)]/60 bg-[var(--kik-accent)]/20 text-[var(--kik-accent)] font-semibold'
                       : 'border-white/20 bg-white/5 text-slate-400 hover:border-[var(--kik-accent)]/50 hover:bg-[var(--kik-accent)]/15 hover:text-[var(--kik-accent)]'
                     : pathname.startsWith('/kik')
-                      ? 'border-[var(--bf-accent)]/50 bg-[var(--bf-accent)]/10 text-[var(--bf-accent)] font-semibold'
-                      : 'border-[var(--bf-accent)]/30 bg-[var(--bf-accent)]/5 text-slate-600 hover:border-[var(--bf-accent)]/50 hover:bg-[var(--bf-accent)]/10 hover:text-[var(--bf-accent)]'
+                      ? 'border-[var(--kik-accent)]/50 bg-[var(--kik-accent)]/10 text-[var(--kik-accent)] font-semibold'
+                      : 'border-[var(--kik-accent)]/35 bg-[var(--kik-accent)]/5 text-slate-600 hover:border-[var(--kik-accent)]/50 hover:bg-[var(--kik-accent)]/10 hover:text-[var(--kik-accent)]'
                 }`}
               >
-                <span className="font-bold text-bf">K</span>
-                <span className="font-bold text-kik">IK</span>
-                <span className={isGamePage ? 'text-slate-400' : 'text-slate-600'}>-вдома</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${kikOpen ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {kikOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-2 py-2.5 w-48 bg-slate-900/98 backdrop-blur-2xl rounded-2xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)] border border-[var(--kik-accent)]/20"
-                  >
-                    {KIK_DROPDOWN.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-[var(--kik-accent)]/20 hover:text-[var(--kik-accent)] transition-all duration-200 rounded-lg mx-2"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                <span className="inline-flex items-center justify-center w-[88px]">
+                  <Image
+                    src="/logo-kik-left-variant.png"
+                    alt="KIK вдома"
+                    width={92}
+                    height={78}
+                    className="h-6 w-auto object-contain"
+                  />
+                </span>
+              </Link>
             </div>
           </div>
 
@@ -236,11 +212,9 @@ export default function Navbar() {
                   ))}
                   <Link href="/kontakty" onClick={() => setMobileOpen(false)} className={`block py-3 px-4 rounded-xl text-base font-medium transition-colors ${isGamePage ? (pathname === '/kontakty' ? 'text-white bg-white/15' : 'text-slate-300 hover:bg-white/10') : (pathname === '/kontakty' ? 'text-[var(--bf-accent)] bg-[var(--bf-accent)]/10' : 'text-slate-600 hover:bg-[var(--bf-accent)]/5 hover:text-[var(--bf-accent)]')}`}>Контакти</Link>
                   <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Кік-вдома</div>
-                  {KIK_DROPDOWN.map((item) => (
-                    <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className={`block py-2.5 px-6 rounded-xl transition-colors ${isGamePage ? 'text-slate-300 hover:bg-white/10 hover:text-[var(--kik-accent)]' : 'text-slate-600 hover:bg-[var(--bf-accent)]/5 hover:text-[var(--bf-accent)]'}`}>
-                      {item.label}
-                    </Link>
-                  ))}
+                  <Link href="/kik" onClick={() => setMobileOpen(false)} className={`block py-2.5 px-6 rounded-xl transition-colors ${isGamePage ? 'text-slate-300 hover:bg-white/10 hover:text-[var(--kik-accent)]' : 'text-slate-600 hover:bg-[var(--kik-accent)]/10 hover:text-[var(--kik-accent)]'}`}>
+                    KIK вдома
+                  </Link>
                 </div>
               </motion.div>
             </>

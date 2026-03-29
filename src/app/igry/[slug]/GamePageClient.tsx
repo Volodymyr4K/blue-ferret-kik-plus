@@ -51,7 +51,7 @@ function getGameAssets(slug: string) {
       boxBack: '/images/trymaysia/box-back-v6.png',
       boxTop: '/images/trymaysia/box-top-v3.png',
       boxSideLeft: '/images/trymaysia/box-side-trymaysia-left.png',
-      boxSideRight: '/images/trymaysia/box-side-trymaysia-left.png',
+      boxSideRight: '/images/trymaysia/box-side-trymaysia-right.png',
       arrow: '/images/trymaysia/arrow.png',
     };
   }

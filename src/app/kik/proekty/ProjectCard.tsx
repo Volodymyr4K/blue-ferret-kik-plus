@@ -3,21 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { ArrowRight, TrendingUp } from 'lucide-react';
-
-export interface Project {
-  id: string;
-  name: string;
-  shortDescription: string;
-  status: string;
-  statusLabel: string;
-  raised: number;
-  goal: number;
-  currency: string;
-  lastUpdate: string;
-  updatePreview: string;
-  coverImage?: string;
-  link: string;
-}
+import type { Project } from '@/data/projects';
 
 export default function ProjectCard({ project }: { project: Project }) {
   const progress = project.goal > 0 ? Math.min(100, (project.raised / project.goal) * 100) : 0;

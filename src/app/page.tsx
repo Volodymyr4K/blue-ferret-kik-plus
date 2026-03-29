@@ -313,7 +313,7 @@ export default function HomePage() {
                 Наші ігри
               </h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                Каталог настільних ігор Blue Ferret. Кожна гра — окремий світ з власним характером та атмосферою.
+                Каталог настільних ігор Blue Ferret. Кожна гра — окремий світ мрій, механік та атмосфери.
               </p>
               <span className="inline-flex items-center gap-2 text-[var(--bf-accent)] font-semibold group-hover:gap-3 transition-all">
                 Переглянути

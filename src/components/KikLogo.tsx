@@ -12,29 +12,28 @@ interface KikLogoProps {
 
 export default function KikLogo({ size = 'md', variant = 'full', className = '', href }: KikLogoProps) {
   const sizes = {
-    sm: { w: 82, h: 52 },
-    md: { w: 144, h: 92 },
-    lg: { w: 216, h: 138 },
+    compact: {
+      sm: { w: 72, h: 60 },
+      md: { w: 122, h: 102 },
+      lg: { w: 188, h: 158 },
+    },
+    full: {
+      sm: { w: 96, h: 82 },
+      md: { w: 156, h: 132 },
+      lg: { w: 224, h: 190 },
+    },
   };
-  const s = sizes[size];
+  const s = sizes[variant][size];
 
   const logo = (
-    <div className={`inline-flex flex-col items-center ${className}`}>
+    <div className={`inline-flex items-center ${className}`}>
       <Image
-        src="/logo-kik-greenmark.webp"
+        src="/logo-kik-left-variant.png"
         alt="KIK вдома"
         width={s.w}
         height={s.h}
         className="object-contain"
       />
-      {variant === 'full' && (
-        <span
-          className="text-kik text-sm sm:text-base -mt-1 font-medium"
-          style={{ fontFamily: 'Caveat, cursive', fontWeight: 600 }}
-        >
-          вдома
-        </span>
-      )}
     </div>
   );
 

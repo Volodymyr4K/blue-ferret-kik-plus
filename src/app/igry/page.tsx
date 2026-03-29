@@ -64,7 +64,7 @@ function GamesContent() {
             </motion.div>
             <SectionHeader
               title="Світи для відкриття"
-              subtitle="Кожна гра — окремий світ з власним характером, механікою та атмосферою. Досліджуйте каталог і обирайте свій формат партії."
+              subtitle="Кожна гра — окремий світ мрій, механік та атмосфери. Досліджуйте каталог і обирайте свій формат партії."
               className="mb-7 sm:mb-8"
             />
             <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">

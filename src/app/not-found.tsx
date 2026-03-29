@@ -40,7 +40,7 @@ export default function NotFound() {
             Наші ігри
           </Link>
         </div>
-        <p className="mt-12 text-xl text-[#009FE3]/80">Ігри з характером ✦</p>
+        <p className="mt-12 text-xl text-[#009FE3]/80">Місце, де мрії збуваються ✦</p>
       </div>
     </div>
   );
