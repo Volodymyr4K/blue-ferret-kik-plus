@@ -53,6 +53,18 @@ function getGameAssets(slug: string) {
       boxSideLeft: '/images/trymaysia/box-side-trymaysia-left.png',
       boxSideRight: '/images/trymaysia/box-side-trymaysia-right.png',
       arrow: '/images/trymaysia/arrow.png',
+      aboutCharacters: [
+        '/images/trymaysia/characters/char-2.png',
+        '/images/trymaysia/characters/char-9.png',
+        '/images/trymaysia/characters/char-4.png',
+        '/images/trymaysia/characters/char-6.png',
+      ],
+      stageCharacters: [
+        '/images/trymaysia/characters/char-3.png',
+        '/images/trymaysia/characters/char-5.png',
+        '/images/trymaysia/characters/char-7.png',
+        '/images/trymaysia/characters/char-11.png',
+      ],
     };
   }
   return null;
@@ -120,6 +132,18 @@ export default function GamePageClient({ game }: { game: Game }) {
   const borderActive = darken(palette, 0.55); // active stage border
   const paletteRgb = hex2rgb(palette);
   const accentRgb = hex2rgb(accent);
+  const aboutCharacterClasses = [
+    'hidden md:block absolute left-6 top-14 w-[11rem] xl:w-[12rem] 2xl:w-[13rem] -rotate-6',
+    'hidden md:block absolute right-6 top-20 w-[9.5rem] xl:w-[10.5rem] 2xl:w-[11rem] rotate-6',
+    'hidden md:block absolute left-10 bottom-10 w-[12rem] xl:w-[13rem] 2xl:w-[14rem] -rotate-2',
+    'hidden md:block absolute right-10 bottom-4 w-[11rem] xl:w-[12rem] 2xl:w-[13rem] rotate-3',
+  ];
+  const stageCharacterClasses = [
+    'hidden md:block absolute left-8 top-8 w-[9rem] xl:w-[10rem] -rotate-6',
+    'hidden md:block absolute right-8 top-4 w-[10.5rem] xl:w-[12rem] rotate-6',
+    'hidden md:block absolute left-12 bottom-14 w-[10rem] xl:w-[11rem] -rotate-3',
+    'hidden md:block absolute right-10 bottom-8 w-[9.5rem] xl:w-[10.5rem] rotate-4',
+  ];
   const accentIconStrong = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},0.68)`;
   const accentIconSoft = `rgba(${accentRgb.r},${accentRgb.g},${accentRgb.b},0.55)`;
   const accentGradientStart = darken(accent, 0.72);
@@ -538,8 +562,27 @@ export default function GamePageClient({ game }: { game: Game }) {
       </section>
 
       {/* ═══════ ПРО ЩО Ж ГРА? ═══════ */}
-      <section className="py-14 sm:py-20 lg:py-28 px-4 sm:px-6" style={{ backgroundColor: bg1 }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="relative py-14 sm:py-20 lg:py-28 px-4 sm:px-6 overflow-hidden" style={{ backgroundColor: bg1 }}>
+        {assets?.aboutCharacters && (
+          <div className="pointer-events-none absolute inset-0 z-0">
+            {assets.aboutCharacters.map((src, index) => (
+              <img
+                key={`about-char-${src}`}
+                src={src}
+                alt=""
+                className={`${aboutCharacterClasses[index] || 'hidden'} select-none`}
+                style={{
+                  opacity: 0.24,
+                  filter: 'brightness(1.06) drop-shadow(0 20px 34px rgba(0,0,0,0.48))',
+                }}
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="relative z-10 max-w-5xl mx-auto">
           {/* Section title image or text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -649,8 +692,27 @@ export default function GamePageClient({ game }: { game: Game }) {
       </section>
 
       {/* ═══════ ЕТАПИ ПРОЄКТУ ═══════ */}
-      <section className="py-14 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: bg2 }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="relative py-14 sm:py-20 px-4 sm:px-6 overflow-hidden" style={{ backgroundColor: bg2 }}>
+        {assets?.stageCharacters && (
+          <div className="pointer-events-none absolute inset-0 z-0">
+            {assets.stageCharacters.map((src, index) => (
+              <img
+                key={`stage-char-${src}`}
+                src={src}
+                alt=""
+                className={`${stageCharacterClasses[index] || 'hidden'} select-none`}
+                style={{
+                  opacity: 0.2,
+                  filter: 'brightness(1.04) drop-shadow(0 18px 30px rgba(0,0,0,0.44))',
+                }}
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="relative z-10 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
