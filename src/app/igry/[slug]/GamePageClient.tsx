@@ -49,7 +49,9 @@ function getGameAssets(slug: string) {
       heroBackgroundFallback: '/images/trymaysia/moryaky.gif',
       boxMockup: '/images/trymaysia/box-front-v6.png',
       boxBack: '/images/trymaysia/box-back-v6.png',
-      boxTop: undefined,
+      boxTop: '/images/trymaysia/box-top-v3.png',
+      boxSideLeft: '/images/trymaysia/box-side-trymaysia-left.png',
+      boxSideRight: '/images/trymaysia/box-side-trymaysia-right.png',
       arrow: '/images/trymaysia/arrow.png',
     };
   }
@@ -577,9 +579,11 @@ export default function GamePageClient({ game }: { game: Game }) {
                   frontImage={assets?.boxMockup || game.coverImage}
                   backImage={assets?.boxBack}
                   topImage={assets?.boxTop}
+                  leftSideImage={assets?.boxSideLeft}
+                  rightSideImage={assets?.boxSideRight}
                   color={palette}
                   sideLabel={game.name}
-                  interactive={false}
+                  interactive
                   className="scale-[0.74] min-[400px]:scale-[0.84] sm:scale-[1.02] md:scale-[1.12] lg:scale-[1.18]"
                 />
               ) : (

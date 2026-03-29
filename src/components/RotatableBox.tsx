@@ -6,67 +6,38 @@ interface RotatableBoxProps {
   frontImage?: string;
   backImage?: string;
   topImage?: string;
+  leftSideImage?: string;
+  rightSideImage?: string;
   color?: string;
   sideLabel?: string;
   interactive?: boolean;
   className?: string;
 }
 
-const AUTO_SPIN_SPEED = 5.8;
-const AUTO_SWAY = 2.2;
-const AUTO_PITCH = 1.4;
-
 export default function RotatableBox({
   frontImage,
   backImage,
   topImage,
+  leftSideImage,
+  rightSideImage,
   color = '#283D57',
   sideLabel = 'Тримайся',
   interactive = true,
   className = '',
 }: RotatableBoxProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: -11, y: -18 });
   const [isDragging, setIsDragging] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(true);
   const inertiaRef = useRef({ vx: 0, vy: 0, active: false });
   const lastPos = useRef({ x: 0, y: 0 });
-  const animRef = useRef<number>(0);
-  const baseY = useRef(-18);
-  const resumeTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Board game box proportions (landscape, thinner depth)
   const W = 304;
   const H = 228;
   const D = 50;
 
-  // Auto-rotate — smooth
-  useEffect(() => {
-    if (!autoRotate || !interactive) return;
-    let start = performance.now();
-    const startY = baseY.current;
-    const animate = (time: number) => {
-      const elapsed = (time - start) / 1000;
-      const sway = Math.sin(elapsed * 0.8) * AUTO_SWAY;
-      const pitch = -11 + Math.sin(elapsed * 0.55) * AUTO_PITCH;
-      setRotation({ x: pitch, y: startY + elapsed * AUTO_SPIN_SPEED + sway });
-      animRef.current = requestAnimationFrame(animate);
-    };
-    animRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animRef.current);
-  }, [autoRotate]);
-
-  useEffect(() => {
-    return () => {
-      if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    };
-  }, []);
-
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (!interactive) return;
     e.preventDefault();
-    setAutoRotate(false);
-    if (resumeTimer.current) clearTimeout(resumeTimer.current);
     inertiaRef.current.active = false;
     inertiaRef.current.vx = 0;
     inertiaRef.current.vy = 0;
@@ -84,12 +55,10 @@ export default function RotatableBox({
       inertiaRef.current.vx = dx * 0.4;
       inertiaRef.current.vy = dy * 0.4;
       setRotation((prev) => {
-        const newRot = {
+        return {
           x: Math.max(-34, Math.min(34, prev.x - dy * 0.24)),
           y: prev.y + dx * 0.28,
         };
-        baseY.current = newRot.y;
-        return newRot;
       });
     },
     [isDragging]
@@ -100,10 +69,13 @@ export default function RotatableBox({
     setIsDragging(false);
     inertiaRef.current.active = true;
   }, [isDragging]);
+
   const onDoubleClick = useCallback(() => {
-    baseY.current = rotation.y;
-    setAutoRotate(true);
-  }, [rotation.y]);
+    inertiaRef.current.active = false;
+    inertiaRef.current.vx = 0;
+    inertiaRef.current.vy = 0;
+    setRotation({ x: -11, y: -18 });
+  }, []);
 
   // Inertia after drag
   useEffect(() => {
@@ -115,12 +87,10 @@ export default function RotatableBox({
       inertiaRef.current.vy *= damp;
       const speed = Math.hypot(inertiaRef.current.vx, inertiaRef.current.vy);
       setRotation((prev) => {
-        const next = {
+        return {
           x: Math.max(-36, Math.min(36, prev.x - inertiaRef.current.vy * 0.2)),
           y: prev.y + inertiaRef.current.vx * 0.2,
         };
-        baseY.current = next.y;
-        return next;
       });
       if (speed > 0.25) {
         raf = requestAnimationFrame(tick);
@@ -128,8 +98,6 @@ export default function RotatableBox({
         inertiaRef.current.active = false;
         inertiaRef.current.vx = 0;
         inertiaRef.current.vy = 0;
-        if (resumeTimer.current) clearTimeout(resumeTimer.current);
-        resumeTimer.current = setTimeout(() => setAutoRotate(true), 1200);
         return;
       }
     };
@@ -184,7 +152,6 @@ export default function RotatableBox({
       }}
     >
       <div
-        ref={containerRef}
         onPointerDown={interactive ? onPointerDown : undefined}
         onPointerMove={interactive ? onPointerMove : undefined}
         onPointerUp={interactive ? onPointerUp : undefined}
@@ -201,8 +168,7 @@ export default function RotatableBox({
           transform: interactive
             ? `translateZ(0) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
             : 'translateZ(0) rotateX(-11deg) rotateY(-18deg)',
-          animation: interactive ? undefined : 'box-auto-spin 15s linear infinite',
-          transition: interactive && !isDragging ? 'transform 0.08s ease-out' : 'none',
+          transition: !isDragging ? 'transform 0.08s ease-out' : 'none',
           willChange: 'transform',
         }}
       >
@@ -277,63 +243,91 @@ export default function RotatableBox({
 
         {/* ─── Right side ─── */}
         <div style={face(D, H, `rotateY(90deg) translateZ(${W / 2}px)`, shade(0.78))}>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(90deg, ${shade(0.68)}, ${shade(0.84)}, ${shade(0.72)})`,
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.12]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 4px,
-                rgba(255,255,255,0.35) 4px,
-                rgba(255,255,255,0.35) 5px
-              )`,
-            }}
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span
-              className="text-white/30 font-bold text-[10px] tracking-[0.22em] uppercase"
-              style={{ writingMode: 'vertical-rl' }}
-            >
-              {sideLabel}
-            </span>
-          </div>
+          {rightSideImage ? (
+            <img
+              src={rightSideImage}
+              alt=""
+              className="w-full h-full object-cover"
+              draggable={false}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(90deg, ${shade(0.68)}, ${shade(0.84)}, ${shade(0.72)})`,
+                }}
+              />
+              <div
+                className="absolute inset-0 opacity-[0.12]"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 4px,
+                    rgba(255,255,255,0.35) 4px,
+                    rgba(255,255,255,0.35) 5px
+                  )`,
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span
+                  className="text-white/30 font-bold text-[10px] tracking-[0.22em] uppercase"
+                  style={{ writingMode: 'vertical-rl' }}
+                >
+                  {sideLabel}
+                </span>
+              </div>
+            </>
+          )}
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/25 via-transparent to-black/35" />
           <div className="absolute inset-0" style={{ boxShadow: 'inset 0 0 17px -6px rgba(0,0,0,0.52)' }} />
         </div>
 
         {/* ─── Left side ─── */}
         <div style={face(D, H, `rotateY(-90deg) translateZ(${W / 2}px)`, shade(0.78))}>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(90deg, ${shade(0.72)}, ${shade(0.84)}, ${shade(0.68)})`,
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.12]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 4px,
-                rgba(255,255,255,0.35) 4px,
-                rgba(255,255,255,0.35) 5px
-              )`,
-            }}
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span
-              className="text-white/30 font-bold text-[10px] tracking-[0.22em] uppercase"
-              style={{ writingMode: 'vertical-rl' }}
-            >
-              Blue Ferret
-            </span>
-          </div>
+          {leftSideImage ? (
+            <img
+              src={leftSideImage}
+              alt=""
+              className="w-full h-full object-cover"
+              draggable={false}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(90deg, ${shade(0.72)}, ${shade(0.84)}, ${shade(0.68)})`,
+                }}
+              />
+              <div
+                className="absolute inset-0 opacity-[0.12]"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 4px,
+                    rgba(255,255,255,0.35) 4px,
+                    rgba(255,255,255,0.35) 5px
+                  )`,
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span
+                  className="text-white/30 font-bold text-[10px] tracking-[0.22em] uppercase"
+                  style={{ writingMode: 'vertical-rl' }}
+                >
+                  Blue Ferret
+                </span>
+              </div>
+            </>
+          )}
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/35 via-transparent to-black/20" />
           <div className="absolute inset-0" style={{ boxShadow: 'inset 0 0 17px -6px rgba(0,0,0,0.52)' }} />
         </div>
 
