@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Цивільне право: договір купівлі-продажу</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap");
+
+      :root {
+        --bg: #070809;
+        --bg-soft: #111214;
+        --line: rgba(255, 255, 255, 0.2);
+        --line-strong: rgba(255, 255, 255, 0.36);
+        --txt: #f5f7fb;
+        --muted: #c8cdd7;
+        --accent: #ffd100;
+        --accent-soft: #ffe165;
+        --ok: #70f0b2;
+        --warn: #ffcf6a;
+        --danger: #ff8a9a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Rubik", "Segoe UI", sans-serif;
+        color: var(--txt);
+        background:
+          radial-gradient(circle at 14% 14%, rgba(255, 209, 0, 0.14), transparent 26%),
+          radial-gradient(circle at 86% 88%, rgba(255, 209, 0, 0.08), transparent 30%),
+          linear-gradient(145deg, #050506, #0a0b0d 40%, #121417);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        overflow: hidden;
+      }
+
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 14px clamp(16px, 2vw, 30px);
+        border-bottom: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(8px);
+      }
+
+      .brand {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-size: 0.95rem;
+      }
+
+      .brand b {
+        color: var(--accent);
+      }
+
+      .counter {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 0.86rem;
+        color: var(--accent-soft);
+      }
+
+      .stage {
+        position: relative;
+        width: min(1240px, 96vw);
+        height: clamp(520px, calc(100vh - 186px), 860px);
+        margin: clamp(14px, 2vw, 22px) auto;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: translateY(22px) scale(0.992);
+        pointer-events: none;
+        transition: opacity 0.35s ease, transform 0.45s ease;
+        background:
+          linear-gradient(175deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        padding: clamp(20px, 4vw, 42px);
+        overflow: auto;
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.38),
+          inset 0 1px 0 rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(4px);
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        font-size: clamp(1.85rem, 3.4vw, 3.05rem);
+        line-height: 1.1;
+        margin-bottom: 14px;
+      }
+
+      h2 {
+        font-size: clamp(1.35rem, 2.6vw, 2.2rem);
+        line-height: 1.15;
+        margin-bottom: 12px;
+        border-left: 4px solid var(--accent);
+        padding-left: 10px;
+      }
+
+      .lead {
+        max-width: 95ch;
+        color: #f7f9ff;
+        font-size: clamp(1rem, 1.45vw, 1.22rem);
+        line-height: 1.48;
+      }
+
+      .meta {
+        margin-top: 16px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 8px 13px;
+        color: var(--accent-soft);
+        font-size: 0.89rem;
+        font-weight: 700;
+      }
+
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      .chip {
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 6px 11px;
+        font-size: 0.8rem;
+      }
+
+      .chip.ok {
+        color: var(--ok);
+        border-color: rgba(112, 240, 178, 0.48);
+      }
+
+      .chip.warn {
+        color: var(--warn);
+        border-color: rgba(255, 207, 106, 0.48);
+      }
+
+      .chip.danger {
+        color: var(--danger);
+        border-color: rgba(255, 138, 154, 0.52);
+      }
+
+      .grid {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 12px 14px;
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 209, 0, 0.42);
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .card h3 {
+        margin-bottom: 8px;
+        font-size: 0.98rem;
+        color: var(--accent-soft);
+      }
+
+      .card p,
+      li,
+      .note,
+      td {
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: clamp(0.9rem, 1.05vw, 1rem);
+      }
+
+      ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+      }
+
+      .scheme-flow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+        counter-reset: flow;
+      }
+
+      .flow-step {
+        border: 1px solid var(--line-strong);
+        border-radius: 14px;
+        padding: 12px 10px 10px 40px;
+        background: rgba(255, 255, 255, 0.05);
+        position: relative;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .flow-step::before {
+        counter-increment: flow;
+        content: counter(flow);
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 209, 0, 0.55);
+        color: var(--accent);
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.72rem;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.35);
+      }
+
+      .flow-step::after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        width: 18px;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(255, 209, 0, 0.9), rgba(255, 209, 0, 0.1));
+      }
+
+      .flow-step:last-child::after {
+        display: none;
+      }
+
+      .flow-step b {
+        display: block;
+        font-size: 0.83rem;
+        color: #fff;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .scheme-stack {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .stack-row {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .stack-row .left {
+        background: rgba(255, 209, 0, 0.14);
+        color: #fff0b2;
+        padding: 10px;
+        font-weight: 700;
+      }
+
+      .stack-row .right {
+        padding: 10px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .stack-row::after {
+        content: "";
+        position: absolute;
+        left: 190px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: rgba(255, 209, 0, 0.25);
+      }
+
+      .matrix {
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .matrix table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .matrix th,
+      .matrix td {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 9px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .matrix th {
+        color: #fff3b8;
+        background: rgba(255, 209, 0, 0.14);
+        font-size: 0.9rem;
+      }
+
+      .pipeline {
+        margin-top: 12px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .pipe {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        position: relative;
+        padding-left: 40px;
+        border-left: 3px solid rgba(255, 209, 0, 0.5);
+      }
+
+      .pipe::before {
+        content: attr(data-step);
+        position: absolute;
+        left: 10px;
+        top: 9px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        color: var(--accent);
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.76rem;
+        display: grid;
+        place-items: center;
+      }
+
+      .pipe:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: calc(100% + 1px);
+        width: 2px;
+        height: 8px;
+        background: rgba(255, 209, 0, 0.45);
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px clamp(16px, 2vw, 30px) 16px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        border: 1px solid var(--line-strong);
+        color: var(--txt);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 9px 13px;
+        border-radius: 10px;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: rgba(255, 255, 255, 0.11);
+      }
+
+      button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .progress-wrap {
+        flex: 1;
+        height: 9px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        overflow: hidden;
+      }
+
+      .progress {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #ffef9f, #ffd100 45%, #c6a300);
+        transition: width 0.3s ease;
+      }
+
+      .kbd {
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .viz-bars {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      .bar {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .bar span {
+        display: block;
+        padding: 8px 10px;
+        color: #fff7cf;
+        font-size: 0.88rem;
+        white-space: nowrap;
+      }
+
+      .w-90 span { width: 90%; background: rgba(255, 209, 0, 0.3); }
+      .w-75 span { width: 75%; background: rgba(255, 209, 0, 0.24); }
+      .w-60 span { width: 60%; background: rgba(255, 209, 0, 0.18); }
+      .w-45 span { width: 45%; background: rgba(255, 209, 0, 0.13); }
+
+      @media (max-width: 980px) {
+        .grid.two,
+        .grid.three,
+        .scheme-flow {
+          grid-template-columns: 1fr;
+        }
+
+        .flow-step::after {
+          content: "";
+          right: auto;
+          left: 18px;
+          top: calc(100% + 1px);
+          width: 2px;
+          height: 10px;
+          transform: none;
+        }
+
+        .flow-step:last-child::after {
+          display: none;
+        }
+
+        .stack-row {
+          grid-template-columns: 1fr;
+        }
+
+        .stack-row::after {
+          display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .top,
+        .footer {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .controls {
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">цивільне право • презентація</div>
+      <div class="counter" id="counter">1 / 19</div>
+    </header>
+
+    <main class="stage">
+      <section class="slide active">
+        <h1>Договір купівлі-продажу в цивільному праві України</h1>
+        <p class="lead">
+          Чітка структура, схеми процесів, алгоритм дій сторін та логіка захисту права.
+        </p>
+        <div class="meta">Підготував: Муністер В. Д.</div>
+        <div class="chips">
+          <span class="chip ok">19 слайдів</span>
+          <span class="chip">Схемний формат</span>
+          <span class="chip warn">Актуальність: 2026</span>
+        </div>
+
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Норма</b>
+            ЦК + спецзакони визначають рамку договору.
+          </div>
+          <div class="flow-step">
+            <b>Укладення</b>
+            Сторони погоджують істотні умови.
+          </div>
+          <div class="flow-step">
+            <b>Виконання</b>
+            Передання товару та оплата.
+          </div>
+          <div class="flow-step">
+            <b>Захист</b>
+            Претензія, суд, виконання рішення.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>1. Нормативний стек</h2>
+        <p class="lead">Схема «загальне право -> спеціальні режими -> практичне застосування».</p>
+
+        <div class="scheme-stack">
+          <div class="stack-row">
+            <div class="left">БАЗА</div>
+            <div class="right">ЦК України, глава 54: модель договору купівлі-продажу, права та обов'язки сторін.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">СПЕЦРЕЖИМ</div>
+            <div class="right">Закон «Про електронну комерцію»: оферта, акцепт, електронний доказ укладення.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">B2C-ШАР</div>
+            <div class="right">Захист прав споживачів: посилений стандарт інформування і відповідальності продавця.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">ПРАКТИКА</div>
+            <div class="right">Судова кваліфікація спору залежить від поєднання загальних і спеціальних норм.</div>
+          </div>
+        </div>
+
+        <div class="matrix">
+          <table>
+            <thead>
+              <tr>
+                <th>Шар регулювання</th>
+                <th>Що покриває</th>
+                <th>Типовий спір</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ЦК (загальні норми)</td>
+                <td>Конструкція договору, істотні умови, виконання зобов'язань</td>
+                <td>Чи укладено договір належно і що саме погодили сторони</td>
+              </tr>
+              <tr>
+                <td>Електронна комерція</td>
+                <td>Оферта/акцепт, електронні докази, підтвердження правочину</td>
+                <td>Чи відбувся акцепт і як це довести технічно</td>
+              </tr>
+              <tr>
+                <td>Споживчий контур</td>
+                <td>Підвищені гарантії для B2C, інформаційні обов'язки</td>
+                <td>Неналежне інформування, якість, повернення коштів</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>2. Юридична модель договору</h2>
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Двосторонність</b>
+            Кожна сторона одночасно кредитор і боржник.
+          </div>
+          <div class="flow-step">
+            <b>Відплатність</b>
+            Майно обмінюється на погоджену ціну.
+          </div>
+          <div class="flow-step">
+            <b>Консенсус</b>
+            Зобов'язання виникають із моменту згоди.
+          </div>
+          <div class="flow-step">
+            <b>Результат</b>
+            Перехід права власності та виконання платежу.
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Сторона продавця</h3>
+            <p>Передає товар належної якості, з документами, без прихованих прав третіх осіб.</p>
+          </div>
+          <div class="card">
+            <h3>Сторона покупця</h3>
+            <p>Приймає товар, оглядає його у розумний строк, сплачує ціну відповідно до договору.</p>
+          </div>
+        </div>
+
+        <div class="pipeline">
+          <div class="pipe" data-step="1">Точка домовленості: сторони фіксують предмет, ціну, форму.</div>
+          <div class="pipe" data-step="2">Точка передачі: продавець передає товар і супровідні документи.</div>
+          <div class="pipe" data-step="3">Точка приймання: покупець перевіряє комплектність і якість.</div>
+          <div class="pipe" data-step="4">Точка фіналізації: оплата, закриття зобов'язань або запуск претензії.</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>3. Істотні умови: карта перевірки</h2>
+        <div class="pipeline">
+          <div class="pipe" data-step="1">Предмет: чіткий опис, кількість, модель, стан, комплектність.</div>
+          <div class="pipe" data-step="2">Ціна: фіксована сума або формула обчислення без подвійних тлумачень.</div>
+          <div class="pipe" data-step="3">Строки: поставка, оплата, строки повідомлення про дефекти.</div>
+          <div class="pipe" data-step="4">Форма: письмова/електронна; для спеціальних об'єктів - імперативні вимоги.</div>
+          <div class="pipe" data-step="5">Відповідальність: збитки, штрафні санкції, порядок розірвання.</div>
+        </div>
+
+        <div class="chips">
+          <span class="chip ok">Чіткість = менше спорів</span>
+          <span class="chip danger">Розмиті умови = складне доказування</span>
+        </div>
+
+        <div class="viz-bars">
+          <div class="bar w-90"><span>Критичність визначення предмета</span></div>
+          <div class="bar w-75"><span>Критичність чіткої ціни / формули</span></div>
+          <div class="bar w-60"><span>Критичність строків поставки й оплати</span></div>
+          <div class="bar w-45"><span>Критичність штрафних застережень</span></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>4. Процес виконання договору</h2>
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Укладення</b>
+            Підпис або електронний акцепт.
+          </div>
+          <div class="flow-step">
+            <b>Передання</b>
+            Товар + документи + підтвердження.
+          </div>
+          <div class="flow-step">
+            <b>Приймання</b>
+            Огляд, фіксація дефектів, акт.
+          </div>
+          <div class="flow-step">
+            <b>Оплата</b>
+            За погодженим механізмом і строками.
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Критичні точки контролю</h3>
+            <ul>
+              <li>Момент переходу ризиків випадкової загибелі.</li>
+              <li>Доказ факту передачі товару належній особі.</li>
+              <li>Наявність первинних і транспортних документів.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Роль документування</h3>
+            <ul>
+              <li>Без актів/накладних сторона втрачає частину доказової сили.</li>
+              <li>Електронні журнали дій мають зберігатися системно.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>5. Схема порушень і засобів захисту</h2>
+        <div class="matrix">
+          <table>
+            <thead>
+              <tr>
+                <th>Тип порушення</th>
+                <th>Правова реакція</th>
+                <th>Що доводити</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Неналежна якість</td>
+                <td>Заміна, зменшення ціни, усунення дефектів, розірвання</td>
+                <td>Наявність дефекту, причинний зв'язок, строки звернення</td>
+              </tr>
+              <tr>
+                <td>Прострочення поставки</td>
+                <td>Примусове виконання, неустойка, відмова від договору</td>
+                <td>Погоджений строк і факт його порушення</td>
+              </tr>
+              <tr>
+                <td>Неоплата товару</td>
+                <td>Стягнення боргу, процентів, штрафних санкцій</td>
+                <td>Передача товару та непроведення платежу</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>6. Електронний договір (e-commerce) - процес</h2>
+        <div class="pipeline">
+          <div class="pipe" data-step="1">Оферта на сайті: істотні умови + правила продажу + політика повернення.</div>
+          <div class="pipe" data-step="2">Акцепт покупця: дія, що однозначно свідчить про згоду.</div>
+          <div class="pipe" data-step="3">Підтвердження: фіксація часу, змісту замовлення, ідентифікатора транзакції.</div>
+          <div class="pipe" data-step="4">Виконання: доставка, оплата, видача підтверджувальних документів.</div>
+          <div class="pipe" data-step="5">Архів доказів: email, логи, квитанції, історія дій у системі.</div>
+        </div>
+
+        <div class="chips">
+          <span class="chip ok">Електронна форма = чинна</span>
+          <span class="chip warn">Важливо: збереження цифрового сліду</span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>7. Споживчий контур (B2C)</h2>
+        <div class="scheme-stack">
+          <div class="stack-row">
+            <div class="left">ІНФОРМАЦІЯ ДО УГОДИ</div>
+            <div class="right">Продавець розкриває істотні властивості товару, фінальну ціну та умови сервісу.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">ГАРАНТІЙНИЙ БЛОК</div>
+            <div class="right">Права споживача при дефектах: ремонт, заміна, зменшення ціни, повернення коштів.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">ПРОЦЕДУРА ЗВЕРНЕННЯ</div>
+            <div class="right">Формалізований канал претензій, строки відповіді, облік усіх звернень.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">КОМПЛАЄНС БІЗНЕСУ</div>
+            <div class="right">Сервісні регламенти і стандарти комунікації знижують імовірність конфлікту.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>8. Форма договору: коли ризик максимальний</h2>
+        <div class="grid three">
+          <div class="card">
+            <h3>Звичайний товар</h3>
+            <p>Письмова або електронна форма, якщо вона дозволяє ідентифікувати волевиявлення сторін.</p>
+          </div>
+          <div class="card">
+            <h3>Нерухомість</h3>
+            <p>Імперативна вимога до форми (письмово + нотаріально). Порушення форми створює критичний ризик.</p>
+          </div>
+          <div class="card">
+            <h3>Складні активи</h3>
+            <p>Додаткові реєстраційні/документарні умови можуть визначати чинність правочину.</p>
+          </div>
+        </div>
+
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Об'єкт</b>
+            Визначає спеціальні вимоги.
+          </div>
+          <div class="flow-step">
+            <b>Форма</b>
+            Перевірка імперативних правил.
+          </div>
+          <div class="flow-step">
+            <b>Документи</b>
+            Повний пакет підтверджень.
+          </div>
+          <div class="flow-step">
+            <b>Валідація</b>
+            Зменшення ризику недійсності.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>9. Типові помилки: карта ризиків</h2>
+        <div class="matrix">
+          <table>
+            <thead>
+              <tr>
+                <th>Помилка</th>
+                <th>Наслідок</th>
+                <th>Як запобігти</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Невизначений предмет</td>
+                <td>Складно довести, що саме мало бути передано</td>
+                <td>Технічна специфікація як додаток до договору</td>
+              </tr>
+              <tr>
+                <td>Нечіткі строки</td>
+                <td>Спір щодо прострочення та санкцій</td>
+                <td>Фіксовані дати і умови перенесення</td>
+              </tr>
+              <tr>
+                <td>Відсутність процедури приймання</td>
+                <td>Слабка доказова позиція при дефектах</td>
+                <td>Покроковий регламент приймання і форми актів</td>
+              </tr>
+              <tr>
+                <td>Ігнорування електронних доказів</td>
+                <td>Втрата підтвердження укладення/виконання</td>
+                <td>Політика збереження журналів та повідомлень</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>10. Алгоритм дій у спорі</h2>
+        <div class="pipeline">
+          <div class="pipe" data-step="1">Аудит договору і кваліфікація порушення.</div>
+          <div class="pipe" data-step="2">Збір доказів: документи, експертизи, електронні логи.</div>
+          <div class="pipe" data-step="3">Претензія з чіткою вимогою та граничним строком відповіді.</div>
+          <div class="pipe" data-step="4">Переговори або медіація (за доцільності).</div>
+          <div class="pipe" data-step="5">Позов і супровід судового провадження.</div>
+          <div class="pipe" data-step="6">Контроль виконання рішення.</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>11. Decision Flow: яку вимогу обрати</h2>
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Дефект товару?</b>
+            Так -> гілка «якість». Ні -> перевірка строку.
+          </div>
+          <div class="flow-step">
+            <b>Строк порушено?</b>
+            Так -> гілка «прострочення поставки».
+          </div>
+          <div class="flow-step">
+            <b>Оплата відсутня?</b>
+            Так -> гілка «стягнення заборгованості».
+          </div>
+          <div class="flow-step">
+            <b>Фінальний вибір</b>
+            Заміна / розірвання / стягнення / неустойка.
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Гілка «Якість»</h3>
+            <p>Пріоритет: фіксація дефекту, експертиза, вимога про заміну або повернення коштів.</p>
+          </div>
+          <div class="card">
+            <h3>Гілка «Строк/Оплата»</h3>
+            <p>Пріоритет: документ про строк, претензія, розрахунок санкцій, позовна стратегія.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>12. Heatmap ризиків договору</h2>
+        <div class="matrix">
+          <table>
+            <thead>
+              <tr>
+                <th>Ризик</th>
+                <th>Ймовірність</th>
+                <th>Вплив</th>
+                <th>Пріоритет дій</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Нечіткий предмет</td>
+                <td>Висока</td>
+                <td>Високий</td>
+                <td>Терміново деталізувати специфікацію</td>
+              </tr>
+              <tr>
+                <td>Відсутність регламенту приймання</td>
+                <td>Висока</td>
+                <td>Середній/високий</td>
+                <td>Додати актування та строки повідомлень</td>
+              </tr>
+              <tr>
+                <td>Слабкий електронний доказ</td>
+                <td>Середня</td>
+                <td>Високий</td>
+                <td>Налаштувати журнали, email, трекінг подій</td>
+              </tr>
+              <tr>
+                <td>Невизначені санкції</td>
+                <td>Середня</td>
+                <td>Середній</td>
+                <td>Прописати формулу штрафу та збитків</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>13. Таймлайн спору: від претензії до виконання</h2>
+        <div class="pipeline">
+          <div class="pipe" data-step="1">День 1-3: аудит договору і збір первинних доказів.</div>
+          <div class="pipe" data-step="2">День 4-7: направлення формальної претензії контрагенту.</div>
+          <div class="pipe" data-step="3">День 8-20: переговори / спроба досудового врегулювання.</div>
+          <div class="pipe" data-step="4">День 21+: підготовка позову, розрахунок вимог, подання до суду.</div>
+          <div class="pipe" data-step="5">Після рішення: відкриття виконавчого провадження і контроль стягнення.</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>14. Порівняння форматів угоди</h2>
+        <div class="grid three">
+          <div class="card">
+            <h3>Паперова модель</h3>
+            <p>Плюс: класична доказовість. Мінус: повільніший документообіг.</p>
+          </div>
+          <div class="card">
+            <h3>Електронна модель</h3>
+            <p>Плюс: швидкість і масштаб. Мінус: критична залежність від якості логів.</p>
+          </div>
+          <div class="card">
+            <h3>Гібридна модель</h3>
+            <p>Плюс: баланс. Мінус: треба синхронізувати паперовий та digital-контури.</p>
+          </div>
+        </div>
+        <div class="viz-bars">
+          <div class="bar w-90"><span>Швидкість укладення: електронна</span></div>
+          <div class="bar w-75"><span>Сила доказування без підсилення: паперова</span></div>
+          <div class="bar w-60"><span>Операційна гнучкість: гібридна</span></div>
+          <div class="bar w-45"><span>Ризик втрати даних: неархівована електронна</span></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>15. Візуальний чекліст комплаєнсу</h2>
+        <div class="scheme-stack">
+          <div class="stack-row">
+            <div class="left">KYC КОНТРАГЕНТА</div>
+            <div class="right">Перевірка правосуб'єктності, повноважень підписанта, репутаційних факторів.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">ДОГОВІРНА ЯКІСТЬ</div>
+            <div class="right">Предмет, ціна, строк, санкції, порядок приймання і розірвання.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">E-АРХІВ</div>
+            <div class="right">Цілісне збереження оферти, акцепту, логів, листування і платежів.</div>
+          </div>
+          <div class="stack-row">
+            <div class="left">ПРЕТЕНЗІЙНИЙ ПРОТОКОЛ</div>
+            <div class="right">Шаблони вимог, строки відповідей, журнал статусів і ескалацій.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>16. Авторське право у договірному контурі</h2>
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Об'єкт IP</b>
+            Фото, дизайн, тексти, ПЗ, інструкції, маркетингові матеріали.
+          </div>
+          <div class="flow-step">
+            <b>Право на використання</b>
+            Ліцензія або відчуження майнових прав має бути прописане окремо.
+          </div>
+          <div class="flow-step">
+            <b>Доказ авторства</b>
+            Файли-оригінали, дати створення, договори з авторами/підрядниками.
+          </div>
+          <div class="flow-step">
+            <b>Захист</b>
+            Вимога припинення порушення, компенсація, блокування неправомірного використання.
+          </div>
+        </div>
+
+        <div class="matrix">
+          <table>
+            <thead>
+              <tr>
+                <th>Ситуація</th>
+                <th>Ризик</th>
+                <th>Що закласти в договір</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Продаж цифрового контенту</td>
+                <td>Невизначений обсяг прав використання</td>
+                <td>Тип ліцензії, територія, строк, способи використання</td>
+              </tr>
+              <tr>
+                <td>Товар із дизайнерськими елементами</td>
+                <td>Претензії автора/правовласника</td>
+                <td>Гарантія правомірного походження IP від продавця</td>
+              </tr>
+              <tr>
+                <td>Маркетинг товару</td>
+                <td>Незаконне копіювання фото/текстів</td>
+                <td>Порядок використання контенту і відповідальність за порушення</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>17. Реєстрація торговельної марки: детальний контур</h2>
+        <div class="pipeline">
+          <div class="pipe" data-step="1">Підготовка позначення: слово/логотип/комбінована ТМ, визначення класів МКТП.</div>
+          <div class="pipe" data-step="2">Попередній пошук: перевірка схожих/тотожних позначень, оцінка ризику відмови.</div>
+          <div class="pipe" data-step="3">Подання заявки до IP Office (УКРНОІВІ): заявник, зображення, перелік класів і товарів/послуг.</div>
+          <div class="pipe" data-step="4">Експертиза: формальна + кваліфікаційна перевірка на охороноздатність.</div>
+          <div class="pipe" data-step="5">Рішення і реєстрація: сплата зборів, внесення до реєстру, отримання свідоцтва.</div>
+          <div class="pipe" data-step="6">Післяреєстраційний моніторинг: контроль порушень, заперечення, підтримка охорони.</div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Що важливо для договорів купівлі-продажу</h3>
+            <ul>
+              <li>Хто є власником ТМ і чи має продавець право маркувати товар.</li>
+              <li>Чи передаються права на ТМ разом із товаром/бізнесом.</li>
+              <li>Як зафіксовано відповідальність за порушення прав третіх осіб.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Антиризикові застереження</h3>
+            <ul>
+              <li>Гарантія «IP clean title» від продавця.</li>
+              <li>Індемніті за претензіями щодо ТМ та авторських прав.</li>
+              <li>Право призупинити оплату при обґрунтованому IP-спорі.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <h2>18. Висновок</h2>
+        <p class="lead">
+          Договір купівлі-продажу працює ефективно, коли права й обов'язки сторін описані
+          точно, а кожен етап виконання підтверджений доказами. Схемний підхід дозволяє швидко
+          бачити ризики і вчасно керувати ними.
+        </p>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Чекліст перед підписанням</h3>
+            <ul>
+              <li>Верифікувати контрагента і повноваження підписанта.</li>
+              <li>Уточнити предмет, ціну, строки, порядок приймання.</li>
+              <li>Прописати чітку відповідальність і порядок розірвання.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Чекліст виконання</h3>
+            <ul>
+              <li>Зберігати акти, накладні, квитанції, цифрові журнали.</li>
+              <li>Оперативно фіксувати дефекти та надсилати претензії.</li>
+              <li>Підтримувати доказову базу до повного закриття зобов'язань.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="scheme-flow">
+          <div class="flow-step">
+            <b>Чіткі умови</b>
+            Мінімізують подвійні тлумачення.
+          </div>
+          <div class="flow-step">
+            <b>Контроль виконання</b>
+            Знижує ймовірність порушень.
+          </div>
+          <div class="flow-step">
+            <b>Доказова база</b>
+            Посилює позицію у спорі.
+          </div>
+          <div class="flow-step">
+            <b>Захист права</b>
+            Стає швидшим і результативнішим.
+          </div>
+        </div>
+
+        <div class="meta">Підготував: Муністер В. Д.</div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="controls">
+        <button id="prevBtn" type="button">← Назад</button>
+        <button id="nextBtn" type="button">Далі →</button>
+      </div>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      <div class="kbd">Клавіші: ← → Home End</div>
+    </footer>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      let index = 0;
+
+      function render() {
+        slides.forEach((s, i) => s.classList.toggle('active', i === index));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === slides.length - 1;
+      }
+
+      function go(step) {
+        index = Math.min(slides.length - 1, Math.max(0, index + step));
+        render();
+      }
+
+      prevBtn.addEventListener('click', () => go(-1));
+      nextBtn.addEventListener('click', () => go(1));
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') go(1);
+        if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(-1);
+        if (e.key === 'Home') {
+          index = 0;
+          render();
+        }
+        if (e.key === 'End') {
+          index = slides.length - 1;
+          render();
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>

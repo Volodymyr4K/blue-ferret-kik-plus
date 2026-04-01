@@ -178,7 +178,7 @@ export default function RotatableBox({
             <img
               src={frontImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#2e4869]"
               draggable={false}
               loading="eager"
               decoding="async"
@@ -212,7 +212,7 @@ export default function RotatableBox({
             <img
               src={backImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#2e4869]"
               draggable={false}
               loading="lazy"
               decoding="async"
@@ -247,7 +247,7 @@ export default function RotatableBox({
             <img
               src={rightSideImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#2e4869]"
               draggable={false}
               loading="lazy"
               decoding="async"
@@ -292,7 +292,7 @@ export default function RotatableBox({
             <img
               src={leftSideImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#2e4869]"
               draggable={false}
               loading="lazy"
               decoding="async"
@@ -337,7 +337,7 @@ export default function RotatableBox({
             <img
               src={topImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#2e4869]"
               style={{ transform: 'none' }}
               draggable={false}
               loading="lazy"

@@ -11,6 +11,22 @@ export interface Project {
   updatePreview: string;
   coverImage?: string;
   link: string;
+  support?: ProjectSupportConfig;
+}
+
+export interface ProjectSupportTier {
+  id: string;
+  title: string;
+  description: string;
+  amount: number;
+  featured?: boolean;
+  includes?: string[];
+}
+
+export interface ProjectSupportConfig {
+  minDonation: number;
+  defaultDonation: number;
+  tiers: ProjectSupportTier[];
 }
 
 const projects: Project[] = [
@@ -27,6 +43,27 @@ const projects: Project[] = [
     updatePreview: 'Завершено друк карток та коробок. Наступний етап — упаковка.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/1',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'city-basic',
+          title: 'Базова версія',
+          description: 'Одна коробка гри «Місто таємниць».',
+          amount: 1200,
+          featured: true,
+          includes: ['Базова коробка', 'Подяка на сторінці проєкту'],
+        },
+        {
+          id: 'city-duo',
+          title: 'Підтримка ×2',
+          description: 'Дві коробки гри за спеціальною ціною.',
+          amount: 2200,
+          includes: ['2 коробки гри', 'Ранній доступ до оновлень'],
+        },
+      ],
+    },
   },
   {
     id: '2',
@@ -41,6 +78,27 @@ const projects: Project[] = [
     updatePreview: 'Ілюстрації готові. Початок виробництва — квітень.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/2',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'island-basic',
+          title: 'Одна гра',
+          description: 'Класична комплектація «Острів скарбів».',
+          amount: 1100,
+          featured: true,
+          includes: ['1 коробка гри', 'Лист подяки від команди'],
+        },
+        {
+          id: 'island-family',
+          title: 'Сімейний набір',
+          description: 'Дві коробки + бонусний міні-набір карт.',
+          amount: 2100,
+          includes: ['2 коробки гри', 'Міні-набір бонусних карт'],
+        },
+      ],
+    },
   },
   {
     id: '3',
@@ -55,6 +113,19 @@ const projects: Project[] = [
     updatePreview: 'Тестування механіки. Скоро анонс збору.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/3',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'forest-basic',
+          title: 'Базова версія',
+          description: 'Попереднє резервування базової коробки.',
+          amount: 1000,
+          includes: ['Резерв гри після старту збору'],
+        },
+      ],
+    },
   },
   {
     id: '4',
@@ -69,6 +140,18 @@ const projects: Project[] = [
     updatePreview: 'Концепція та механіка в розробці.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/4',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'epoch-basic',
+          title: 'Попередня підтримка',
+          description: 'Символічна підтримка розробки без нагороди.',
+          amount: 300,
+        },
+      ],
+    },
   },
   {
     id: '5',
@@ -83,6 +166,27 @@ const projects: Project[] = [
     updatePreview: '89% зібрано! Виробництво розпочнеться на початку квітня.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/5',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'chef-basic',
+          title: 'Базова версія',
+          description: 'Одна коробка гри «Кухня шефа».',
+          amount: 1300,
+          featured: true,
+          includes: ['Базова коробка', 'Набір додаткових рецептів'],
+        },
+        {
+          id: 'chef-party',
+          title: 'Паті-набір',
+          description: 'Дві коробки для гри великими компаніями.',
+          amount: 2400,
+          includes: ['2 коробки гри', 'Бонусний жетон першого кухаря'],
+        },
+      ],
+    },
   },
   {
     id: '6',
@@ -97,6 +201,18 @@ const projects: Project[] = [
     updatePreview: 'Розробка прототипу. Очікуваний запуск збору — травень.',
     coverImage: '/images/placeholder-project.svg',
     link: '/kik/proekty/6',
+    support: {
+      minDonation: 50,
+      defaultDonation: 200,
+      tiers: [
+        {
+          id: 'space-basic',
+          title: 'Попередня підтримка',
+          description: 'Підтримка розробки на етапі прототипу.',
+          amount: 300,
+        },
+      ],
+    },
   },
 ];
 

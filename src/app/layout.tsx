@@ -8,8 +8,9 @@ export const metadata: Metadata = {
   title: "Blue Ferret | Незалежне видавництво настільних ігор",
   description: "Blue Ferret — незалежне видавництво настільних ігор. Грайливий, авторський, теплий стиль. Для настільних гравців. KIK вдома — платформа підтримки авторських проєктів.",
   icons: {
-    icon: "/logo-blue-ferret.png",
-    apple: "/logo-blue-ferret.png",
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "Blue Ferret | Настільні ігри",

@@ -13,14 +13,14 @@ interface KikLogoProps {
 export default function KikLogo({ size = 'md', variant = 'full', className = '', href }: KikLogoProps) {
   const sizes = {
     compact: {
-      sm: { w: 72, h: 60 },
-      md: { w: 122, h: 102 },
-      lg: { w: 188, h: 158 },
+      sm: { w: 126, h: 50 },
+      md: { w: 176, h: 70 },
+      lg: { w: 228, h: 90 },
     },
     full: {
-      sm: { w: 96, h: 82 },
-      md: { w: 156, h: 132 },
-      lg: { w: 224, h: 190 },
+      sm: { w: 164, h: 64 },
+      md: { w: 236, h: 92 },
+      lg: { w: 328, h: 128 },
     },
   };
   const s = sizes[variant][size];
@@ -28,7 +28,7 @@ export default function KikLogo({ size = 'md', variant = 'full', className = '',
   const logo = (
     <div className={`inline-flex items-center ${className}`}>
       <Image
-        src="/logo-kik-left-variant.png"
+        src="/images/kik/logo-kik-horizontal.png"
         alt="KIK вдома"
         width={s.w}
         height={s.h}

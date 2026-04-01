@@ -152,7 +152,7 @@ export default function Navbar() {
             >
               <Link
                 href="/kik"
-                className={`group flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl text-sm font-medium transition-all duration-300 border min-w-[126px] ${
+                className={`group flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 border min-w-[164px] ${
                   isGamePage
                     ? pathname.startsWith('/kik')
                       ? 'border-[var(--kik-accent)]/60 bg-[var(--kik-accent)]/20 text-[var(--kik-accent)] font-semibold'
@@ -162,13 +162,13 @@ export default function Navbar() {
                       : 'border-[var(--kik-accent)]/35 bg-[var(--kik-accent)]/5 text-slate-600 hover:border-[var(--kik-accent)]/50 hover:bg-[var(--kik-accent)]/10 hover:text-[var(--kik-accent)]'
                 }`}
               >
-                <span className="inline-flex items-center justify-center w-[88px]">
+                <span className="inline-flex items-center justify-center w-[132px]">
                   <Image
-                    src="/logo-kik-left-variant.png"
+                    src="/images/kik/logo-kik-horizontal.png"
                     alt="KIK вдома"
-                    width={92}
-                    height={78}
-                    className="h-6 w-auto object-contain"
+                    width={132}
+                    height={52}
+                    className="h-[30px] w-auto object-contain"
                   />
                 </span>
               </Link>

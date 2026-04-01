@@ -73,6 +73,7 @@ export default async function ProjectDetailsPage({
 
   const progress =
     project.goal > 0 ? Math.min(100, (project.raised / project.goal) * 100) : 0;
+  const canSupport = project.status === 'active';
   const stageState =
     PROJECT_STAGES[project.status as keyof typeof PROJECT_STAGES] ??
     PROJECT_STAGES.preparing;
@@ -179,6 +180,20 @@ export default async function ProjectDetailsPage({
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
+                {canSupport ? (
+                  <Link
+                    href={`/kik/proekty/${project.id}/pidtrymaty`}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[var(--kik-accent)] to-[var(--teal-accent)] text-white font-semibold hover:from-[var(--teal-accent)] hover:to-[var(--kik-accent)] transition-colors"
+                  >
+                    <CircleDollarSign className="w-4 h-4" />
+                    Підтримати
+                  </Link>
+                ) : (
+                  <span className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 font-semibold cursor-not-allowed">
+                    <CalendarDays className="w-4 h-4" />
+                    Підтримка скоро
+                  </span>
+                )}
                 <Link
                   href="/kik/proekty"
                   className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors"
