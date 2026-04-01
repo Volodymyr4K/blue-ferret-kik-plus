@@ -47,12 +47,12 @@ function getGameAssets(slug: string) {
       heroBackgroundVideoMp4: '/images/trymaysia/moryaky.mp4',
       heroBackgroundVideoWebm: '/images/trymaysia/moryaky.webm',
       heroBackgroundFallback: '/images/trymaysia/moryaky.gif',
-      boxMockup: '/images/trymaysia/box-front-center-v10.webp',
-      boxBack: '/images/trymaysia/box-back-center-v10.webp',
-      boxTop: '/images/trymaysia/box-top-v10.webp',
-      boxBottom: '/images/trymaysia/box-bottom-v10.webp',
-      boxSideLeft: '/images/trymaysia/box-side-left-front-v10.webp',
-      boxSideRight: '/images/trymaysia/box-side-right-front-v10.webp',
+      boxMockup: '/images/trymaysia/box-front-center-v11.jpg',
+      boxBack: '/images/trymaysia/box-back-center-v11.jpg',
+      boxTop: '/images/trymaysia/box-top-v11.jpg',
+      boxBottom: '/images/trymaysia/box-bottom-v11.jpg',
+      boxSideLeft: '/images/trymaysia/box-side-left-front-v11.jpg',
+      boxSideRight: '/images/trymaysia/box-side-right-front-v11.jpg',
       arrow: '/images/trymaysia/arrow.png',
       aboutCharacters: [
         '/images/trymaysia/characters/char-2.png',
@@ -604,6 +604,8 @@ export default function GamePageClient({ game }: { game: Game }) {
                   rightSideImage={assets?.boxSideRight}
                   color={palette}
                   sideLabel={game.name}
+                  depthScale={0.72}
+                  initialRotation={{ x: -7, y: -13 }}
                   interactive
                   className="scale-[0.74] min-[400px]:scale-[0.84] sm:scale-[1.02] md:scale-[1.12] lg:scale-[1.18]"
                 />

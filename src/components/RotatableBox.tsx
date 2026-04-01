@@ -11,6 +11,8 @@ interface RotatableBoxProps {
   rightSideImage?: string;
   color?: string;
   sideLabel?: string;
+  depthScale?: number;
+  initialRotation?: { x: number; y: number };
   interactive?: boolean;
   className?: string;
 }
@@ -24,18 +26,24 @@ export default function RotatableBox({
   rightSideImage,
   color = '#283D57',
   sideLabel = 'Тримайся',
+  depthScale = 0.72,
+  initialRotation = { x: -7, y: -13 },
   interactive = true,
   className = '',
 }: RotatableBoxProps) {
-  const [rotation, setRotation] = useState({ x: -11, y: -18 });
+  const [rotation, setRotation] = useState(initialRotation);
   const [isDragging, setIsDragging] = useState(false);
   const inertiaRef = useRef({ vx: 0, vy: 0, active: false });
   const lastPos = useRef({ x: 0, y: 0 });
 
-  // Board game box proportions (landscape, thinner depth)
-  const W = 304;
-  const H = 228;
-  const D = 50;
+  // Geometry calibrated to the actual box dieline proportions
+  // front: 2457x2183, top: 2456x834
+  const FRONT_RATIO = 2457 / 2183;
+  const DEPTH_RATIO = 834 / 2456;
+  const H = 258;
+  const W = Math.round(H * FRONT_RATIO);
+  const rawDepth = Math.round(W * DEPTH_RATIO);
+  const D = Math.max(56, Math.round(rawDepth * depthScale));
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (!interactive) return;
@@ -58,8 +66,8 @@ export default function RotatableBox({
       inertiaRef.current.vy = dy * 0.4;
       setRotation((prev) => {
         return {
-          x: Math.max(-34, Math.min(34, prev.x - dy * 0.24)),
-          y: prev.y + dx * 0.28,
+          x: Math.max(-30, Math.min(30, prev.x - dy * 0.2)),
+          y: prev.y + dx * 0.22,
         };
       });
     },
@@ -76,8 +84,8 @@ export default function RotatableBox({
     inertiaRef.current.active = false;
     inertiaRef.current.vx = 0;
     inertiaRef.current.vy = 0;
-    setRotation({ x: -11, y: -18 });
-  }, []);
+    setRotation(initialRotation);
+  }, [initialRotation]);
 
   // Inertia after drag
   useEffect(() => {
@@ -90,8 +98,8 @@ export default function RotatableBox({
       const speed = Math.hypot(inertiaRef.current.vx, inertiaRef.current.vy);
       setRotation((prev) => {
         return {
-          x: Math.max(-36, Math.min(36, prev.x - inertiaRef.current.vy * 0.2)),
-          y: prev.y + inertiaRef.current.vx * 0.2,
+          x: Math.max(-32, Math.min(32, prev.x - inertiaRef.current.vy * 0.16)),
+          y: prev.y + inertiaRef.current.vx * 0.15,
         };
       });
       if (speed > 0.25) {
@@ -138,7 +146,7 @@ export default function RotatableBox({
     transform,
     backfaceVisibility: 'hidden',
     backgroundColor: bg,
-    borderRadius: 4,
+    borderRadius: 2,
     overflow: 'hidden',
     ...extra,
   });
@@ -147,7 +155,7 @@ export default function RotatableBox({
     <div
       className={`select-none touch-none ${className}`}
       style={{
-        perspective: 1500,
+        perspective: 1750,
         background: `
           radial-gradient(130% 80% at 50% -20%, rgba(255,255,255,0.1) 0%, transparent 46%),
           radial-gradient(110% 76% at 50% 122%, rgba(${baseRgb.r},${baseRgb.g},${baseRgb.b},0.24) 0%, transparent 58%),
@@ -176,7 +184,7 @@ export default function RotatableBox({
           transformStyle: 'preserve-3d',
           transform: interactive
             ? `translateZ(0) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
-            : 'translateZ(0) rotateX(-11deg) rotateY(-18deg)',
+            : `translateZ(0) rotateX(${initialRotation.x}deg) rotateY(${initialRotation.y}deg)`,
           transition: !isDragging ? 'transform 0.08s ease-out' : 'none',
           willChange: 'transform',
         }}
@@ -415,7 +423,7 @@ export default function RotatableBox({
             left: '50%',
             top: '50%',
             marginLeft: -(W * 0.92) / 2,
-            marginTop: H / 2 + 8,
+            marginTop: H / 2 + Math.max(5, Math.round(D * 0.07)),
             transform: `rotateX(-90deg) translateZ(-${H / 2 + 2}px)`,
             background: 'radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 72%)',
             filter: 'blur(10px)',
