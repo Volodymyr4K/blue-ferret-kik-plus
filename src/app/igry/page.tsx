@@ -91,6 +91,7 @@ function GamesContent() {
           <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-8 lg:gap-9">
             {games.map((game, i) => {
               const isComingSoon =
+                game.slug !== 'trymaysia' &&
                 game.status === 'announcement' &&
                 game.stages.production.state === 'locked' &&
                 game.stages.preorder.state === 'locked' &&
