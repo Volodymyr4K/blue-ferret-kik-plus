@@ -1,16 +1,62 @@
 import gamesData from '../src/content/games.json';
+import gamesBasicData from '../src/content/manager/games-basic.json';
 import projectsData from '../src/content/projects.json';
+import projectsBasicData from '../src/content/manager/projects-basic.json';
 import siteContentData from '../src/content/site-content.json';
 import uiContentData from '../src/content/ui-content.json';
 import {
+  GamesBasicOverridesSchema,
   GamesSchema,
+  ProjectsBasicOverridesSchema,
   ProjectsSchema,
   SiteContentSchema,
   UIContentSchema,
 } from '../src/lib/content-schemas';
 
-const games = GamesSchema.parse(gamesData);
-const projects = ProjectsSchema.parse(projectsData);
+const baseGames = GamesSchema.parse(gamesData);
+const gamesBasic = GamesBasicOverridesSchema.parse(gamesBasicData);
+const gamesOverridesById = new Map(gamesBasic.map((item) => [item.id, item]));
+const games = GamesSchema.parse(
+  baseGames.map((item) => {
+    const override = gamesOverridesById.get(item.id);
+    return override
+      ? {
+          ...item,
+          name: override.name,
+          slogan: override.slogan,
+          shortDescription: override.shortDescription,
+          aboutGame: override.aboutGame,
+          status: override.status,
+          heroImage: override.heroImage,
+          coverImage: override.coverImage,
+          price: override.price,
+        }
+      : item;
+  })
+);
+
+const baseProjects = ProjectsSchema.parse(projectsData);
+const projectsBasic = ProjectsBasicOverridesSchema.parse(projectsBasicData);
+const projectsOverridesById = new Map(projectsBasic.map((item) => [item.id, item]));
+const projects = ProjectsSchema.parse(
+  baseProjects.map((item) => {
+    const override = projectsOverridesById.get(item.id);
+    return override
+      ? {
+          ...item,
+          name: override.name,
+          shortDescription: override.shortDescription,
+          status: override.status,
+          statusLabel: override.statusLabel,
+          raised: override.raised,
+          goal: override.goal,
+          lastUpdate: override.lastUpdate,
+          updatePreview: override.updatePreview,
+          coverImage: override.coverImage,
+        }
+      : item;
+  })
+);
 const site = SiteContentSchema.parse(siteContentData);
 const ui = UIContentSchema.parse(uiContentData);
 

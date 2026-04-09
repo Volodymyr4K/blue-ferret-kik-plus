@@ -43,6 +43,8 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 
 - `src/content/games.json` — ігри (товари)
 - `src/content/projects.json` — проєкти KIK
+- `src/content/manager/games-basic.json` — базові менеджерські поля для ігор
+- `src/content/manager/projects-basic.json` — базові менеджерські поля для проєктів
 - `src/content/site-content.json` — тексти та блоки сайту
 - `src/content/ui-content.json` — UI-тексти сторінок і компонентів
 
@@ -81,6 +83,9 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 6. Після зеленого `Quality Gate` зробити merge
 
 Для менеджера доступна сторінка-помічник: `/admin-guide` (slug/metadata підказки + швидкі посилання).
+У CMS є два режими:
+- `Менеджер (базовий режим)` — безпечний для щоденної роботи
+- `Адмін (розширений режим)` — детальні технічні поля
 
 ## Quality/Security Gate
 

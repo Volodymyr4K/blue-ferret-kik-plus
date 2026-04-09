@@ -1,0 +1,35 @@
+[
+  {
+    "id": "trymaysia",
+    "name": "Тримайся",
+    "slogan": "За все, що можеш!",
+    "shortDescription": "Динамічна командна гра на реакцію та спритність — хапайся за мотузку і тримайся до кінця! Для всіх, хто любить активний відпочинок, сміх і азарт.",
+    "aboutGame": "Динамічна командна гра на реакцію та спритність — хапайся за мотузку і тримайся до кінця! Для всіх, хто любить активний відпочинок, сміх і азарт.",
+    "status": "announcement",
+    "heroImage": "/images/trymaysia/moryaky.gif",
+    "coverImage": "/images/trymaysia/box-front-v6.png",
+    "price": 599
+  },
+  {
+    "id": "second-game",
+    "name": "Друга гра",
+    "slogan": "Кожен хід — нова історія",
+    "shortDescription": "Стратегічна гра для 2–4 гравців. Унікальна механіка, продуманий баланс та висока реіграбельність. Ідеально для вечорів з друзями.",
+    "aboutGame": "",
+    "status": "announcement",
+    "heroImage": "/images/placeholder-game.svg",
+    "coverImage": "",
+    "price": 0
+  },
+  {
+    "id": "third-game",
+    "name": "Третя гра",
+    "slogan": "Об'єднайся з друзями",
+    "shortDescription": "Кооперативна гра для всієї родини. Разом подолайте випробування, розгадайте загадки та досягніть спільної мети.",
+    "aboutGame": "",
+    "status": "announcement",
+    "heroImage": "/images/placeholder-game.svg",
+    "coverImage": "",
+    "price": 0
+  }
+]

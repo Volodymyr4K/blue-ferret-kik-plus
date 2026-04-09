@@ -33,6 +33,10 @@ const internalPathSchema = z
   .refine((value) => !value.startsWith('//'), 'Protocol-relative URL is not allowed');
 
 const mediaPathSchema = internalPathSchema;
+const optionalMediaPathSchema = z.preprocess(
+  (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+  mediaPathSchema.optional()
+);
 
 const externalUrlSchema = z
   .string()
@@ -142,6 +146,39 @@ const projectSchema = z
     coverImage: mediaPathSchema.optional(),
     link: internalPathSchema,
     support: projectSupportSchema.optional(),
+  })
+  .strict()
+  .refine((value) => value.goal >= value.raised, {
+    message: 'goal must be >= raised',
+    path: ['goal'],
+  });
+
+const gameBasicOverrideSchema = z
+  .object({
+    id: slugSchema,
+    name: nonEmptyText,
+    slogan: optionalText,
+    shortDescription: nonEmptyText,
+    aboutGame: optionalText,
+    status: z.enum(['announcement', 'production', 'preorder', 'onsale']),
+    heroImage: optionalMediaPathSchema,
+    coverImage: optionalMediaPathSchema,
+    price: z.number().finite().min(0).optional(),
+  })
+  .strict();
+
+const projectBasicOverrideSchema = z
+  .object({
+    id: slugSchema,
+    name: nonEmptyText,
+    shortDescription: nonEmptyText,
+    status: z.enum(['active', 'preparing', 'complete']),
+    statusLabel: nonEmptyText,
+    raised: z.number().finite().min(0),
+    goal: z.number().finite().min(0),
+    lastUpdate: dateSchema,
+    updatePreview: nonEmptyText,
+    coverImage: optionalMediaPathSchema,
   })
   .strict()
   .refine((value) => value.goal >= value.raised, {
@@ -657,6 +694,8 @@ export const ProjectsSchema = z.array(projectSchema).superRefine((projects, ctx)
 
 export const SiteContentSchema = siteContentSchema;
 export const UIContentSchema = uiContentSchema;
+export const GamesBasicOverridesSchema = z.array(gameBasicOverrideSchema);
+export const ProjectsBasicOverridesSchema = z.array(projectBasicOverrideSchema);
 
 export type Game = z.infer<typeof gameSchema>;
 export type GameStage = z.infer<typeof gameStageSchema>;
@@ -666,3 +705,5 @@ export type ProjectSupportConfig = z.infer<typeof projectSupportSchema>;
 export type ProjectSupportTier = z.infer<typeof projectSupportTierSchema>;
 export type SiteContent = z.infer<typeof siteContentSchema>;
 export type UIContent = z.infer<typeof uiContentSchema>;
+export type GameBasicOverride = z.infer<typeof gameBasicOverrideSchema>;
+export type ProjectBasicOverride = z.infer<typeof projectBasicOverrideSchema>;

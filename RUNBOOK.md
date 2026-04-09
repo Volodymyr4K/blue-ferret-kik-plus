@@ -4,11 +4,12 @@
 
 1. Відкрити `/admin-guide` і перейти в Pages CMS з кнопки.
 2. Працювати в гілці `staging` (не в `main`).
-3. Внести зміни у поля в CMS.
-4. Створити PR `staging` → `main`.
-5. Дочекатися зеленого `Quality Gate` (включає content/media/links/copy-check).
-6. Попросити рев'ю і тільки тоді merge.
-7. За потреби взяти preview-артефакт із workflow `Staging Preview Build`.
+3. Внести зміни у секції `Менеджер (базовий режим)`.
+4. Секції `Адмін (розширений режим)` відкривати тільки за потреби.
+5. Створити PR `staging` → `main`.
+6. Дочекатися зеленого `Quality Gate` (включає content/media/links/copy-check).
+7. Попросити рев'ю і тільки тоді merge.
+8. За потреби взяти preview-артефакт із workflow `Staging Preview Build`.
 
 ## 2) Що обов'язково перевірити перед merge
 

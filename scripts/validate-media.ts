@@ -2,7 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { imageSize } from 'image-size';
 import gamesData from '../src/content/games.json';
+import gamesBasicData from '../src/content/manager/games-basic.json';
 import projectsData from '../src/content/projects.json';
+import projectsBasicData from '../src/content/manager/projects-basic.json';
 import siteContentData from '../src/content/site-content.json';
 import uiContentData from '../src/content/ui-content.json';
 
@@ -49,7 +51,9 @@ function fail(message: string): never {
 
 const mediaPaths = collectPaths({
   gamesData,
+  gamesBasicData,
   projectsData,
+  projectsBasicData,
   siteContentData,
   uiContentData,
 });

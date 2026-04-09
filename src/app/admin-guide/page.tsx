@@ -48,6 +48,9 @@ export default function AdminGuidePage() {
           <p className="text-slate-600">
             Ця сторінка допомагає редагувати контент без технічних дій: швидкі посилання, генерація slug та превʼю метаданих.
           </p>
+          <p className="text-slate-500 text-sm mt-2">
+            У CMS працюйте переважно в секції <strong>Менеджер (базовий режим)</strong>.
+          </p>
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">

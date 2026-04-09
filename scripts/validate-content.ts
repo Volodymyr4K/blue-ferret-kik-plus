@@ -1,11 +1,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import gamesData from '../src/content/games.json';
+import gamesBasicData from '../src/content/manager/games-basic.json';
 import projectsData from '../src/content/projects.json';
+import projectsBasicData from '../src/content/manager/projects-basic.json';
 import siteContentData from '../src/content/site-content.json';
 import uiContentData from '../src/content/ui-content.json';
 import {
+  GamesBasicOverridesSchema,
   GamesSchema,
+  ProjectsBasicOverridesSchema,
   ProjectsSchema,
   SiteContentSchema,
   UIContentSchema,
@@ -41,7 +45,9 @@ function collectPaths(value: unknown, acc = new Set<string>()): Set<string> {
 }
 
 const games = GamesSchema.parse(gamesData);
+const gamesBasic = GamesBasicOverridesSchema.parse(gamesBasicData);
 const projects = ProjectsSchema.parse(projectsData);
+const projectsBasic = ProjectsBasicOverridesSchema.parse(projectsBasicData);
 const site = SiteContentSchema.parse(siteContentData);
 const ui = UIContentSchema.parse(uiContentData);
 
@@ -60,7 +66,25 @@ for (const project of projects) {
   }
 }
 
-const contentPaths = collectPaths({ games, projects, site, ui });
+const gameIds = new Set(games.map((item) => item.id));
+const gameBasicIds = new Set(gamesBasic.map((item) => item.id));
+for (const id of gameIds) {
+  assert(gameBasicIds.has(id), `Missing manager/basic game override for "${id}"`);
+}
+for (const id of gameBasicIds) {
+  assert(gameIds.has(id), `Orphan manager/basic game override "${id}"`);
+}
+
+const projectIds = new Set(projects.map((item) => item.id));
+const projectBasicIds = new Set(projectsBasic.map((item) => item.id));
+for (const id of projectIds) {
+  assert(projectBasicIds.has(id), `Missing manager/basic project override for "${id}"`);
+}
+for (const id of projectBasicIds) {
+  assert(projectIds.has(id), `Orphan manager/basic project override "${id}"`);
+}
+
+const contentPaths = collectPaths({ games, gamesBasic, projects, projectsBasic, site, ui });
 const missingFiles: string[] = [];
 
 for (const mediaPath of contentPaths) {
