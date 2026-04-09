@@ -10,6 +10,7 @@
 6. Дочекатися зеленого `Quality Gate` (включає content/media/links/copy-check).
 7. Попросити рев'ю і тільки тоді merge.
 8. За потреби взяти preview-артефакт із workflow `Staging Preview Build`.
+9. На `/admin-guide` перевірити блок `Стан перевірок` перед фінальним merge.
 
 ## 2) Що обов'язково перевірити перед merge
 

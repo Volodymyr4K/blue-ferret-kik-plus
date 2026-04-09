@@ -3,10 +3,13 @@ name: Staging Preview Build
 on:
   push:
     branches: ['staging']
+  pull_request:
+    branches: ['main']
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   staging-preview:
@@ -53,3 +56,28 @@ jobs:
           name: staging-preview-out
           path: ./out
           retention-days: 7
+
+      - name: Comment PR with preview run
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const runUrl = `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`;
+            const body = [
+              '## Preview Build',
+              '',
+              `Staging preview готовий. Відкрийте run: ${runUrl}`,
+              '',
+              'Що далі:',
+              '1. Відкрити run',
+              '2. Завантажити artifact `staging-preview-out`',
+              '3. Перевірити сторінки перед merge',
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: context.issue.number,
+              body,
+            });

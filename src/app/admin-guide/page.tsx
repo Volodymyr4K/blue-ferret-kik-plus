@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import uiContent from '@/data/ui-content';
 
 const CYRILLIC_MAP: Record<string, string> = {
@@ -25,10 +25,62 @@ function slugify(input: string) {
     .replace(/^-|-$/g, '');
 }
 
+type WorkflowRunStatus = {
+  name: string;
+  status: string;
+  conclusion: string | null;
+  html_url: string;
+  head_branch: string;
+  created_at: string;
+};
+
+const REPO_OWNER = 'Volodymyr4K';
+const REPO_NAME = 'blue-ferret-kik-plus';
+
+async function fetchLatestWorkflowRun(workflowFile: string): Promise<WorkflowRunStatus | null> {
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${workflowFile}/runs?per_page=1`;
+  const response = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = (await response.json()) as { workflow_runs?: WorkflowRunStatus[] };
+  return payload.workflow_runs?.[0] ?? null;
+}
+
+function statusLabel(run: WorkflowRunStatus | null) {
+  if (!run) return 'Немає даних';
+  if (run.status !== 'completed') return 'В процесі';
+  if (run.conclusion === 'success') return 'Успішно';
+  if (run.conclusion === 'failure') return 'Помилка';
+  return run.conclusion ?? 'Невідомо';
+}
+
+function statusClass(run: WorkflowRunStatus | null) {
+  if (!run) return 'text-slate-600 bg-slate-100';
+  if (run.status !== 'completed') return 'text-amber-700 bg-amber-100';
+  if (run.conclusion === 'success') return 'text-emerald-700 bg-emerald-100';
+  if (run.conclusion === 'failure') return 'text-rose-700 bg-rose-100';
+  return 'text-slate-700 bg-slate-100';
+}
+
 export default function AdminGuidePage() {
   const [gameName, setGameName] = useState('');
   const [projectName, setProjectName] = useState('');
   const [customDescription, setCustomDescription] = useState('');
+  const [qualityRun, setQualityRun] = useState<WorkflowRunStatus | null>(null);
+  const [stagingRun, setStagingRun] = useState<WorkflowRunStatus | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      const [quality, staging] = await Promise.all([
+        fetchLatestWorkflowRun('quality.yml'),
+        fetchLatestWorkflowRun('staging-preview.yml'),
+      ]);
+      setQualityRun(quality);
+      setStagingRun(staging);
+    })();
+  }, []);
 
   const generatedSlug = useMemo(() => slugify(gameName), [gameName]);
   const gameMetaTitle = useMemo(
@@ -68,6 +120,55 @@ export default function AdminGuidePage() {
             <Link href="/kik/proekty" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
               Перевірити проєкти KIK
             </Link>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Стан перевірок</h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="font-semibold text-slate-900">Quality Gate</p>
+                <span className={`text-xs px-2 py-1 rounded-full ${statusClass(qualityRun)}`}>
+                  {statusLabel(qualityRun)}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">
+                {qualityRun
+                  ? `Гілка: ${qualityRun.head_branch} • ${new Date(qualityRun.created_at).toLocaleString('uk-UA')}`
+                  : 'Не вдалося отримати дані workflow.'}
+              </p>
+              <a
+                href={qualityRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/quality.yml`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-slate-900 underline"
+              >
+                Відкрити workflow
+              </a>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="font-semibold text-slate-900">Staging Preview</p>
+                <span className={`text-xs px-2 py-1 rounded-full ${statusClass(stagingRun)}`}>
+                  {statusLabel(stagingRun)}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">
+                {stagingRun
+                  ? `Гілка: ${stagingRun.head_branch} • ${new Date(stagingRun.created_at).toLocaleString('uk-UA')}`
+                  : 'Не вдалося отримати дані workflow.'}
+              </p>
+              <a
+                href={stagingRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/staging-preview.yml`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-slate-900 underline"
+              >
+                Відкрити preview run
+              </a>
+            </div>
           </div>
         </div>
 
