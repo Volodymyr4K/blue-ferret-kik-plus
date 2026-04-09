@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import uiContent from '@/data/ui-content';
 
@@ -199,14 +200,15 @@ export default function RotatableBox({
         {/* ─── Front ─── */}
         <div style={face(W, H, `translateZ(${D / 2}px)`, color)}>
           {frontImage ? (
-            <img
+            <Image
               src={frontImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="eager"
-              decoding="async"
+              priority
             />
           ) : (
             <span className="absolute inset-0 flex items-center justify-center text-white/40 font-bold">
@@ -236,14 +238,14 @@ export default function RotatableBox({
         {/* ─── Back ─── */}
         <div style={face(W, H, `rotateY(180deg) translateZ(${D / 2}px)`, shade(0.85))}>
           {backImage ? (
-            <img
+            <Image
               src={backImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="lazy"
-              decoding="async"
             />
           ) : (
             <div
@@ -278,14 +280,14 @@ export default function RotatableBox({
         {/* ─── Right side ─── */}
         <div style={face(D, H, `rotateY(90deg) translateZ(${W / 2}px)`, shade(0.78))}>
           {rightSideImage ? (
-            <img
+            <Image
               src={rightSideImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="lazy"
-              decoding="async"
             />
           ) : (
             <>
@@ -324,14 +326,14 @@ export default function RotatableBox({
         {/* ─── Left side ─── */}
         <div style={face(D, H, `rotateY(-90deg) translateZ(${W / 2}px)`, shade(0.78))}>
           {leftSideImage ? (
-            <img
+            <Image
               src={leftSideImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="lazy"
-              decoding="async"
             />
           ) : (
             <>
@@ -370,14 +372,14 @@ export default function RotatableBox({
         {/* ─── Top ─── */}
         <div style={face(W, D, `rotateX(90deg) translateZ(${H / 2}px)`, shade(0.92))}>
           {topImage ? (
-            <img
+            <Image
               src={topImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, transform: 'none', filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="lazy"
-              decoding="async"
             />
           ) : (
             <div
@@ -399,14 +401,14 @@ export default function RotatableBox({
         {/* ─── Bottom ─── */}
         <div style={face(W, D, `rotateX(-90deg) translateZ(${H / 2}px)`, shade(0.45))}>
           {bottomImage ? (
-            <img
+            <Image
               src={bottomImage}
               alt=""
-              className="w-full h-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
               style={{ backgroundColor: panelTone, filter: 'saturate(1.04) contrast(1.03)' }}
               draggable={false}
-              loading="lazy"
-              decoding="async"
             />
           ) : (
             <div

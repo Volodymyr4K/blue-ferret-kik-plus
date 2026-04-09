@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Suspense } from 'react';
 import { motion, useInView, AnimatePresence } from 'motion/react';
 import { useRef, useEffect, useState } from 'react';
@@ -116,10 +117,12 @@ function GamesContent() {
                         style={{ backgroundColor: game.palette || '#283D57' }}
                       >
                         {game.heroImage && (
-                          <img
+                          <Image
                             src={game.heroImage}
                             alt={game.name}
-                            className="absolute inset-0 w-full h-full object-cover"
+                            fill
+                            sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            className="absolute inset-0 object-cover"
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
@@ -170,10 +173,12 @@ function GamesContent() {
                         style={{ backgroundColor: game.palette || '#283D57' }}
                       >
                         {game.heroImage && (
-                          <img
+                          <Image
                             src={game.heroImage}
                             alt={game.name}
-                            className="absolute inset-0 w-full h-full object-cover"
+                            fill
+                            sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            className="absolute inset-0 object-cover"
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />

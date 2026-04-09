@@ -25,6 +25,19 @@ type StageKey = (typeof STAGE_ORDER)[number];
 
 /* ───── helpers ───── */
 
+const hex2rgb = (hex: string) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return { r, g, b };
+};
+
+const darken = (hex: string, factor: number) => {
+  const { r, g, b } = hex2rgb(hex);
+  const f = factor;
+  return `rgb(${Math.round(r * f)},${Math.round(g * f)},${Math.round(b * f)})`;
+};
+
 function SkeletonLines({ count = 3, maxWidth = 100 }: { count?: number; maxWidth?: number }) {
   return (
     <div className="space-y-3 mt-4">
@@ -105,19 +118,6 @@ export default function GamePageClient({ game }: { game: Game }) {
       ];
   const stageBadgeLabels = uiContent.gamePage.stageBadge;
   const statusLabels = uiContent.gamePage.statusLabels;
-
-  // Generate dark theme colors from palette
-  const hex2rgb = (hex: string) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return { r, g, b };
-  };
-  const darken = (hex: string, factor: number) => {
-    const { r, g, b } = hex2rgb(hex);
-    const f = factor;
-    return `rgb(${Math.round(r * f)},${Math.round(g * f)},${Math.round(b * f)})`;
-  };
 
   // Theme colors derived from palette
   const bg1 = darken(palette, 0.18);  // darkest — page bg
@@ -231,12 +231,13 @@ export default function GamePageClient({ game }: { game: Game }) {
                   )}
                 </video>
               ) : (
-                <img
-                  src={assets?.heroBackgroundFallback}
+                <Image
+                  src={assets?.heroBackgroundFallback || '/images/placeholder-game.svg'}
                   alt=""
-                  className="w-full h-full object-cover"
-                  loading="eager"
-                  decoding="async"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
                 />
               )}
             </div>
@@ -360,9 +361,11 @@ export default function GamePageClient({ game }: { game: Game }) {
           className="relative z-10 px-4"
         >
           {assets?.logo ? (
-            <img
+            <Image
               src={assets.logo}
               alt={game.name}
+              width={1400}
+              height={800}
               className="w-[min(88vw,400px)] sm:w-[500px] md:w-[600px] lg:w-[700px] h-auto drop-shadow-2xl"
             />
           ) : (
@@ -533,10 +536,12 @@ export default function GamePageClient({ game }: { game: Game }) {
         {assets?.aboutCharacters && (
           <div className="pointer-events-none absolute inset-0 z-0">
             {assets.aboutCharacters.map((src, index) => (
-              <img
+              <Image
                 key={`about-char-${src}`}
                 src={src}
                 alt=""
+                width={520}
+                height={520}
                 className={`${aboutCharacterClasses[index] || 'hidden'} select-none`}
                 style={{
                   opacity: 0.24,
@@ -558,9 +563,11 @@ export default function GamePageClient({ game }: { game: Game }) {
             className="flex justify-center mb-10 sm:mb-16"
           >
             {assets?.sectionTitle ? (
-                <img
+                <Image
                   src={assets.sectionTitle}
                   alt={uiContent.gamePage.aboutImageAlt}
+                  width={1000}
+                  height={400}
                   className="w-[220px] sm:w-[400px] md:w-[500px] h-auto"
                 />
               ) : (
@@ -656,10 +663,12 @@ export default function GamePageClient({ game }: { game: Game }) {
         {assets?.stageCharacters && (
           <div className="pointer-events-none absolute inset-0 z-0">
             {assets.stageCharacters.map((src, index) => (
-              <img
+              <Image
                 key={`stage-char-${src}`}
                 src={src}
                 alt=""
+                width={520}
+                height={520}
                 className={`${stageCharacterClasses[index] || 'hidden'} select-none`}
                 style={{
                   opacity: 0.2,

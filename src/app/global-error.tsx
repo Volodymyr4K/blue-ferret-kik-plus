@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import uiContent from '@/data/ui-content';
 
 export default function GlobalError({
@@ -9,6 +10,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
     <html lang="uk">
       <body className="min-h-screen flex flex-col items-center justify-center bg-slate-50 px-4">

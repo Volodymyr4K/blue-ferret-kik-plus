@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import type { Project } from '@/data/projects';
@@ -20,10 +21,12 @@ export default function ProjectCard({ project }: { project: Project }) {
     >
       <div className="aspect-[16/10] min-h-[190px] relative overflow-hidden bg-gradient-to-br from-emerald-800/95 via-teal-900/90 to-slate-900">
         {project.coverImage && (
-          <img
+          <Image
             src={project.coverImage}
             alt={project.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="(min-width: 1024px) 420px, (min-width: 640px) 50vw, 100vw"
+            className="absolute inset-0 object-cover"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-slate-900/10 to-transparent" />
