@@ -156,6 +156,7 @@ const projectSchema = z
 const gameBasicOverrideSchema = z
   .object({
     id: slugSchema,
+    slug: slugSchema,
     name: nonEmptyText,
     slogan: optionalText,
     shortDescription: nonEmptyText,
@@ -163,7 +164,18 @@ const gameBasicOverrideSchema = z
     status: z.enum(['announcement', 'production', 'preorder', 'onsale']),
     heroImage: optionalMediaPathSchema,
     coverImage: optionalMediaPathSchema,
+    palette: hexColorSchema.optional(),
+    accent: hexColorSchema.optional(),
     price: z.number().finite().min(0).optional(),
+    passport: gamePassportSchema.optional(),
+    stages: z
+      .object({
+        announcement: gameStageSchema,
+        production: gameStageSchema,
+        preorder: gameStageSchema,
+        onsale: gameStageSchema,
+      })
+      .strict(),
   })
   .strict();
 
@@ -176,9 +188,12 @@ const projectBasicOverrideSchema = z
     statusLabel: nonEmptyText,
     raised: z.number().finite().min(0),
     goal: z.number().finite().min(0),
+    currency: z.enum(['UAH']),
     lastUpdate: dateSchema,
     updatePreview: nonEmptyText,
     coverImage: optionalMediaPathSchema,
+    link: internalPathSchema,
+    support: projectSupportSchema.optional(),
   })
   .strict()
   .refine((value) => value.goal >= value.raised, {

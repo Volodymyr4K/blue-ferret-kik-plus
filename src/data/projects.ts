@@ -25,9 +25,12 @@ const projects = ProjectsSchema.parse(
       statusLabel: override.statusLabel,
       raised: override.raised,
       goal: override.goal,
+      currency: override.currency,
       lastUpdate: override.lastUpdate,
       updatePreview: override.updatePreview,
       coverImage: override.coverImage,
+      link: override.link,
+      support: override.support,
     };
   })
 );

@@ -1,6 +1,7 @@
 [
   {
     "id": "trymaysia",
+    "slug": "trymaysia",
     "name": "Тримайся",
     "slogan": "За все, що можеш!",
     "shortDescription": "Динамічна командна гра на реакцію та спритність — хапайся за мотузку і тримайся до кінця! Для всіх, хто любить активний відпочинок, сміх і азарт.",
@@ -8,10 +9,48 @@
     "status": "announcement",
     "heroImage": "/images/trymaysia/moryaky.gif",
     "coverImage": "/images/trymaysia/box-front-v6.png",
-    "price": 599
+    "palette": "#283D57",
+    "accent": "#3d6b8a",
+    "price": 599,
+    "passport": {
+      "players": "2–5 гравців",
+      "duration": "~15 хв",
+      "age": "Від 6+",
+      "author": "Рогачова Вероніка"
+    },
+    "stages": {
+      "announcement": {
+        "state": "active",
+        "title": "Анонс",
+        "content": "Ми раді представити «Тримайся» — динамічну настільну гру, натхненну духом морських пригод! Хапайтеся за мотузку і не відпускайте — хто протримається довше? Авторська розробка Рогачової Вероніки, яка поєднала простоту правил, захопливу механіку і теплу атмосферу командної гри.",
+        "image": "/images/trymaysia/box-front-v6.png"
+      },
+      "production": {
+        "state": "locked",
+        "title": "Виробництво",
+        "content": "Зараз «Тримайся» активно готується до виходу. Ми ретельно контролюємо кожен етап: від друку коробок до якості мотузок і карток. Морська тематика — в кожній деталі пакування та ілюстрацій. Фото з виробництва з'являться незабаром!",
+        "lastUpdate": "2026-03-15",
+        "image": "/images/trymaysia/box-front-v6.png"
+      },
+      "preorder": {
+        "state": "locked",
+        "title": "Передзамовлення",
+        "content": "Скоро з'явиться можливість передзамовлення. Підпишіться на оновлення, щоб не пропустити.",
+        "ctaText": "Передзамовити",
+        "ctaLink": "#"
+      },
+      "onsale": {
+        "state": "locked",
+        "title": "У вільному продажі",
+        "content": "Гра буде доступна у вільному продажі після завершення передзамовлення.",
+        "ctaText": "Придбати",
+        "ctaLink": "#"
+      }
+    }
   },
   {
     "id": "second-game",
+    "slug": "druha-gra",
     "name": "Друга гра",
     "slogan": "Кожен хід — нова історія",
     "shortDescription": "Стратегічна гра для 2–4 гравців. Унікальна механіка, продуманий баланс та висока реіграбельність. Ідеально для вечорів з друзями.",
@@ -19,10 +58,41 @@
     "status": "announcement",
     "heroImage": "/images/placeholder-game.svg",
     "coverImage": "",
-    "price": 0
+    "palette": "#8B7355",
+    "accent": "#A0845C",
+    "price": 0,
+    "passport": {},
+    "stages": {
+      "announcement": {
+        "state": "active",
+        "title": "Анонс",
+        "content": "Ми готуємо нову гру! Це буде стратегічна настільна гра з унікальною механікою та авторським стилем. Деталі незабаром.",
+        "image": "/images/placeholder-game.svg"
+      },
+      "production": {
+        "state": "locked",
+        "title": "Виробництво",
+        "content": ""
+      },
+      "preorder": {
+        "state": "locked",
+        "title": "Передзамовлення",
+        "content": "",
+        "ctaText": "Передзамовити",
+        "ctaLink": "#"
+      },
+      "onsale": {
+        "state": "locked",
+        "title": "У вільному продажі",
+        "content": "",
+        "ctaText": "Придбати",
+        "ctaLink": "#"
+      }
+    }
   },
   {
     "id": "third-game",
+    "slug": "tretya-gra",
     "name": "Третя гра",
     "slogan": "Об'єднайся з друзями",
     "shortDescription": "Кооперативна гра для всієї родини. Разом подолайте випробування, розгадайте загадки та досягніть спільної мети.",
@@ -30,6 +100,36 @@
     "status": "announcement",
     "heroImage": "/images/placeholder-game.svg",
     "coverImage": "",
-    "price": 0
+    "palette": "#0f4c3a",
+    "accent": "#1a6b4f",
+    "price": 0,
+    "passport": {},
+    "stages": {
+      "announcement": {
+        "state": "active",
+        "title": "Анонс",
+        "content": "Нова кооперативна гра в розробці. Тепла атмосфера, цікаві механіки та ілюстрації, що зачаровують. Слідкуйте за оновленнями!",
+        "image": "/images/placeholder-game.svg"
+      },
+      "production": {
+        "state": "locked",
+        "title": "Виробництво",
+        "content": ""
+      },
+      "preorder": {
+        "state": "locked",
+        "title": "Передзамовлення",
+        "content": "",
+        "ctaText": "Передзамовити",
+        "ctaLink": "#"
+      },
+      "onsale": {
+        "state": "locked",
+        "title": "У вільному продажі",
+        "content": "",
+        "ctaText": "Придбати",
+        "ctaLink": "#"
+      }
+    }
   }
 ]

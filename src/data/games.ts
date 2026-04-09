@@ -19,6 +19,7 @@ const games = GamesSchema.parse(
 
     return {
       ...game,
+      slug: override.slug,
       name: override.name,
       slogan: override.slogan,
       shortDescription: override.shortDescription,
@@ -26,7 +27,11 @@ const games = GamesSchema.parse(
       status: override.status,
       heroImage: override.heroImage,
       coverImage: override.coverImage,
+      palette: override.palette,
+      accent: override.accent,
       price: override.price,
+      passport: override.passport,
+      stages: override.stages,
     };
   })
 );
