@@ -1,0 +1,32 @@
+name: Content Incident
+description: Повідомлення про інцидент після контентного оновлення
+title: "[Incident] "
+labels: ["incident", "content"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Що сталось
+      description: Коротко опиши проблему
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Вплив
+      description: Які сторінки/користувачі зачеплено
+    validations:
+      required: true
+  - type: textarea
+    id: root-cause
+    attributes:
+      label: Ймовірна причина
+      description: Що могло призвести до інциденту
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Як виправили / як плануєте виправити
+    validations:
+      required: true

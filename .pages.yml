@@ -120,10 +120,443 @@ content:
     label: Основний контент сайту
     type: file
     path: src/content/site-content.json
-    format: raw
+    format: json
+    fields:
+      - name: brand
+        label: Бренд
+        type: object
+        fields:
+          - { name: name, label: Назва бренду, type: string, required: true }
+          - { name: tagline, label: Tagline, type: string, required: true }
+          - { name: description, label: Опис бренду, type: text, required: true }
+          - { name: heroSubtitle, label: Hero підзаголовок, type: string, required: true }
+          - { name: heroDescription, label: Hero опис, type: text, required: true }
+          - { name: brandWords, label: Слова бренду, type: string, list: true }
+          - { name: antiWords, label: Анти-слова бренду, type: string, list: true }
+      - name: kik
+        label: KIK
+        type: object
+        fields:
+          - { name: name, label: Назва KIK, type: string, required: true }
+          - { name: tagline, label: Tagline KIK, type: string, required: true }
+          - { name: description, label: Опис KIK, type: text, required: true }
+          - name: proKik
+            label: Тексти сторінки Про KIK
+            type: object
+            fields:
+              - { name: intro, label: Intro, type: text, required: true }
+              - { name: story, label: Story, type: text, required: true }
+              - { name: benefit, label: Benefit, type: text, required: true }
+              - { name: trust, label: Trust, type: text, required: true }
+      - name: about
+        label: Хто ми
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string, required: true }
+          - { name: subtitle, label: Підзаголовок, type: string, required: true }
+          - { name: intro, label: Intro, type: text, required: true }
+          - { name: paragraph2, label: Параграф 2, type: text, required: true }
+          - { name: paragraph3, label: Параграф 3, type: text, required: true }
+      - name: values
+        label: Цінності
+        type: object
+        fields:
+          - { name: title, label: Заголовок блоку, type: string, required: true }
+          - name: items
+            label: Пункти цінностей
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Назва, type: string, required: true }
+              - { name: description, label: Опис, type: text, required: true }
+      - name: approach
+        label: Підхід
+        type: object
+        fields:
+          - { name: title, label: Заголовок блоку, type: string, required: true }
+          - { name: items, label: Пункти підходу, type: string, list: true }
+      - name: nav
+        label: Навігація (контентні джерела)
+        type: object
+        fields:
+          - { name: blueFerret, label: Blue Ferret меню, type: string, list: true }
+          - { name: kik, label: KIK меню, type: string, list: true }
+      - name: contacts
+        label: Контакти
+        type: object
+        fields:
+          - { name: email, label: Email, type: string, required: true }
+          - { name: phone, label: Телефон, type: string, required: true }
+          - { name: address, label: Адреса, type: string, required: true }
+          - { name: intro, label: Intro, type: text, required: true }
+          - { name: partnership, label: Партнерство текст, type: text, required: true }
+          - name: social
+            label: Соцмережі
+            type: object
+            fields:
+              - { name: instagram, label: Instagram URL, type: string, required: true }
+              - { name: facebook, label: Facebook URL, type: string, required: true }
+              - { name: telegram, label: Telegram URL, type: string, required: true }
+      - name: cta
+        label: CTA блок
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string, required: true }
+          - { name: subtitle, label: Підзаголовок, type: string, required: true }
+          - { name: description, label: Опис, type: text, required: true }
+      - name: pillars
+        label: Pillars
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Заголовок, type: string, required: true }
+          - { name: description, label: Опис, type: text, required: true }
+          - { name: href, label: Посилання (internal), type: string, required: true }
+          - { name: icon, label: Іконка ID, type: string, required: true }
+      - name: testimonial
+        label: Відгуки
+        type: object
+        list: true
+        fields:
+          - { name: quote, label: Цитата, type: text, required: true }
+          - { name: author, label: Автор, type: string, required: true }
+          - { name: role, label: Роль, type: string }
 
   - name: uiContent
     label: UI тексти
     type: file
     path: src/content/ui-content.json
-    format: raw
+    format: json
+    fields:
+      - name: metadata
+        label: Metadata
+        type: object
+        fields:
+          - { name: siteTitle, label: Site title, type: string, required: true }
+          - { name: siteDescription, label: Site description, type: text, required: true }
+          - { name: openGraphTitle, label: OG title, type: string, required: true }
+          - { name: openGraphDescription, label: OG description, type: text, required: true }
+          - { name: gamesTitle, label: Games title, type: string, required: true }
+          - { name: gamesDescription, label: Games description, type: text, required: true }
+          - { name: kikTitle, label: KIK title, type: string, required: true }
+          - { name: kikDescription, label: KIK description, type: text, required: true }
+          - { name: kikProjectsTitle, label: KIK projects title, type: string, required: true }
+          - { name: kikProjectsDescription, label: KIK projects description, type: text, required: true }
+          - { name: contactsTitle, label: Contacts title, type: string, required: true }
+          - { name: contactsDescription, label: Contacts description, type: text, required: true }
+          - { name: gameNotFoundTitle, label: Game not found title, type: string, required: true }
+          - { name: gameTitleTemplate, label: Game title template, type: string, required: true }
+          - { name: projectTitleTemplate, label: Project title template, type: string, required: true }
+          - { name: projectSupportTitleTemplate, label: Project support title template, type: string, required: true }
+      - name: branding
+        label: Branding UI
+        type: object
+        fields:
+          - { name: logoHomeAria, label: Logo aria, type: string, required: true }
+          - { name: publisherLabel, label: Publisher label, type: string, required: true }
+          - { name: kikLogoAlt, label: KIK logo alt, type: string, required: true }
+          - { name: defaultSideLabel, label: Default side label, type: string, required: true }
+      - name: navbar
+        label: Navbar UI
+        type: object
+        fields:
+          - { name: home, label: Home, type: string, required: true }
+          - { name: games, label: Games, type: string, required: true }
+          - { name: allGames, label: All games, type: string, required: true }
+          - { name: contacts, label: Contacts, type: string, required: true }
+          - { name: kik, label: KIK, type: string, required: true }
+          - { name: mobileKikSection, label: Mobile KIK section, type: string, required: true }
+          - { name: mobileGamesSection, label: Mobile games section, type: string, required: true }
+          - { name: trymaysiaLabel, label: Trymaysia label, type: string, required: true }
+          - { name: closeMenuAria, label: Close menu aria, type: string, required: true }
+          - { name: openMenuAria, label: Open menu aria, type: string, required: true }
+          - { name: closeMobileMenuAria, label: Close mobile menu aria, type: string, required: true }
+      - name: footer
+        label: Footer UI
+        type: object
+        fields:
+          - { name: navigationTitle, label: Navigation title, type: string, required: true }
+          - { name: contactTitle, label: Contact title, type: string, required: true }
+          - { name: home, label: Home label, type: string, required: true }
+          - { name: games, label: Games label, type: string, required: true }
+          - { name: kik, label: KIK label, type: string, required: true }
+          - { name: contacts, label: Contacts label, type: string, required: true }
+          - { name: rights, label: Rights text, type: string, required: true }
+      - name: kikNav
+        label: KIK nav UI
+        type: object
+        fields:
+          - { name: backHomeAria, label: Back home aria, type: string, required: true }
+          - { name: about, label: About label, type: string, required: true }
+          - { name: projects, label: Projects label, type: string, required: true }
+      - name: home
+        label: Home UI
+        type: object
+        fields:
+          - { name: ctaPrimary, label: CTA primary, type: string, required: true }
+          - { name: ctaSecondary, label: CTA secondary, type: string, required: true }
+          - { name: pillarMore, label: Pillar more, type: string, required: true }
+          - { name: valuesSubtitle, label: Values subtitle, type: string, required: true }
+          - { name: previewGamesTitle, label: Preview games title, type: string, required: true }
+          - { name: previewGamesDescription, label: Preview games description, type: text, required: true }
+          - { name: previewGamesAction, label: Preview games action, type: string, required: true }
+          - { name: previewKikTitle, label: Preview KIK title, type: string, required: true }
+          - { name: previewKikDescription, label: Preview KIK description, type: text, required: true }
+          - { name: previewKikAction, label: Preview KIK action, type: string, required: true }
+          - { name: ctaPrimaryLarge, label: CTA primary large, type: string, required: true }
+          - { name: ctaSecondaryLarge, label: CTA secondary large, type: string, required: true }
+          - { name: ctaTertiary, label: CTA tertiary, type: string, required: true }
+          - name: fallbackPillars
+            label: Fallback pillars
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Title, type: string, required: true }
+              - { name: description, label: Description, type: text, required: true }
+              - { name: href, label: Href, type: string, required: true }
+              - { name: icon, label: Icon, type: string, required: true }
+          - name: fallbackCta
+            label: Fallback CTA
+            type: object
+            fields:
+              - { name: title, label: Title, type: string, required: true }
+              - { name: subtitle, label: Subtitle, type: string, required: true }
+              - { name: description, label: Description, type: text, required: true }
+      - name: gamesPage
+        label: Games page UI
+        type: object
+        fields:
+          - { name: paymentSuccess, label: Payment success, type: string, required: true }
+          - { name: badgeTitle, label: Badge title, type: string, required: true }
+          - { name: title, label: Title, type: string, required: true }
+          - { name: subtitle, label: Subtitle, type: text, required: true }
+          - { name: gamesCount, label: Games count label, type: string, required: true }
+          - { name: activeStages, label: Active stages label, type: string, required: true }
+          - { name: statusUpdates, label: Status updates label, type: string, required: true }
+          - { name: statusAnnouncement, label: Status announcement, type: string, required: true }
+          - { name: statusProduction, label: Status production, type: string, required: true }
+          - { name: statusPreorder, label: Status preorder, type: string, required: true }
+          - { name: statusOnsale, label: Status onsale, type: string, required: true }
+          - { name: details, label: Details label, type: string, required: true }
+          - { name: comingSoon, label: Coming soon label, type: string, required: true }
+          - { name: loading, label: Loading label, type: string, required: true }
+      - name: kikHome
+        label: KIK home UI
+        type: object
+        fields:
+          - { name: platformBadge, label: Platform badge, type: string, required: true }
+          - { name: facts, label: Facts list, type: string, list: true }
+          - { name: projectsButton, label: Projects button, type: string, required: true }
+          - { name: aboutButton, label: About button, type: string, required: true }
+          - { name: comicAltTemplate, label: Comic alt template, type: string, required: true }
+      - name: proKik
+        label: Pro KIK UI
+        type: object
+        fields:
+          - { name: badge, label: Badge, type: string, required: true }
+          - { name: title, label: Title, type: string, required: true }
+          - { name: authorFormButton, label: Author form button, type: string, required: true }
+          - { name: projectsButton, label: Projects button, type: string, required: true }
+          - { name: reasonsTitle, label: Reasons title, type: string, required: true }
+          - { name: processBadge, label: Process badge, type: string, required: true }
+          - { name: processTitle, label: Process title, type: string, required: true }
+          - { name: processButton, label: Process button, type: string, required: true }
+          - { name: afterApply, label: After apply text, type: text, required: true }
+          - name: fallback
+            label: Fallback тексти
+            type: object
+            fields:
+              - { name: intro, label: Intro fallback, type: text, required: true }
+              - { name: story, label: Story fallback, type: text, required: true }
+              - { name: benefit, label: Benefit fallback, type: text, required: true }
+              - { name: trust, label: Trust fallback, type: text, required: true }
+          - name: keyPoints
+            label: Ключові пункти
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Заголовок, type: string, required: true }
+              - { name: text, label: Текст, type: text, required: true }
+          - name: submissionSteps
+            label: Кроки подачі
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Заголовок, type: string, required: true }
+              - { name: text, label: Текст, type: text, required: true }
+      - name: contactsPage
+        label: Contacts page UI
+        type: object
+        fields:
+          - { name: label, label: Label, type: string, required: true }
+          - { name: title, label: Title, type: string, required: true }
+          - { name: instagramHandle, label: Instagram handle, type: string, required: true }
+          - { name: telegramAction, label: Telegram action, type: string, required: true }
+          - { name: partnershipTitle, label: Partnership title, type: string, required: true }
+          - { name: writeButton, label: Write button, type: string, required: true }
+      - name: projectsPage
+        label: Projects page UI
+        type: object
+        fields:
+          - { name: paymentSuccess, label: Payment success, type: string, required: true }
+          - { name: label, label: Label, type: string, required: true }
+          - { name: title, label: Title, type: string, required: true }
+          - { name: subtitle, label: Subtitle, type: text, required: true }
+          - { name: projectsCount, label: Projects count label, type: string, required: true }
+          - { name: activeCount, label: Active count label, type: string, required: true }
+          - { name: updates, label: Updates label, type: string, required: true }
+          - { name: loading, label: Loading label, type: string, required: true }
+      - name: projectCard
+        label: Project card UI
+        type: object
+        fields:
+          - { name: raised, label: Raised label, type: string, required: true }
+          - { name: update, label: Update label, type: string, required: true }
+          - { name: details, label: Details label, type: string, required: true }
+      - name: projectDetails
+        label: Project details UI
+        type: object
+        fields:
+          - { name: notFoundTitle, label: Not found title, type: string, required: true }
+          - { name: backToProjects, label: Back to projects, type: string, required: true }
+          - { name: updatePrefix, label: Update prefix, type: string, required: true }
+          - { name: pageBadge, label: Page badge, type: string, required: true }
+          - { name: raised, label: Raised label, type: string, required: true }
+          - { name: progress, label: Progress label, type: string, required: true }
+          - { name: prepare, label: Prepare label, type: string, required: true }
+          - { name: collecting, label: Collecting label, type: string, required: true }
+          - { name: production, label: Production label, type: string, required: true }
+          - { name: support, label: Support label, type: string, required: true }
+          - { name: supportSoon, label: Support soon label, type: string, required: true }
+          - { name: otherProjects, label: Other projects label, type: string, required: true }
+          - { name: howItWorks, label: How it works label, type: string, required: true }
+      - name: projectSupportPage
+        label: Project support page UI
+        type: object
+        fields:
+          - { name: fallbackTitle, label: Fallback title, type: string, required: true }
+          - { name: fallbackDescriptionTemplate, label: Fallback description template, type: string, required: true }
+          - { name: backToProject, label: Back to project, type: string, required: true }
+          - { name: titleTemplate, label: Title template, type: string, required: true }
+          - { name: subtitle, label: Subtitle, type: text, required: true }
+          - { name: howItWorks, label: How it works label, type: string, required: true }
+          - { name: supportLockedBadge, label: Support locked badge, type: string, required: true }
+          - { name: supportLockedTitle, label: Support locked title, type: string, required: true }
+          - { name: supportLockedDescription, label: Support locked description, type: text, required: true }
+          - { name: backButton, label: Back button, type: string, required: true }
+      - name: supportOptions
+        label: Support options UI
+        type: object
+        fields:
+          - { name: minDonationErrorTemplate, label: Min donation error template, type: string, required: true }
+          - { name: createFailed, label: Create failed text, type: string, required: true }
+          - { name: missingPaymentLink, label: Missing payment link text, type: string, required: true }
+          - { name: paymentError, label: Payment error text, type: string, required: true }
+          - { name: withoutRewardTitle, label: Without reward title, type: string, required: true }
+          - { name: withoutRewardDescriptionTemplate, label: Without reward description template, type: text, required: true }
+          - { name: amountAria, label: Amount aria, type: string, required: true }
+          - { name: withoutRewardButtonLabel, label: Without reward button label, type: string, required: true }
+          - { name: supportButton, label: Support button label, type: string, required: true }
+          - { name: creating, label: Creating text, type: string, required: true }
+          - { name: featured, label: Featured label, type: string, required: true }
+      - name: gamePage
+        label: Game page UI
+        type: object
+        fields:
+          - { name: highlightsTrymaysia, label: Highlights Trymaysia, type: string, list: true }
+          - { name: highlightsDefault, label: Highlights default, type: string, list: true }
+          - name: stageBadge
+            label: Stage badge labels
+            type: object
+            fields:
+              - { name: active, label: Active, type: string, required: true }
+              - { name: locked, label: Locked, type: string, required: true }
+              - { name: archived, label: Archived, type: string, required: true }
+              - { name: hidden, label: Hidden, type: string, required: true }
+          - name: statusLabels
+            label: Status labels
+            type: object
+            fields:
+              - { name: announcement, label: Announcement, type: string, required: true }
+              - { name: production, label: Production, type: string, required: true }
+              - { name: preorder, label: Preorder, type: string, required: true }
+              - { name: onsale, label: Onsale, type: string, required: true }
+          - { name: dive, label: Dive label, type: string, required: true }
+          - { name: aboutLabel, label: About label, type: string, required: true }
+          - { name: passportTitle, label: Passport title, type: string, required: true }
+          - { name: passportSubtitleTemplate, label: Passport subtitle template, type: string, required: true }
+          - name: passportStats
+            label: Passport stats labels
+            type: object
+            fields:
+              - { name: players, label: Players, type: string, required: true }
+              - { name: duration, label: Duration, type: string, required: true }
+              - { name: age, label: Age, type: string, required: true }
+              - { name: author, label: Author, type: string, required: true }
+          - { name: projectState, label: Project state label, type: string, required: true }
+          - { name: readinessTemplate, label: Readiness template, type: string, required: true }
+          - { name: stagesOpenTemplate, label: Stages open template, type: string, required: true }
+          - { name: aboutImageAlt, label: About image alt, type: string, required: true }
+          - { name: aboutFallbackTitle, label: About fallback title, type: string, required: true }
+          - { name: progressLabel, label: Progress label, type: string, required: true }
+          - { name: stagesTitle, label: Stages title, type: string, required: true }
+          - { name: stagesSubtitle, label: Stages subtitle, type: string, required: true }
+          - { name: previewFallback, label: Preview fallback, type: string, required: true }
+          - { name: clickToOpen, label: Click to open, type: string, required: true }
+          - { name: sectionNotFilled, label: Section not filled, type: string, required: true }
+      - name: orderModal
+        label: Order modal UI
+        type: object
+        fields:
+          - { name: createPaymentError, label: Create payment error, type: string, required: true }
+          - { name: missingPaymentLink, label: Missing payment link, type: string, required: true }
+          - { name: paymentError, label: Payment error, type: string, required: true }
+          - { name: title, label: Title, type: string, required: true }
+          - { name: closeAria, label: Close aria, type: string, required: true }
+          - { name: gamePrefix, label: Game prefix, type: string, required: true }
+          - { name: monoText, label: Mono text, type: string, required: true }
+          - { name: monoBrand, label: Mono brand, type: string, required: true }
+          - { name: creating, label: Creating text, type: string, required: true }
+          - { name: payButtonTemplate, label: Pay button template, type: string, required: true }
+          - { name: safePayment, label: Safe payment text, type: string, required: true }
+          - { name: requestInstead, label: Request instead text, type: string, required: true }
+          - { name: requestOnly, label: Request only text, type: string, required: true }
+          - { name: placeholderName, label: Placeholder name, type: string, required: true }
+          - { name: placeholderPhone, label: Placeholder phone, type: string, required: true }
+          - { name: placeholderEmail, label: Placeholder email, type: string, required: true }
+          - { name: placeholderAddress, label: Placeholder address, type: string, required: true }
+          - { name: placeholderComment, label: Placeholder comment, type: string, required: true }
+          - { name: submitRequest, label: Submit request label, type: string, required: true }
+      - name: monoApi
+        label: Mono API UI
+        type: object
+        fields:
+          - { name: paymentsDisabled, label: Payments disabled text, type: string, required: true }
+          - { name: notConfigured, label: Not configured text, type: string, required: true }
+          - { name: minAmount, label: Min amount text, type: string, required: true }
+          - { name: destinationPrefix, label: Destination prefix, type: string, required: true }
+          - { name: defaultOrder, label: Default order text, type: string, required: true }
+          - { name: defaultComment, label: Default comment text, type: string, required: true }
+          - { name: defaultItemName, label: Default item name, type: string, required: true }
+          - { name: unit, label: Unit label, type: string, required: true }
+          - { name: monoApiError, label: Mono API error text, type: string, required: true }
+          - { name: createInvoiceError, label: Create invoice error text, type: string, required: true }
+      - name: errors
+        label: Error pages UI
+        type: object
+        fields:
+          - { name: notFoundTitle, label: Not found title, type: string, required: true }
+          - { name: notFoundDescription, label: Not found description, type: text, required: true }
+          - { name: toHome, label: To home label, type: string, required: true }
+          - { name: toGames, label: To games label, type: string, required: true }
+          - { name: brandLine, label: Brand line, type: string, required: true }
+          - { name: errorTitle, label: Error title, type: string, required: true }
+          - { name: errorDescription, label: Error description, type: text, required: true }
+          - { name: tryAgain, label: Try again label, type: string, required: true }
+          - { name: home, label: Home label, type: string, required: true }
+          - { name: games, label: Games label, type: string, required: true }
+          - { name: kik, label: KIK label, type: string, required: true }
+          - { name: globalErrorTitle, label: Global error title, type: string, required: true }
+          - { name: globalErrorDescription, label: Global error description, type: text, required: true }
+          - { name: gamesErrorTitle, label: Games error title, type: string, required: true }
+          - { name: gamesErrorDescription, label: Games error description, type: text, required: true }

@@ -66,6 +66,9 @@ npm run check    # Повна перевірка: content schema + typecheck + l
   - `src/content/games.json`
   - `src/content/projects.json`
   - `src/content/site-content.json`
+  - `src/content/ui-content.json`
+
+`site-content` та `ui-content` налаштовано як структуровані форми (без raw JSON) для безпечнішого редагування менеджером.
 
 Підключення:
 
@@ -83,6 +86,9 @@ npm run check    # Повна перевірка: content schema + typecheck + l
   - `.github/workflows/quality.yml`
   - `.github/workflows/security-audit.yml`
 - Dependabot увімкнено: `.github/dependabot.yml`
+- Шаблон PR для контенту: `.github/pull_request_template.md`
+- Runbook для менеджера: `RUNBOOK.md`
+- Шаблон інцидентів: `.github/ISSUE_TEMPLATE/content-incident.yml`
 
 ## Обов'язкові GitHub налаштування (ручні)
 
