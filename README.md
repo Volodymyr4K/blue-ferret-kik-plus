@@ -87,6 +87,10 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 - Валідація контенту (strict schema): `npm run validate:content`
 - Типи: `npm run typecheck`
 - Лінт: `npm run lint`
+- Валідація медіа/лінків/copy-лімітів:
+  - `npm run validate:media`
+  - `npm run validate:links`
+  - `npm run validate:copy`
 - CI workflow:
   - `.github/workflows/quality.yml`
   - `.github/workflows/security-audit.yml`

@@ -8,7 +8,9 @@
     "typecheck": "tsc --noEmit",
     "validate:content": "tsx scripts/validate-content.ts",
     "validate:media": "tsx scripts/validate-media.ts",
-    "check": "npm run validate:content && npm run validate:media && npm run typecheck && npm run lint && npm run build",
+    "validate:links": "tsx scripts/validate-links.ts",
+    "validate:copy": "tsx scripts/validate-copy.ts",
+    "check": "npm run validate:content && npm run validate:media && npm run validate:links && npm run validate:copy && npm run typecheck && npm run lint && npm run build",
     "start": "next start",
     "lint": "eslint"
   },

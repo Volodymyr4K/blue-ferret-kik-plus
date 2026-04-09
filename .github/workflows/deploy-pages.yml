@@ -36,6 +36,12 @@ jobs:
       - name: Validate media
         run: npm run validate:media
 
+      - name: Validate links
+        run: npm run validate:links
+
+      - name: Validate copy limits
+        run: npm run validate:copy
+
       - name: Type check
         run: npm run typecheck
 

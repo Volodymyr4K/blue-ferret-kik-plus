@@ -6,7 +6,7 @@
 2. Працювати в гілці `staging` (не в `main`).
 3. Внести зміни у поля в CMS.
 4. Створити PR `staging` → `main`.
-5. Дочекатися зеленого `Quality Gate`.
+5. Дочекатися зеленого `Quality Gate` (включає content/media/links/copy-check).
 6. Попросити рев'ю і тільки тоді merge.
 7. За потреби взяти preview-артефакт із workflow `Staging Preview Build`.
 
