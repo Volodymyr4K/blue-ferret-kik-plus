@@ -17,7 +17,11 @@ content:
         list: true
         fields:
           - { name: id, label: ID, type: string, required: true }
-          - { name: slug, label: Slug, type: string, required: true }
+          - name: slug
+            label: Slug (латиниця)
+            type: string
+            required: true
+            description: "Лише маленькі латинські букви, цифри і дефіс. Підказка: скористайтесь /admin-guide."
           - { name: name, label: Назва, type: string, required: true }
           - { name: slogan, label: Слоган, type: string }
           - { name: shortDescription, label: Короткий опис, type: text, required: true }
@@ -58,9 +62,15 @@ content:
                   - { name: title, label: Заголовок, type: string, required: true }
                   - { name: content, label: Контент, type: text }
                   - { name: image, label: Зображення, type: image }
-                  - { name: lastUpdate, label: Останнє оновлення (YYYY-MM-DD), type: string }
+                  - name: lastUpdate
+                    label: Останнє оновлення (YYYY-MM-DD)
+                    type: string
+                    description: "Формат дати: 2026-04-09"
                   - { name: ctaText, label: Текст кнопки, type: string }
-                  - { name: ctaLink, label: Посилання кнопки, type: string }
+                  - name: ctaLink
+                    label: Посилання кнопки
+                    type: string
+                    description: "Дозволено: /internal-path, https://..., mailto:..., tel:..."
               - name: production
                 label: Виробництво
                 type: object
@@ -94,10 +104,18 @@ content:
           - { name: raised, label: Зібрано, type: number, required: true }
           - { name: goal, label: Ціль, type: number, required: true }
           - { name: currency, label: Валюта, type: string, required: true }
-          - { name: lastUpdate, label: Дата оновлення (YYYY-MM-DD), type: string, required: true }
+          - name: lastUpdate
+            label: Дата оновлення (YYYY-MM-DD)
+            type: string
+            required: true
+            description: "Формат дати: 2026-04-09"
           - { name: updatePreview, label: Опис оновлення, type: text, required: true }
           - { name: coverImage, label: Обкладинка, type: image }
-          - { name: link, label: Посилання, type: string, required: true }
+          - name: link
+            label: Посилання (всередині сайту)
+            type: string
+            required: true
+            description: "Формат: /kik/proekty/{id}"
           - name: support
             label: Параметри підтримки
             type: object
@@ -195,8 +213,8 @@ content:
             type: object
             fields:
               - { name: instagram, label: Instagram URL, type: string, required: true }
-              - { name: facebook, label: Facebook URL, type: string, required: true }
-              - { name: telegram, label: Telegram URL, type: string, required: true }
+              - { name: facebook, label: Facebook URL, type: string, required: true, description: "Лише https:// посилання" }
+              - { name: telegram, label: Telegram URL, type: string, required: true, description: "Лише https:// посилання" }
       - name: cta
         label: CTA блок
         type: object
@@ -229,7 +247,7 @@ content:
     format: json
     fields:
       - name: metadata
-        label: Metadata
+        label: Мета-дані SEO
         type: object
         fields:
           - { name: siteTitle, label: Site title, type: string, required: true }
@@ -249,7 +267,7 @@ content:
           - { name: projectTitleTemplate, label: Project title template, type: string, required: true }
           - { name: projectSupportTitleTemplate, label: Project support title template, type: string, required: true }
       - name: branding
-        label: Branding UI
+        label: Бренд-елементи UI
         type: object
         fields:
           - { name: logoHomeAria, label: Logo aria, type: string, required: true }
@@ -257,7 +275,7 @@ content:
           - { name: kikLogoAlt, label: KIK logo alt, type: string, required: true }
           - { name: defaultSideLabel, label: Default side label, type: string, required: true }
       - name: navbar
-        label: Navbar UI
+        label: Верхнє меню
         type: object
         fields:
           - { name: home, label: Home, type: string, required: true }
@@ -272,7 +290,7 @@ content:
           - { name: openMenuAria, label: Open menu aria, type: string, required: true }
           - { name: closeMobileMenuAria, label: Close mobile menu aria, type: string, required: true }
       - name: footer
-        label: Footer UI
+        label: Footer меню
         type: object
         fields:
           - { name: navigationTitle, label: Navigation title, type: string, required: true }
@@ -283,14 +301,14 @@ content:
           - { name: contacts, label: Contacts label, type: string, required: true }
           - { name: rights, label: Rights text, type: string, required: true }
       - name: kikNav
-        label: KIK nav UI
+        label: Меню KIK
         type: object
         fields:
           - { name: backHomeAria, label: Back home aria, type: string, required: true }
           - { name: about, label: About label, type: string, required: true }
           - { name: projects, label: Projects label, type: string, required: true }
       - name: home
-        label: Home UI
+        label: Головна сторінка UI
         type: object
         fields:
           - { name: ctaPrimary, label: CTA primary, type: string, required: true }
@@ -323,7 +341,7 @@ content:
               - { name: subtitle, label: Subtitle, type: string, required: true }
               - { name: description, label: Description, type: text, required: true }
       - name: gamesPage
-        label: Games page UI
+        label: Сторінка ігор UI
         type: object
         fields:
           - { name: paymentSuccess, label: Payment success, type: string, required: true }
@@ -341,7 +359,7 @@ content:
           - { name: comingSoon, label: Coming soon label, type: string, required: true }
           - { name: loading, label: Loading label, type: string, required: true }
       - name: kikHome
-        label: KIK home UI
+        label: KIK головна UI
         type: object
         fields:
           - { name: platformBadge, label: Platform badge, type: string, required: true }
@@ -350,7 +368,7 @@ content:
           - { name: aboutButton, label: About button, type: string, required: true }
           - { name: comicAltTemplate, label: Comic alt template, type: string, required: true }
       - name: proKik
-        label: Pro KIK UI
+        label: Сторінка Про KIK UI
         type: object
         fields:
           - { name: badge, label: Badge, type: string, required: true }
@@ -385,7 +403,7 @@ content:
               - { name: title, label: Заголовок, type: string, required: true }
               - { name: text, label: Текст, type: text, required: true }
       - name: contactsPage
-        label: Contacts page UI
+        label: Сторінка Контакти UI
         type: object
         fields:
           - { name: label, label: Label, type: string, required: true }
@@ -395,7 +413,7 @@ content:
           - { name: partnershipTitle, label: Partnership title, type: string, required: true }
           - { name: writeButton, label: Write button, type: string, required: true }
       - name: projectsPage
-        label: Projects page UI
+        label: Сторінка Проєкти UI
         type: object
         fields:
           - { name: paymentSuccess, label: Payment success, type: string, required: true }
@@ -407,14 +425,14 @@ content:
           - { name: updates, label: Updates label, type: string, required: true }
           - { name: loading, label: Loading label, type: string, required: true }
       - name: projectCard
-        label: Project card UI
+        label: Картка проєкту UI
         type: object
         fields:
           - { name: raised, label: Raised label, type: string, required: true }
           - { name: update, label: Update label, type: string, required: true }
           - { name: details, label: Details label, type: string, required: true }
       - name: projectDetails
-        label: Project details UI
+        label: Деталі проєкту UI
         type: object
         fields:
           - { name: notFoundTitle, label: Not found title, type: string, required: true }
@@ -431,7 +449,7 @@ content:
           - { name: otherProjects, label: Other projects label, type: string, required: true }
           - { name: howItWorks, label: How it works label, type: string, required: true }
       - name: projectSupportPage
-        label: Project support page UI
+        label: Сторінка підтримки UI
         type: object
         fields:
           - { name: fallbackTitle, label: Fallback title, type: string, required: true }
@@ -445,7 +463,7 @@ content:
           - { name: supportLockedDescription, label: Support locked description, type: text, required: true }
           - { name: backButton, label: Back button, type: string, required: true }
       - name: supportOptions
-        label: Support options UI
+        label: Варіанти підтримки UI
         type: object
         fields:
           - { name: minDonationErrorTemplate, label: Min donation error template, type: string, required: true }
@@ -460,7 +478,7 @@ content:
           - { name: creating, label: Creating text, type: string, required: true }
           - { name: featured, label: Featured label, type: string, required: true }
       - name: gamePage
-        label: Game page UI
+        label: Сторінка гри UI
         type: object
         fields:
           - { name: highlightsTrymaysia, label: Highlights Trymaysia, type: string, list: true }
@@ -505,7 +523,7 @@ content:
           - { name: clickToOpen, label: Click to open, type: string, required: true }
           - { name: sectionNotFilled, label: Section not filled, type: string, required: true }
       - name: orderModal
-        label: Order modal UI
+        label: Модальне вікно замовлення
         type: object
         fields:
           - { name: createPaymentError, label: Create payment error, type: string, required: true }
@@ -528,7 +546,7 @@ content:
           - { name: placeholderComment, label: Placeholder comment, type: string, required: true }
           - { name: submitRequest, label: Submit request label, type: string, required: true }
       - name: monoApi
-        label: Mono API UI
+        label: Тексти Mono API
         type: object
         fields:
           - { name: paymentsDisabled, label: Payments disabled text, type: string, required: true }
@@ -542,7 +560,7 @@ content:
           - { name: monoApiError, label: Mono API error text, type: string, required: true }
           - { name: createInvoiceError, label: Create invoice error text, type: string, required: true }
       - name: errors
-        label: Error pages UI
+        label: Сторінки помилок UI
         type: object
         fields:
           - { name: notFoundTitle, label: Not found title, type: string, required: true }

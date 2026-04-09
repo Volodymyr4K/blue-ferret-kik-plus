@@ -27,6 +27,9 @@ jobs:
       - name: Validate content
         run: npm run validate:content
 
+      - name: Validate media
+        run: npm run validate:media
+
       - name: Type check
         run: npm run typecheck
 

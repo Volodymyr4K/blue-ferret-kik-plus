@@ -50,6 +50,7 @@ https://ваш-домен.com/api/mono/webhook
 
 ```bash
 npm run validate:content
+npm run validate:media
 npm run typecheck
 npm run lint
 npm run build

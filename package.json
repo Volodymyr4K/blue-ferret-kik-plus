@@ -7,7 +7,8 @@
     "build": "next build --webpack",
     "typecheck": "tsc --noEmit",
     "validate:content": "tsx scripts/validate-content.ts",
-    "check": "npm run validate:content && npm run typecheck && npm run lint && npm run build",
+    "validate:media": "tsx scripts/validate-media.ts",
+    "check": "npm run validate:content && npm run validate:media && npm run typecheck && npm run lint && npm run build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.2.3",
+    "image-size": "^1.2.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"

@@ -19,6 +19,7 @@
 /kik                 — KIK вдома (Про КІК)
 /kik/proekty         — Проєкти платформи
 /kontakty            — Контакти
+/admin-guide         — Портал менеджера контенту
 ```
 
 ## Дизайн-система (з ТЗ)
@@ -75,7 +76,11 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 1. Відкрити `https://app.pagescms.org`
 2. Увійти через GitHub і вибрати репозиторій `Volodymyr4K/blue-ferret-kik-plus`
 3. Редагувати контент у секціях `Каталог` і `Сайт`
-4. Після commit у `main` GitHub Actions автоматично задеплоїть оновлення
+4. Зберігати зміни у гілку `staging`
+5. Створити PR `staging -> main`
+6. Після зеленого `Quality Gate` зробити merge
+
+Для менеджера доступна сторінка-помічник: `/admin-guide` (slug/metadata підказки + швидкі посилання).
 
 ## Quality/Security Gate
 
@@ -85,6 +90,8 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 - CI workflow:
   - `.github/workflows/quality.yml`
   - `.github/workflows/security-audit.yml`
+  - `.github/workflows/staging-preview.yml`
+  - `.github/workflows/rollback-main.yml`
 - Dependabot увімкнено: `.github/dependabot.yml`
 - Шаблон PR для контенту: `.github/pull_request_template.md`
 - Runbook для менеджера: `RUNBOOK.md`

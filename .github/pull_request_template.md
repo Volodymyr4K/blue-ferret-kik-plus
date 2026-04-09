@@ -10,6 +10,7 @@
 ## Чекліст перед merge
 
 - [ ] `Quality Gate` в GitHub Actions зелений
+- [ ] Зміни прийшли зі `staging` (а не прямим push у `main`)
 - [ ] Перевірено сторінки: `/`, `/igry`, `/kik/proekty`, один `/igry/[slug]`, один `/kik/proekty/[id]`
 - [ ] Перевірено мобільний вигляд (DevTools або телефон)
 - [ ] Перевірено зовнішні посилання (Instagram/Telegram/Facebook)
