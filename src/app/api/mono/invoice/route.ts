@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import uiContent from '@/data/ui-content';
+import { paymentsEnabled } from '@/config/features';
 
 const MONO_API_URL = process.env.MONO_API_URL || 'https://api.monobank.ua';
 
 export async function POST(request: NextRequest) {
+  if (!paymentsEnabled) {
+    return NextResponse.json(
+      { error: uiContent.monoApi.paymentsDisabled },
+      { status: 503 }
+    );
+  }
+
   const token = process.env.MONO_API_TOKEN;
   if (!token) {
     return NextResponse.json(

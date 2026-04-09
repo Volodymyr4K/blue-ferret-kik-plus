@@ -295,6 +295,7 @@
     "submitRequest": "Надіслати заявку"
   },
   "monoApi": {
+    "paymentsDisabled": "Онлайн-оплата тимчасово вимкнена.",
     "notConfigured": "Plata by Mono не налаштовано. Додайте MONO_API_TOKEN до .env",
     "minAmount": "Мінімальна сума — 1 грн (100 копійок)",
     "destinationPrefix": "Оплата:",

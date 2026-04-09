@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, CreditCard, Sparkles } from 'lucide-react';
 import type { ProjectSupportTier } from '@/data/projects';
 import uiContent from '@/data/ui-content';
+import { paymentsEnabled } from '@/config/features';
 
 interface SupportOptionsClientProps {
   projectId: string;
@@ -34,6 +35,11 @@ export default function SupportOptionsClient({
   const [error, setError] = useState<string | null>(null);
 
   const createInvoice = async (amount: number, title: string, key: string) => {
+    if (!paymentsEnabled) {
+      setError(uiContent.monoApi.paymentsDisabled);
+      return;
+    }
+
     if (!Number.isFinite(amount) || amount < minDonation) {
       setError(
         uiContent.supportOptions.minDonationErrorTemplate.replace(
@@ -103,7 +109,7 @@ export default function SupportOptionsClient({
             <button
               type="button"
               onClick={() => createInvoice(Number(customAmount), uiContent.supportOptions.withoutRewardButtonLabel, 'custom')}
-              disabled={loadingKey === 'custom'}
+              disabled={loadingKey === 'custom' || !paymentsEnabled}
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loadingKey === 'custom' ? uiContent.supportOptions.creating : uiContent.supportOptions.supportButton}
@@ -152,7 +158,7 @@ export default function SupportOptionsClient({
                   <button
                     type="button"
                     onClick={() => createInvoice(tier.amount, tier.title, key)}
-                    disabled={isLoading}
+                    disabled={isLoading || !paymentsEnabled}
                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isLoading ? uiContent.supportOptions.creating : uiContent.supportOptions.supportButton}

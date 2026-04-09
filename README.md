@@ -33,6 +33,7 @@
 npm install
 npm run dev      # http://localhost:3000
 npm run build    # Статичний export у папку out/ для GitHub Pages
+npm run check    # Повна перевірка: content schema + typecheck + lint + build
 ```
 
 ## CMS-ready структура
@@ -73,7 +74,30 @@ npm run build    # Статичний export у папку out/ для GitHub Pa
 3. Редагувати контент у секціях `Каталог` і `Сайт`
 4. Після commit у `main` GitHub Actions автоматично задеплоїть оновлення
 
+## Quality/Security Gate
+
+- Валідація контенту (strict schema): `npm run validate:content`
+- Типи: `npm run typecheck`
+- Лінт: `npm run lint`
+- CI workflow:
+  - `.github/workflows/quality.yml`
+  - `.github/workflows/security-audit.yml`
+- Dependabot увімкнено: `.github/dependabot.yml`
+
+## Обов'язкові GitHub налаштування (ручні)
+
+У `Settings → Branches → Branch protection rules` для `main`:
+1. Увімкнути `Require a pull request before merging`
+2. Увімкнути `Require approvals` (мінімум 1)
+3. Увімкнути `Require status checks to pass` і вибрати `Quality Gate`
+4. Увімкнути `Dismiss stale pull request approvals when new commits are pushed`
+5. Увімкнути `Do not allow bypassing the above settings`
+
 ## Важливо про оплату (Mono)
 
 GitHub Pages — це лише статичний хостинг, тому API-роути для Mono у `src/app/api/*` вимкнено для цього деплою.
 Заготовки серверної логіки збережені в `src/server/mono/*` для майбутнього переносу на серверний хостинг.
+
+Додатково встановлено прапорець безпеки:
+- `NEXT_PUBLIC_ENABLE_PAYMENTS=false` (за замовчуванням)
+- якщо прапорець не `true`, UI-кнопки і API-створення інвойсу повертають контрольовану помилку.

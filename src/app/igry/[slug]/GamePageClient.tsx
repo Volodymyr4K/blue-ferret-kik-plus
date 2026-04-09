@@ -173,11 +173,6 @@ export default function GamePageClient({ game }: { game: Game }) {
   }, [accent, accentRgb.b, accentRgb.g, accentRgb.r]);
 
   useEffect(() => {
-    const firstActive = STAGE_ORDER.find((k) => game.stages[k]?.state === 'active');
-    setExpandedStage(firstActive || null);
-  }, [game.slug, game.stages]);
-
-  useEffect(() => {
     return () => {
       if (lockFeedbackTimeoutRef.current) {
         clearTimeout(lockFeedbackTimeoutRef.current);

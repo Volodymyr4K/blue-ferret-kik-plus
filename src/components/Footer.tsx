@@ -3,6 +3,7 @@ import { Instagram, Facebook, Send, Mail, Gamepad2, Heart } from 'lucide-react';
 import Logo from './Logo';
 import siteContent from '@/data/site-content';
 import uiContent from '@/data/ui-content';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 export default function Footer() {
   const { brand, contacts } = siteContent;
@@ -81,7 +82,7 @@ export default function Footer() {
               </a>
               <div className="flex gap-3">
                 <a
-                  href={contacts.social.instagram}
+                  href={safeExternalUrl(contacts.social.instagram)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-bf hover:scale-110 hover:shadow-[0_0_25px_-5px_rgba(0,159,227,0.5)] transition-all duration-300"
@@ -90,7 +91,7 @@ export default function Footer() {
                   <Instagram className="w-5 h-5" />
                 </a>
                 <a
-                  href={contacts.social.facebook}
+                  href={safeExternalUrl(contacts.social.facebook)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-kik hover:scale-110 hover:shadow-[0_0_25px_-5px_rgba(75,178,114,0.5)] transition-all duration-300"
@@ -99,7 +100,7 @@ export default function Footer() {
                   <Facebook className="w-5 h-5" />
                 </a>
                 <a
-                  href={contacts.social.telegram}
+                  href={safeExternalUrl(contacts.social.telegram)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-[var(--teal-accent)] hover:scale-110 hover:shadow-[0_0_25px_-5px_rgba(20,184,166,0.5)] transition-all duration-300"

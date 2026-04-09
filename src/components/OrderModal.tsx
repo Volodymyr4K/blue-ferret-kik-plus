@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CreditCard } from 'lucide-react';
 import uiContent from '@/data/ui-content';
+import { paymentsEnabled } from '@/config/features';
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -27,7 +28,10 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
 
   const handlePayMono = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canPayMono) return;
+    if (!canPayMono || !paymentsEnabled) {
+      setError(uiContent.monoApi.paymentsDisabled);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -98,7 +102,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
               )}
             </p>
 
-            {canPayMono && (
+            {canPayMono && paymentsEnabled && (
               <div className="mb-6 p-5 rounded-2xl bg-slate-50/80 border-2 border-slate-200/60">
                 <p className="text-caption mb-4 pb-4 border-b border-slate-200/80">
                   {uiContent.orderModal.monoText} <strong className="text-slate-800">{uiContent.orderModal.monoBrand}</strong>

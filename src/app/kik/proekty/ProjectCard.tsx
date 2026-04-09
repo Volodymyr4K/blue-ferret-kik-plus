@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import type { Project } from '@/data/projects';
 import uiContent from '@/data/ui-content';
+import { safeInternalPath } from '@/lib/safe-url';
 
 export default function ProjectCard({ project }: { project: Project }) {
   const progress = project.goal > 0 ? Math.min(100, (project.raised / project.goal) * 100) : 0;
@@ -14,7 +15,7 @@ export default function ProjectCard({ project }: { project: Project }) {
 
   return (
     <Link
-      href={project.link}
+      href={safeInternalPath(project.link, '/kik/proekty')}
       className="group flex h-full flex-col bg-white/98 rounded-2xl overflow-hidden board-game-border-kik transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_46px_-30px_rgba(15,23,42,0.45)]"
     >
       <div className="aspect-[16/10] min-h-[190px] relative overflow-hidden bg-gradient-to-br from-emerald-800/95 via-teal-900/90 to-slate-900">

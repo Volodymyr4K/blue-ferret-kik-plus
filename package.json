@@ -5,15 +5,19 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
+    "typecheck": "tsc --noEmit",
+    "validate:content": "tsx scripts/validate-content.ts",
+    "check": "npm run validate:content && npm run typecheck && npm run lint && npm run build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "lucide-react": "^0.577.0",
     "motion": "^12.35.2",
-    "next": "16.1.6",
+    "next": "^16.2.3",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -21,8 +25,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^16.2.3",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

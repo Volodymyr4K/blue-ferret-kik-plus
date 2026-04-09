@@ -5,6 +5,7 @@ import { Mail, Instagram, Send, MessageCircle } from 'lucide-react';
 import siteContent from '@/data/site-content';
 import SectionHeader from '@/components/SectionHeader';
 import uiContent from '@/data/ui-content';
+import { safeExternalUrl } from '@/lib/safe-url';
 
 export default function ContactsPage() {
   const { contacts } = siteContent;
@@ -48,7 +49,7 @@ export default function ContactsPage() {
             </a>
 
             <a
-              href={contacts.social.instagram}
+              href={safeExternalUrl(contacts.social.instagram)}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center p-6 sm:p-12 rounded-2xl bg-white/95 backdrop-blur-sm border-2 border-slate-200/70 shadow-card hover:shadow-card-hover hover:border-bf/50 transition-all duration-400 hover:-translate-y-2 card-shimmer"
@@ -61,7 +62,7 @@ export default function ContactsPage() {
             </a>
 
             <a
-              href={contacts.social.telegram}
+              href={safeExternalUrl(contacts.social.telegram)}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center p-6 sm:p-12 rounded-2xl bg-white/95 backdrop-blur-sm border-2 border-slate-200/70 shadow-card hover:shadow-card-hover hover:border-bf/50 transition-all duration-400 hover:-translate-y-2 card-shimmer"

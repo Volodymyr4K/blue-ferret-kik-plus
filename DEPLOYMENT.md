@@ -23,6 +23,7 @@ npm start
 |--------|------|-------------|
 | `MONO_API_TOKEN` | Токен API Monobank (Plata by Mono) | Так, для оплати |
 | `NEXT_PUBLIC_SITE_URL` | Публічний URL сайту (напр. https://blueferret.com.ua) | Так, для webhook і редіректів |
+| `NEXT_PUBLIC_ENABLE_PAYMENTS` | Увімкнення онлайн-оплати (`true`/`false`) | Ні, за замовчуванням `false` |
 
 ## API endpoints
 
@@ -48,9 +49,14 @@ https://ваш-домен.com/api/mono/webhook
 ## Production build
 
 ```bash
+npm run validate:content
+npm run typecheck
+npm run lint
 npm run build
 ```
 
-Вихід: `.next/` — готовий до деплою на Vercel, Node.js сервер тощо.
+Вихід: `out/` — статичний сайт для GitHub Pages.
 
-Для статичного експорту (опційно) — потрібна додаткова конфігурація, оскільки є динамічні маршрути (`/igry/[slug]`) та API.
+Важливо:
+- На GitHub Pages API-роути `src/app/api/*` не виконуються.
+- Моноплатіжна серверна логіка (`src/server/mono/*`) збережена для майбутнього серверного хостингу.

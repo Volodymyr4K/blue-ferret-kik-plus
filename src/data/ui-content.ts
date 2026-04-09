@@ -1,6 +1,7 @@
 import uiContentData from '@/content/ui-content.json';
+import { UIContentSchema, type UIContent } from '@/lib/content-schemas';
 
-const uiContent = uiContentData;
+const uiContent = UIContentSchema.parse(uiContentData);
 
-export type UIContent = typeof uiContentData;
 export default uiContent;
+export type { UIContent };

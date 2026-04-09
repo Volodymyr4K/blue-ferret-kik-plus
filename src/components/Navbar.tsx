@@ -24,19 +24,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    setMobileOpen(false);
-    setGamesOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -66,7 +53,6 @@ export default function Navbar() {
   }, [mobileOpen]);
 
   const isGamePage = pathname.startsWith('/igry/') && pathname !== '/igry';
-  const isPublisherPage = !isGamePage;
 
   return (
     <header

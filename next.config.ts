@@ -8,9 +8,6 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   outputFileTracingRoot: path.resolve(process.cwd()),
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 };
 
 export default nextConfig;
