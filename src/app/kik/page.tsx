@@ -6,11 +6,12 @@ import { motion } from 'motion/react';
 import { Heart, FolderKanban, ArrowRight, Leaf, ShieldCheck, Clock3 } from 'lucide-react';
 import KikLogo from '@/components/KikLogo';
 import siteContent from '@/data/site-content';
+import uiContent from '@/data/ui-content';
 
 const KIK_FACTS = [
-  { icon: FolderKanban, text: 'Авторські проєкти' },
-  { icon: ShieldCheck, text: 'Прозорі етапи' },
-  { icon: Clock3, text: 'Регулярні оновлення' },
+  { icon: FolderKanban, text: uiContent.kikHome.facts[0] },
+  { icon: ShieldCheck, text: uiContent.kikHome.facts[1] },
+  { icon: Clock3, text: uiContent.kikHome.facts[2] },
 ];
 
 const COMIC_STRIP = [
@@ -39,7 +40,7 @@ export default function KikHomePage() {
           >
             <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full badge-gradient border border-[var(--kik-accent)]/35 shadow-sm mb-7 sm:mb-9">
               <Leaf className="w-4 h-4 text-[var(--kik-accent)]" />
-              <span className="text-sm font-semibold text-[var(--kik-accent)]">Платформа Blue Ferret</span>
+              <span className="text-sm font-semibold text-[var(--kik-accent)]">{uiContent.kikHome.platformBadge}</span>
             </span>
 
             <div className="mb-8">
@@ -76,7 +77,7 @@ export default function KikHomePage() {
                 className="group inline-flex w-full sm:w-auto max-w-sm mx-auto sm:mx-0 items-center justify-center gap-2.5 px-7 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-[var(--kik-accent)] to-[var(--teal-accent)] text-white text-sm sm:text-[15px] font-bold rounded-2xl hover:from-[var(--teal-accent)] hover:to-[var(--kik-accent)] transition-colors"
               >
                 <FolderKanban className="w-4 h-4" />
-                Проєкти
+                {uiContent.kikHome.projectsButton}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -84,7 +85,7 @@ export default function KikHomePage() {
                 className="group inline-flex w-full sm:w-auto max-w-sm mx-auto sm:mx-0 items-center justify-center gap-2.5 px-7 sm:px-10 py-3.5 sm:py-4 bg-white text-slate-700 font-bold rounded-2xl border border-[var(--kik-accent)]/45 hover:border-[var(--kik-accent)] hover:text-[var(--kik-accent)] transition-colors shadow-sm"
               >
                 <Heart className="w-5 h-5" />
-                Про КІК
+                {uiContent.kikHome.aboutButton}
               </Link>
             </motion.div>
           </motion.div>
@@ -99,7 +100,7 @@ export default function KikHomePage() {
               <div key={src} className="relative aspect-square">
                 <Image
                   src={src}
-                  alt={`Комікс — кадр ${index + 1}`}
+                  alt={uiContent.kikHome.comicAltTemplate.replace('{index}', String(index + 1))}
                   fill
                   sizes="(min-width: 1024px) 33vw, 33vw"
                   className="object-cover"

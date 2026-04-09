@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import uiContent from '@/data/ui-content';
 
 const MONO_API_URL = process.env.MONO_API_URL || 'https://api.monobank.ua';
 
@@ -6,7 +7,7 @@ export async function createMonoInvoice(request: NextRequest) {
   const token = process.env.MONO_API_TOKEN;
   if (!token) {
     return NextResponse.json(
-      { error: 'Plata by Mono не налаштовано. Додайте MONO_API_TOKEN до .env' },
+      { error: uiContent.monoApi.notConfigured },
       { status: 503 }
     );
   }
@@ -17,7 +18,7 @@ export async function createMonoInvoice(request: NextRequest) {
 
     if (!amount || amount < 100) {
       return NextResponse.json(
-        { error: 'Мінімальна сума — 1 грн (100 копійок)' },
+        { error: uiContent.monoApi.minAmount },
         { status: 400 }
       );
     }
@@ -27,15 +28,15 @@ export async function createMonoInvoice(request: NextRequest) {
       ccy: 980,
       merchantPaymInfo: {
         reference: reference || `order-${Date.now()}`,
-        destination: `Оплата: ${gameName || 'Замовлення'}`,
-        comment: gameName || 'Замовлення настільної гри',
+        destination: `${uiContent.monoApi.destinationPrefix} ${gameName || uiContent.monoApi.defaultOrder}`,
+        comment: gameName || uiContent.monoApi.defaultComment,
         basketOrder: [
           {
-            name: gameName || 'Настільна гра',
+            name: gameName || uiContent.monoApi.defaultItemName,
             qty: 1,
             sum: Math.round(Number(amount)),
             total: Math.round(Number(amount)),
-            unit: 'шт.',
+            unit: uiContent.monoApi.unit,
             code: `game-${Date.now()}`,
           },
         ],
@@ -59,7 +60,7 @@ export async function createMonoInvoice(request: NextRequest) {
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: data.errorDescription || data.errText || 'Помилка Mono API', details: data },
+        { error: data.errorDescription || data.errText || uiContent.monoApi.monoApiError, details: data },
         { status: res.status }
       );
     }
@@ -71,7 +72,7 @@ export async function createMonoInvoice(request: NextRequest) {
   } catch (err) {
     console.error('Mono invoice error:', err);
     return NextResponse.json(
-      { error: 'Помилка створення рахунку' },
+      { error: uiContent.monoApi.createInvoiceError },
       { status: 500 }
     );
   }

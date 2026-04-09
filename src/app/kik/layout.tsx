@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
+import uiContent from '@/data/ui-content';
 import KikNav from '@/components/KikNav';
 
 export const metadata: Metadata = {
-  title: 'KIK вдома | Blue Ferret',
-  description: 'KIK вдома — платформа підтримки авторських настільних ігор',
+  title: uiContent.metadata.kikTitle,
+  description: uiContent.metadata.kikDescription,
 };
 
 export default function KikLayout({

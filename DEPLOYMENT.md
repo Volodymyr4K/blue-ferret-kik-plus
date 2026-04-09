@@ -38,9 +38,12 @@ https://ваш-домен.com/api/mono/webhook
 
 ## Структура даних (для інтеграції з CMS)
 
-- **Ігри**: `src/data/games.ts` — можна замінити на API
-- **Проєкти KIK**: `src/data/projects.ts` — можна замінити на API
-- **Контент сайту**: `src/data/site-content.ts` — можна замінити на API
+- **Ігри**: `src/content/games.json`
+- **Проєкти KIK**: `src/content/projects.json`
+- **Контент сайту**: `src/content/site-content.json`
+- **UI-тексти**: `src/content/ui-content.json`
+
+`src/data/*.ts` — адаптери з типами, що читають ці JSON.
 
 ## Production build
 

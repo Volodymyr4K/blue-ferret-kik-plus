@@ -1,0 +1,129 @@
+media:
+  input: public/uploads
+  output: /uploads
+  categories: [image]
+  rename: safe
+
+content:
+  - name: catalog
+    label: Каталог
+    type: group
+    items:
+      - name: games
+        label: Ігри (товари)
+        type: file
+        path: src/content/games.json
+        format: json
+        list: true
+        fields:
+          - { name: id, label: ID, type: string, required: true }
+          - { name: slug, label: Slug, type: string, required: true }
+          - { name: name, label: Назва, type: string, required: true }
+          - { name: slogan, label: Слоган, type: string }
+          - { name: shortDescription, label: Короткий опис, type: text, required: true }
+          - { name: aboutGame, label: Про гру, type: text }
+          - name: status
+            label: Статус
+            type: select
+            required: true
+            options:
+              values: [announcement, production, preorder, onsale]
+          - { name: heroImage, label: Hero зображення, type: image }
+          - { name: coverImage, label: Обкладинка, type: image }
+          - { name: palette, label: Основний колір, type: string }
+          - { name: accent, label: Акцентний колір, type: string }
+          - { name: price, label: Ціна (грн), type: number }
+          - name: passport
+            label: Паспорт гри
+            type: object
+            fields:
+              - { name: players, label: Гравці, type: string }
+              - { name: duration, label: Тривалість, type: string }
+              - { name: age, label: Вік, type: string }
+              - { name: author, label: Автор(ка), type: string }
+          - name: stages
+            label: Етапи
+            type: object
+            fields:
+              - name: announcement
+                label: Анонс
+                type: object
+                fields: &stage_fields
+                  - name: state
+                    label: Стан
+                    type: select
+                    required: true
+                    options:
+                      values: [active, locked, archived, hidden]
+                  - { name: title, label: Заголовок, type: string, required: true }
+                  - { name: content, label: Контент, type: text }
+                  - { name: image, label: Зображення, type: image }
+                  - { name: lastUpdate, label: Останнє оновлення (YYYY-MM-DD), type: string }
+                  - { name: ctaText, label: Текст кнопки, type: string }
+                  - { name: ctaLink, label: Посилання кнопки, type: string }
+              - name: production
+                label: Виробництво
+                type: object
+                fields: *stage_fields
+              - name: preorder
+                label: Передзамовлення
+                type: object
+                fields: *stage_fields
+              - name: onsale
+                label: У продажі
+                type: object
+                fields: *stage_fields
+
+      - name: projects
+        label: Проєкти KIK
+        type: file
+        path: src/content/projects.json
+        format: json
+        list: true
+        fields:
+          - { name: id, label: ID, type: string, required: true }
+          - { name: name, label: Назва, type: string, required: true }
+          - { name: shortDescription, label: Короткий опис, type: text, required: true }
+          - name: status
+            label: Статус
+            type: select
+            required: true
+            options:
+              values: [active, preparing, complete]
+          - { name: statusLabel, label: Текст статусу, type: string, required: true }
+          - { name: raised, label: Зібрано, type: number, required: true }
+          - { name: goal, label: Ціль, type: number, required: true }
+          - { name: currency, label: Валюта, type: string, required: true }
+          - { name: lastUpdate, label: Дата оновлення (YYYY-MM-DD), type: string, required: true }
+          - { name: updatePreview, label: Опис оновлення, type: text, required: true }
+          - { name: coverImage, label: Обкладинка, type: image }
+          - { name: link, label: Посилання, type: string, required: true }
+          - name: support
+            label: Параметри підтримки
+            type: object
+            fields:
+              - { name: minDonation, label: Мінімум донату, type: number }
+              - { name: defaultDonation, label: Донат за замовчуванням, type: number }
+              - name: tiers
+                label: Рівні підтримки
+                type: object
+                list: true
+                fields:
+                  - { name: id, label: ID рівня, type: string, required: true }
+                  - { name: title, label: Назва, type: string, required: true }
+                  - { name: description, label: Опис, type: text, required: true }
+                  - { name: amount, label: Сума, type: number, required: true }
+                  - { name: featured, label: Рекомендований, type: boolean }
+                  - { name: includes, label: Що входить, type: string, list: true }
+
+  - name: siteContent
+    label: Основний контент сайту
+    type: file
+    path: src/content/site-content.json
+    format: raw
+
+  - name: uiContent
+    label: UI тексти
+    type: file
+    path: src/content/ui-content.json
+    format: raw

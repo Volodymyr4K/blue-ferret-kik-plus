@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
+import uiContent from '@/data/ui-content';
 
 export const metadata: Metadata = {
-  title: 'Наші ігри | Blue Ferret',
-  description: 'Каталог настільних ігор видавництва Blue Ferret',
+  title: uiContent.metadata.gamesTitle,
+  description: uiContent.metadata.gamesDescription,
 };
 
 export default function GamesLayout({

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import type { Project } from '@/data/projects';
+import uiContent from '@/data/ui-content';
 
 export default function ProjectCard({ project }: { project: Project }) {
   const progress = project.goal > 0 ? Math.min(100, (project.raised / project.goal) * 100) : 0;
@@ -47,7 +48,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         {project.goal > 0 && (
           <div className="mb-4 sm:mb-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3 text-xs sm:text-sm mb-1.5 sm:mb-2">
-              <span className="text-slate-500">Зібрано</span>
+              <span className="text-slate-500">{uiContent.projectCard.raised}</span>
               <span className="font-bold text-[var(--kik-accent)] leading-tight">
                 {formatMoney(project.raised)} / {formatMoney(project.goal)}
               </span>
@@ -68,12 +69,12 @@ export default function ProjectCard({ project }: { project: Project }) {
         </p>
 
         <div className="mb-4 p-3 rounded-xl bg-slate-50/90 border border-slate-200/70">
-          <p className="text-caption mb-0.5">Оновлення · {project.lastUpdate}</p>
+          <p className="text-caption mb-0.5">{uiContent.projectCard.update} · {project.lastUpdate}</p>
           <p className="text-sm text-slate-700 line-clamp-2 leading-relaxed">{project.updatePreview}</p>
         </div>
 
         <span className="inline-flex items-center gap-2 text-[var(--kik-accent)] font-semibold text-sm group-hover:gap-3 transition-all mt-auto">
-          Детальніше
+          {uiContent.projectCard.details}
           <ArrowRight className="w-4 h-4" />
         </span>
       </div>

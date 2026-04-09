@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Instagram, Facebook, Send, Mail, Gamepad2, Heart } from 'lucide-react';
 import Logo from './Logo';
 import siteContent from '@/data/site-content';
+import uiContent from '@/data/ui-content';
 
 export default function Footer() {
   const { brand, contacts } = siteContent;
@@ -36,31 +37,31 @@ export default function Footer() {
             {/* Навігація */}
             <div className="md:col-span-4 lg:col-span-4">
               <h4 className="font-bold text-white text-xs mb-6 uppercase tracking-[0.2em] text-slate-400">
-                Навігація
+                {uiContent.footer.navigationTitle}
               </h4>
               <ul className="space-y-4">
                 <li>
                   <Link href="/" className="group inline-flex items-center gap-2.5 text-slate-400 hover:text-bf transition-all duration-300 text-[15px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover:bg-bf group-hover:scale-125 transition-all" />
-                    Головна
+                    {uiContent.footer.home}
                   </Link>
                 </li>
                 <li>
                   <Link href="/igry" className="group inline-flex items-center gap-2.5 text-slate-400 hover:text-bf transition-all duration-300 text-[15px]">
                     <Gamepad2 className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                    Наші ігри
+                    {uiContent.footer.games}
                   </Link>
                 </li>
                 <li>
                   <Link href="/kik" className="group inline-flex items-center gap-2.5 text-slate-400 hover:text-kik transition-all duration-300 text-[15px]">
                     <Heart className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                    Кік-вдома
+                    {uiContent.footer.kik}
                   </Link>
                 </li>
                 <li>
                   <Link href="/kontakty" className="group inline-flex items-center gap-2.5 text-slate-400 hover:text-[var(--teal-accent)] transition-all duration-300 text-[15px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-500 group-hover:bg-[var(--teal-accent)] group-hover:scale-125 transition-all" />
-                    Контакти
+                    {uiContent.footer.contacts}
                   </Link>
                 </li>
               </ul>
@@ -69,7 +70,7 @@ export default function Footer() {
             {/* Зв'язок */}
             <div className="md:col-span-3 lg:col-span-3">
               <h4 className="font-bold text-white text-xs mb-6 uppercase tracking-[0.2em] text-slate-400">
-                Зв&apos;язок
+                {uiContent.footer.contactTitle}
               </h4>
               <a
                 href={`mailto:${contacts.email}`}
@@ -113,7 +114,7 @@ export default function Footer() {
           {/* Нижня смуга */}
           <div className="mt-20 pt-10 border-t border-slate-800/60 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} Blue Ferret. Всі права захищені.
+              © {new Date().getFullYear()} Blue Ferret. {uiContent.footer.rights}
             </p>
           </div>
         </div>

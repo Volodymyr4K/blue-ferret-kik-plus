@@ -12,6 +12,7 @@ import {
   TimerReset,
 } from 'lucide-react';
 import projects from '@/data/projects';
+import uiContent from '@/data/ui-content';
 
 const PROJECT_STAGES = {
   preparing: ['active', 'locked', 'locked'],
@@ -19,7 +20,11 @@ const PROJECT_STAGES = {
   complete: ['completed', 'completed', 'completed'],
 } as const;
 
-const STAGE_LABELS = ['Підготовка', 'Збір коштів', 'Виробництво'] as const;
+const STAGE_LABELS = [
+  uiContent.projectDetails.prepare,
+  uiContent.projectDetails.collecting,
+  uiContent.projectDetails.production,
+] as const;
 
 function getProject(id: string) {
   return projects.find((project) => project.id === id);
@@ -54,10 +59,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const project = getProject(id);
-  if (!project) return { title: 'Проєкт не знайдено' };
+  if (!project) return { title: uiContent.projectDetails.notFoundTitle };
 
   return {
-    title: `${project.name} | KIK вдома`,
+    title: uiContent.metadata.projectTitleTemplate.replace('{name}', project.name),
     description: project.shortDescription,
   };
 }
@@ -90,7 +95,7 @@ export default async function ProjectDetailsPage({
             className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-[var(--kik-accent)] transition-colors mb-5"
           >
             <ArrowLeft className="w-4 h-4" />
-            До всіх проєктів
+            {uiContent.projectDetails.backToProjects}
           </Link>
 
           <div className="grid lg:grid-cols-[1fr_1.05fr] gap-6 lg:gap-8">
@@ -120,14 +125,14 @@ export default async function ProjectDetailsPage({
               </div>
 
               <div className="p-5 sm:p-6">
-                <p className="text-sm text-slate-500 mb-1">Оновлення · {formatDate(project.lastUpdate)}</p>
+                <p className="text-sm text-slate-500 mb-1">{uiContent.projectDetails.updatePrefix} · {formatDate(project.lastUpdate)}</p>
                 <p className="text-slate-700 leading-relaxed">{project.updatePreview}</p>
               </div>
             </div>
 
             <div className="rounded-3xl border border-[var(--kik-accent)]/20 bg-white/95 p-6 sm:p-8 shadow-[0_28px_62px_-42px_rgba(15,23,42,0.4)]">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--kik-accent)]/10 text-[var(--kik-accent)] border border-[var(--kik-accent)]/30 text-xs font-semibold mb-5">
-                Сторінка проєкту
+                {uiContent.projectDetails.pageBadge}
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
@@ -139,7 +144,7 @@ export default async function ProjectDetailsPage({
 
               <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 sm:p-5 mb-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                  <span className="text-slate-600 text-sm">Зібрано</span>
+                  <span className="text-slate-600 text-sm">{uiContent.projectDetails.raised}</span>
                   <span className="text-[var(--kik-accent)] font-extrabold text-lg">
                     {formatMoney(project.raised)} / {formatMoney(project.goal)}
                   </span>
@@ -151,7 +156,7 @@ export default async function ProjectDetailsPage({
                   />
                 </div>
                 <p className="text-xs text-slate-500">
-                  Поточний прогрес: {Math.round(progress)}%
+                  {uiContent.projectDetails.progress}: {Math.round(progress)}%
                 </p>
               </div>
 
@@ -186,26 +191,26 @@ export default async function ProjectDetailsPage({
                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[var(--kik-accent)] to-[var(--teal-accent)] text-white font-semibold hover:from-[var(--teal-accent)] hover:to-[var(--kik-accent)] transition-colors"
                   >
                     <CircleDollarSign className="w-4 h-4" />
-                    Підтримати
+                    {uiContent.projectDetails.support}
                   </Link>
                 ) : (
                   <span className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 font-semibold cursor-not-allowed">
                     <CalendarDays className="w-4 h-4" />
-                    Підтримка скоро
+                    {uiContent.projectDetails.supportSoon}
                   </span>
                 )}
                 <Link
                   href="/kik/proekty"
                   className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors"
                 >
-                  Інші проєкти
+                  {uiContent.projectDetails.otherProjects}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/kik/pro-kik"
                   className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[var(--kik-accent)]/30 bg-white text-slate-700 font-semibold hover:text-[var(--kik-accent)] hover:border-[var(--kik-accent)] transition-colors"
                 >
-                  Як працює KIK вдома
+                  {uiContent.projectDetails.howItWorks}
                 </Link>
               </div>
             </div>

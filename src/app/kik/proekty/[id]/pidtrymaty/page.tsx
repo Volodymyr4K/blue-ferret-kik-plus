@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CircleHelp, Lock } from 'lucide-react';
 import projects from '@/data/projects';
+import uiContent from '@/data/ui-content';
 import SupportOptionsClient from '../SupportOptionsClient';
 
 function getProject(id: string) {
@@ -20,11 +21,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const project = getProject(id);
-  if (!project) return { title: 'Підтримка проєкту | KIK вдома' };
+  if (!project) return { title: uiContent.projectSupportPage.fallbackTitle };
 
   return {
-    title: `Підтримати ${project.name} | KIK вдома`,
-    description: `Оберіть формат підтримки для проєкту ${project.name}.`,
+    title: uiContent.metadata.projectSupportTitleTemplate.replace('{name}', project.name),
+    description: uiContent.projectSupportPage.fallbackDescriptionTemplate.replace('{name}', project.name),
   };
 }
 
@@ -56,17 +57,17 @@ export default async function ProjectSupportPage({
             className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-[var(--kik-accent)] transition-colors mb-5"
           >
             <ArrowLeft className="w-4 h-4" />
-            До сторінки проєкту
+            {uiContent.projectSupportPage.backToProject}
           </Link>
 
           <div className="rounded-3xl border border-[var(--kik-accent)]/20 bg-white/95 p-6 sm:p-8 shadow-[0_26px_62px_-40px_rgba(15,23,42,0.4)] mb-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
-                  Підтримати «{project.name}»
+                  {uiContent.projectSupportPage.titleTemplate.replace('{name}', project.name)}
                 </h1>
                 <p className="text-slate-600 text-base sm:text-lg max-w-3xl">
-                  Оберіть варіант: замовити фіксовану версію гри або підтримати сумою без нагороди.
+                  {uiContent.projectSupportPage.subtitle}
                 </p>
               </div>
               <Link
@@ -74,7 +75,7 @@ export default async function ProjectSupportPage({
                 className="inline-flex items-center gap-2 self-start lg:self-auto px-4 py-2.5 rounded-xl border border-[var(--kik-accent)]/30 bg-white text-slate-700 font-medium hover:text-[var(--kik-accent)] hover:border-[var(--kik-accent)] transition-colors"
               >
                 <CircleHelp className="w-4 h-4" />
-                Як працює KIK вдома
+                {uiContent.projectSupportPage.howItWorks}
               </Link>
             </div>
           </div>
@@ -91,19 +92,19 @@ export default async function ProjectSupportPage({
             <div className="rounded-3xl border border-slate-200 bg-white/95 p-6 sm:p-8 shadow-[0_26px_62px_-40px_rgba(15,23,42,0.35)]">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold mb-4">
                 <Lock className="w-3.5 h-3.5" />
-                Підтримка скоро відкриється
+                {uiContent.projectSupportPage.supportLockedBadge}
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">
-                Для цього проєкту ще не стартував збір коштів
+                {uiContent.projectSupportPage.supportLockedTitle}
               </h2>
               <p className="text-slate-600 leading-relaxed mb-5">
-                Підтримка стане доступною, коли проєкт перейде в етап «Збір коштів». Слідкуйте за оновленнями сторінки.
+                {uiContent.projectSupportPage.supportLockedDescription}
               </p>
               <Link
                 href={`/kik/proekty/${project.id}`}
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors"
               >
-                Назад до проєкту
+                {uiContent.projectSupportPage.backButton}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

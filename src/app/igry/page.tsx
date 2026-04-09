@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import games from '@/data/games';
 import { ArrowRight, Sparkles, CheckCircle, Gamepad2, Clock3, Layers3 } from 'lucide-react';
 import SectionHeader from '@/components/SectionHeader';
+import uiContent from '@/data/ui-content';
 
 function GamesContent() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -39,7 +40,7 @@ function GamesContent() {
           >
             <CheckCircle className="w-6 h-6 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base leading-snug">
-              Оплату успішно отримано! Дякуємо за замовлення.
+              {uiContent.gamesPage.paymentSuccess}
             </span>
           </motion.div>
         )}
@@ -60,26 +61,26 @@ function GamesContent() {
           >
             <motion.div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full badge-gradient border border-[var(--bf-accent)]/30 shadow-[0_12px_30px_-20px_rgba(15,23,42,0.5)] mb-7">
               <Sparkles className="w-4 h-4 text-bf animate-sparkle" />
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Каталог ігор</span>
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{uiContent.gamesPage.badgeTitle}</span>
             </motion.div>
             <SectionHeader
-              title="Світи для відкриття"
-              subtitle="Кожна гра — окремий світ мрій, механік та атмосфери. Досліджуйте каталог і обирайте свій формат партії."
+              title={uiContent.gamesPage.title}
+              subtitle={uiContent.gamesPage.subtitle}
               titleClassName="heading-3"
               className="mb-7 sm:mb-8"
             />
             <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <Gamepad2 className="w-4 h-4 text-[var(--bf-accent)]" />
-                {games.length} ігри в каталозі
+                {games.length} {uiContent.gamesPage.gamesCount}
               </span>
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <Layers3 className="w-4 h-4 text-[var(--bf-accent)]" />
-                {activeGames} активних етапів
+                {activeGames} {uiContent.gamesPage.activeStages}
               </span>
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <Clock3 className="w-4 h-4 text-[var(--bf-accent)]" />
-                Оновлення по статусах
+                {uiContent.gamesPage.statusUpdates}
               </span>
             </div>
           </motion.div>
@@ -126,10 +127,10 @@ function GamesContent() {
                         <div className="absolute inset-0 bg-[var(--bf-accent)]/0 transition-colors duration-500" />
                         <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 right-3 sm:right-5 flex justify-between items-end gap-2">
                           <span className="board-game-badge inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white/95 text-slate-700 text-xs sm:text-sm shadow-md backdrop-blur-sm border border-[var(--bf-accent)]/30">
-                            {game.status === 'announcement' && 'Анонс'}
-                            {game.status === 'production' && 'Виробництво'}
-                            {game.status === 'preorder' && 'Передзамовлення'}
-                            {game.status === 'onsale' && 'У продажі'}
+                            {game.status === 'announcement' && uiContent.gamesPage.statusAnnouncement}
+                            {game.status === 'production' && uiContent.gamesPage.statusProduction}
+                            {game.status === 'preorder' && uiContent.gamesPage.statusPreorder}
+                            {game.status === 'onsale' && uiContent.gamesPage.statusOnsale}
                           </span>
                           <motion.span className="p-2.5 sm:p-3 rounded-xl bg-white/95 backdrop-blur-sm border border-white/60 shadow-sm">
                             <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-bf" />
@@ -145,7 +146,7 @@ function GamesContent() {
                           {game.shortDescription}
                         </p>
                         <span className="inline-flex items-center gap-2 text-[var(--bf-accent)] font-bold text-sm transition-all duration-300 mt-auto">
-                          Детальніше
+                          {uiContent.gamesPage.details}
                           <ArrowRight className="w-5 h-5" />
                         </span>
                       </div>
@@ -154,7 +155,7 @@ function GamesContent() {
                         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/68 via-slate-950/76 to-slate-950/82 backdrop-blur-[3px]" />
                         <div className="absolute inset-0 flex items-center justify-center p-5">
                           <span className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/95 text-slate-800 text-xs sm:text-sm font-semibold text-center shadow-[0_10px_28px_-16px_rgba(15,23,42,0.55)] border border-white/90">
-                            Тут скоро буде новий проєкт!
+                            {uiContent.gamesPage.comingSoon}
                           </span>
                         </div>
                       </div>
@@ -180,10 +181,10 @@ function GamesContent() {
                         <div className="absolute inset-0 bg-[var(--bf-accent)]/0 group-hover:bg-[var(--bf-accent)]/10 transition-colors duration-500" />
                         <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 right-3 sm:right-5 flex justify-between items-end gap-2">
                           <span className="board-game-badge inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white/95 text-slate-700 text-xs sm:text-sm shadow-md backdrop-blur-sm border border-[var(--bf-accent)]/30">
-                            {game.status === 'announcement' && 'Анонс'}
-                            {game.status === 'production' && 'Виробництво'}
-                            {game.status === 'preorder' && 'Передзамовлення'}
-                            {game.status === 'onsale' && 'У продажі'}
+                            {game.status === 'announcement' && uiContent.gamesPage.statusAnnouncement}
+                            {game.status === 'production' && uiContent.gamesPage.statusProduction}
+                            {game.status === 'preorder' && uiContent.gamesPage.statusPreorder}
+                            {game.status === 'onsale' && uiContent.gamesPage.statusOnsale}
                           </span>
                           <motion.span className="p-2.5 sm:p-3 rounded-xl bg-white/95 backdrop-blur-sm border border-white/60 shadow-sm">
                             <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-bf" />
@@ -199,7 +200,7 @@ function GamesContent() {
                           {game.shortDescription}
                         </p>
                         <span className="inline-flex items-center gap-2 text-[var(--bf-accent)] font-bold text-sm group-hover:gap-4 group-hover:text-[var(--teal-accent)] transition-all duration-300 mt-auto">
-                          Детальніше
+                          {uiContent.gamesPage.details}
                           <ArrowRight className="w-5 h-5 group-hover:translate-x-1" />
                         </span>
                       </div>
@@ -217,7 +218,7 @@ function GamesContent() {
 
 export default function GamesPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Завантаження...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">{uiContent.gamesPage.loading}</div>}>
       <GamesContent />
     </Suspense>
   );

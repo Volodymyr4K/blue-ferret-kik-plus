@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import uiContent from '@/data/ui-content';
 
 interface KikLogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -29,7 +30,7 @@ export default function KikLogo({ size = 'md', variant = 'full', className = '',
     <div className={`inline-flex items-center ${className}`}>
       <Image
         src="/images/kik/logo-kik-horizontal.png"
-        alt="KIK вдома"
+        alt={uiContent.branding.kikLogoAlt}
         width={s.w}
         height={s.h}
         className="object-contain"

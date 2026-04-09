@@ -2,19 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import uiContent from "@/data/ui-content";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://blueferret.com.ua'),
-  title: "Blue Ferret | Незалежне видавництво настільних ігор",
-  description: "Blue Ferret — незалежне видавництво настільних ігор. Грайливий, авторський, теплий стиль. Для настільних гравців. KIK вдома — платформа підтримки авторських проєктів.",
+  title: uiContent.metadata.siteTitle,
+  description: uiContent.metadata.siteDescription,
   icons: {
     icon: "/icon.png",
     apple: "/apple-icon.png",
     shortcut: "/favicon.ico",
   },
   openGraph: {
-    title: "Blue Ferret | Настільні ігри",
-    description: "Незалежне видавництво настільних ігор. Грайливий, авторський, теплий стиль для настільних гравців.",
+    title: uiContent.metadata.openGraphTitle,
+    description: uiContent.metadata.openGraphDescription,
     images: ["/logo-blue-ferret.png"],
   },
 };

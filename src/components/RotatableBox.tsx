@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import uiContent from '@/data/ui-content';
 
 interface RotatableBoxProps {
   frontImage?: string;
@@ -30,7 +31,7 @@ export default function RotatableBox({
   leftSideImage,
   rightSideImage,
   color = '#283D57',
-  sideLabel = 'Тримайся',
+  sideLabel = uiContent.branding.defaultSideLabel,
   depthScale = 0.72,
   dimensions,
   initialRotation = { x: -7, y: -13 },

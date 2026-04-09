@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import games from '@/data/games';
+import uiContent from '@/data/ui-content';
 import GamePageClient from './GamePageClient';
 
 export function generateStaticParams() {
@@ -10,9 +11,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const game = games.find((g) => g.slug === slug);
-  if (!game) return { title: 'Гра не знайдена' };
+  if (!game) return { title: uiContent.metadata.gameNotFoundTitle };
   return {
-    title: `${game.name} | Blue Ferret`,
+    title: uiContent.metadata.gameTitleTemplate.replace('{name}', game.name),
     description: game.shortDescription,
   };
 }

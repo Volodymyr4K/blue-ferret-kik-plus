@@ -13,42 +13,43 @@ import {
   UsersRound,
 } from 'lucide-react';
 import siteContent from '@/data/site-content';
+import uiContent from '@/data/ui-content';
 
 const KEY_POINTS = [
   {
     icon: UsersRound,
-    title: 'Спільнота навколо ідеї',
-    text: 'Проєкти бачать реальні люди, які люблять настільні ігри та підтримують авторів.',
+    title: uiContent.proKik.keyPoints[0].title,
+    text: uiContent.proKik.keyPoints[0].text,
   },
   {
     icon: ShieldCheck,
-    title: 'Прозорі етапи',
-    text: 'Статуси, зібрана сума, оновлення та дати — все публічно і без зайвих складнощів.',
+    title: uiContent.proKik.keyPoints[1].title,
+    text: uiContent.proKik.keyPoints[1].text,
   },
   {
     icon: HandHeart,
-    title: 'Людяна комунікація',
-    text: 'Ми супроводжуємо авторів та пояснюємо кроки простою мовою, без формальностей.',
+    title: uiContent.proKik.keyPoints[2].title,
+    text: uiContent.proKik.keyPoints[2].text,
   },
   {
     icon: Sparkles,
-    title: 'Фокус на настілках',
-    text: 'KIK вдома створений саме для авторських ігор та їхнього якісного запуску.',
+    title: uiContent.proKik.keyPoints[3].title,
+    text: uiContent.proKik.keyPoints[3].text,
   },
 ];
 
 const SUBMISSION_STEPS = [
   {
-    title: 'Заповнюєте анкету',
-    text: 'Коротко описуєте гру, стан підготовки та очікування від запуску.',
+    title: uiContent.proKik.submissionSteps[0].title,
+    text: uiContent.proKik.submissionSteps[0].text,
   },
   {
-    title: 'Ми звʼязуємося з вами',
-    text: 'Команда переглядає заявку та повертається з фідбеком і наступними кроками.',
+    title: uiContent.proKik.submissionSteps[1].title,
+    text: uiContent.proKik.submissionSteps[1].text,
   },
   {
-    title: 'Готуємо запуск на платформі',
-    text: 'Разом формуємо сторінку проєкту, візуали, етапи та механіку підтримки.',
+    title: uiContent.proKik.submissionSteps[2].title,
+    text: uiContent.proKik.submissionSteps[2].text,
   },
 ];
 
@@ -58,10 +59,10 @@ const AUTHOR_FORM_URL =
 export default function ProKikPage() {
   const { kik } = siteContent;
   const proKik = kik.proKik ?? {
-    intro: 'KIK вдома — це зрозумілий та свій спосіб підтримувати цікаві авторські настільні ігри.',
-    story: 'Це окремий підпростір усередині Blue Ferret. Тут ми представляємо авторські проєкти настільних ігор, які потребують підтримки спільноти. Це не лише показ однієї гри — це платформа, де можна знайти різноманітні проєкти, побачити їхній статус, зібрану суму та оновлення.',
-    benefit: 'Ми віримо, що кожен цікавий проєкт вартий уваги. KIK вдома — це спосіб зробити підтримку авторських ігор зручною та прозорою. Просто, зрозуміло, без зайвого шуму.',
-    trust: 'Чому можна довіряти? Тому що ми самі — незалежне видавництво. Ми знаємо, як важлива прозорість на кожному етапі. Кожен проєкт має свою історію, ціль і відкритий статус.',
+    intro: uiContent.proKik.fallback.intro,
+    story: uiContent.proKik.fallback.story,
+    benefit: uiContent.proKik.fallback.benefit,
+    trust: uiContent.proKik.fallback.trust,
   };
 
   return (
@@ -81,11 +82,11 @@ export default function ProKikPage() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--kik-accent)]/35 bg-white/85 text-[var(--kik-accent)] text-sm font-semibold mb-5">
                 <Leaf className="w-4 h-4" />
-                Про платформу KIK вдома
+                {uiContent.proKik.badge}
               </div>
 
               <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-5">
-                Що таке KIK вдома?
+                {uiContent.proKik.title}
               </h1>
 
               <p className="text-base sm:text-xl text-slate-600 leading-relaxed mb-6">
@@ -105,14 +106,14 @@ export default function ProKikPage() {
                   rel="noopener noreferrer"
                   className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors"
                 >
-                  Анкета для авторів
+                  {uiContent.proKik.authorFormButton}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   href="/kik/proekty"
                   className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 rounded-xl border border-[var(--kik-accent)]/35 bg-white text-slate-700 font-semibold hover:border-[var(--kik-accent)] hover:text-[var(--kik-accent)] transition-colors"
                 >
-                  Переглянути проєкти
+                  {uiContent.proKik.projectsButton}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -130,7 +131,7 @@ export default function ProKikPage() {
             className="mb-6 sm:mb-8"
           >
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">
-              Чому автори обирають KIK вдома
+              {uiContent.proKik.reasonsTitle}
             </h2>
             <p className="text-slate-600 text-base sm:text-lg max-w-3xl leading-relaxed">
               {proKik.benefit}
@@ -168,10 +169,10 @@ export default function ProKikPage() {
             >
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--kik-accent)]/30 bg-white/75 text-[var(--kik-accent)] text-xs font-semibold mb-4">
                 <FileText className="w-3.5 h-3.5" />
-                Простий процес
+                {uiContent.proKik.processBadge}
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4">
-                Як подати проєкт
+                {uiContent.proKik.processTitle}
               </h2>
               <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-6">
                 {proKik.trust}
@@ -182,7 +183,7 @@ export default function ProKikPage() {
                 rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors"
               >
-                Заповнити анкету автора
+                {uiContent.proKik.processButton}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>
@@ -209,7 +210,7 @@ export default function ProKikPage() {
               <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-4 sm:p-5 flex gap-3 items-start">
                 <CheckCircle2 className="w-5 h-5 text-[var(--kik-accent)] mt-0.5 shrink-0" />
                 <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
-                  Після подачі анкети ми повертаємося з відповіддю та допомагаємо довести запуск до готового вигляду.
+                  {uiContent.proKik.afterApply}
                 </p>
               </div>
             </div>

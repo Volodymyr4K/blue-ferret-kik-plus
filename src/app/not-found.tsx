@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import LogoIcon from '@/components/LogoIcon';
 import { Gamepad2, Home } from 'lucide-react';
+import uiContent from '@/data/ui-content';
 
 export default function NotFound() {
   return (
@@ -19,10 +20,10 @@ export default function NotFound() {
           404
         </h1>
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
-          Сторінку не знайдено
+          {uiContent.errors.notFoundTitle}
         </h2>
         <p className="text-slate-600 text-lg mb-10 max-w-md mx-auto">
-          Можливо, сторінка переміщена або не існує. Поверніться на головну або перегляньте наші ігри.
+          {uiContent.errors.notFoundDescription}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -30,17 +31,17 @@ export default function NotFound() {
             className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#009FE3] text-white font-bold rounded-2xl hover:bg-[#0088c4] transition-all duration-300 shadow-[0_8px_30px_-10px_rgba(0,159,227,0.5)] hover:shadow-[0_12px_40px_-15px_rgba(0,159,227,0.6)] hover:scale-105"
           >
             <Home className="w-5 h-5" />
-            На головну
+            {uiContent.errors.toHome}
           </Link>
           <Link
             href="/igry"
             className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-slate-700 font-bold rounded-2xl border-2 border-slate-200/80 hover:border-[#009FE3]/50 hover:text-[#009FE3] hover:bg-[#009FE3]/5 transition-all duration-300 shadow-card hover:shadow-card-hover"
           >
             <Gamepad2 className="w-5 h-5" />
-            Наші ігри
+            {uiContent.errors.toGames}
           </Link>
         </div>
-        <p className="mt-12 text-xl text-[#009FE3]/80">Місце, де мрії збуваються ✦</p>
+        <p className="mt-12 text-xl text-[#009FE3]/80">{uiContent.errors.brandLine}</p>
       </div>
     </div>
   );

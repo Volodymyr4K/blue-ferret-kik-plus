@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
+import uiContent from '@/data/ui-content';
 
 export const metadata: Metadata = {
-  title: 'Контакти | Blue Ferret',
-  description: 'Зв\'яжіться з Blue Ferret — видавництвом настільних ігор',
+  title: uiContent.metadata.contactsTitle,
+  description: uiContent.metadata.contactsDescription,
 };
 
 export default function ContactsLayout({

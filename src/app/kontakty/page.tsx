@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Mail, Instagram, Send, MessageCircle } from 'lucide-react';
 import siteContent from '@/data/site-content';
 import SectionHeader from '@/components/SectionHeader';
+import uiContent from '@/data/ui-content';
 
 export default function ContactsPage() {
   const { contacts } = siteContent;
@@ -19,8 +20,8 @@ export default function ContactsPage() {
         <div className="relative max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
             <SectionHeader
-              label="Контакти"
-              title="Зв'яжіться з нами"
+              label={uiContent.contactsPage.label}
+              title={uiContent.contactsPage.title}
               subtitle={contacts.intro}
             />
           </motion.div>
@@ -56,7 +57,7 @@ export default function ContactsPage() {
                 <Instagram className="w-7 h-7 sm:w-8 sm:h-8 text-bf" />
               </div>
               <h3 className="heading-3 mb-2 text-lg">Instagram</h3>
-              <p className="text-body text-center text-sm sm:text-base break-all">@blueferret.games</p>
+              <p className="text-body text-center text-sm sm:text-base break-all">{uiContent.contactsPage.instagramHandle}</p>
             </a>
 
             <a
@@ -69,7 +70,7 @@ export default function ContactsPage() {
                 <Send className="w-7 h-7 sm:w-8 sm:h-8 text-bf" />
               </div>
               <h3 className="heading-3 mb-2 text-lg">Telegram</h3>
-              <p className="text-body text-center text-sm sm:text-base">Написати в Telegram</p>
+              <p className="text-body text-center text-sm sm:text-base">{uiContent.contactsPage.telegramAction}</p>
             </a>
           </motion.div>
 
@@ -83,7 +84,7 @@ export default function ContactsPage() {
               <MessageCircle className="w-7 h-7 text-bf" />
             </div>
             <h3 className="heading-2 text-xl mb-3">
-              Співпраця та партнерство
+              {uiContent.contactsPage.partnershipTitle}
             </h3>
             <p className="text-body mb-8 max-w-xl mx-auto">
               {contacts.partnership}
@@ -93,7 +94,7 @@ export default function ContactsPage() {
               className="inline-flex w-full sm:w-auto max-w-xs justify-center items-center gap-2 px-8 sm:px-10 py-4 btn btn-primary rounded-xl shadow-premium-glow"
             >
               <Mail className="w-5 h-5" />
-              Написати
+              {uiContent.contactsPage.writeButton}
             </a>
           </motion.div>
         </div>

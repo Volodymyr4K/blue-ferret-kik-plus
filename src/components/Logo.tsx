@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import LogoIcon from './LogoIcon';
+import uiContent from '@/data/ui-content';
 
 type LogoProps = {
   variant?: 'full' | 'icon' | 'compact';
@@ -32,7 +33,7 @@ export default function Logo({ variant = 'full', size = 'md', className = '', li
 
   if (variant === 'icon') {
     return (
-      <Link href="/" className={`inline-block ${className}`} aria-label="Blue Ferret — головна">
+      <Link href="/" className={`inline-block ${className}`} aria-label={uiContent.branding.logoHomeAria}>
         {logoMark}
       </Link>
     );
@@ -42,7 +43,7 @@ export default function Logo({ variant = 'full', size = 'md', className = '', li
     <Link
       href="/"
       className={`flex items-center gap-3 group ${className}`}
-      aria-label="Blue Ferret — головна"
+      aria-label={uiContent.branding.logoHomeAria}
     >
       {logoMark}
       {variant === 'full' && (
@@ -59,7 +60,7 @@ export default function Logo({ variant = 'full', size = 'md', className = '', li
               light ? 'text-slate-400' : 'text-slate-500'
             }`}
           >
-            видавництво
+            {uiContent.branding.publisherLabel}
           </span>
         </div>
       )}

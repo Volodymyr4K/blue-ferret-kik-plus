@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { Gamepad2, Heart, ArrowRight, Sparkles, Award, Palette, Shield, CheckCircle2, Quote } from 'lucide-react';
 import siteContent from '@/data/site-content';
 import { HeroDecorationsLight } from '@/components/DecorativeShapes';
+import uiContent from '@/data/ui-content';
 
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
@@ -105,14 +106,14 @@ export default function HomePage() {
               className="group inline-flex w-full sm:w-auto max-w-xs mx-auto items-center justify-center gap-2 px-8 sm:px-10 py-4 text-sm font-bold bg-[var(--bf-accent)] hover:bg-[var(--bf-accent-hover)] text-white rounded-full transition-colors shadow-[0_14px_30px_-18px_rgba(0,159,227,0.7)]"
             >
               <Gamepad2 className="w-5 h-5" />
-              Наші ігри
+              {uiContent.home.ctaPrimary}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
               href="/kik/"
               className="group inline-flex w-full sm:w-auto max-w-xs mx-auto items-center justify-center gap-2 px-8 sm:px-10 py-4 text-sm font-bold border-2 border-slate-200 text-slate-700 bg-white rounded-full hover:border-[var(--bf-accent)] hover:text-[var(--bf-accent)] transition-colors"
             >
-              КІК вдома
+              {uiContent.home.ctaSecondary}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </motion.div>
@@ -158,9 +159,24 @@ export default function HomePage() {
           {/* Feature pillars — світлі картки */}
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
             {(pillars ?? [
-              { title: 'Створюйте світи', description: about.paragraph3, href: '/igry', icon: 'sparkles' },
-              { title: 'Відкривайте ігри', description: about.paragraph2, href: '/igry', icon: 'gamepad' },
-              { title: 'Об\'єднуйте гравців', description: 'KIK вдома — платформа підтримки авторських проєктів.', href: '/kik', icon: 'heart' },
+              {
+                title: uiContent.home.fallbackPillars[0].title,
+                description: about.paragraph3 || uiContent.home.fallbackPillars[0].description,
+                href: uiContent.home.fallbackPillars[0].href,
+                icon: uiContent.home.fallbackPillars[0].icon,
+              },
+              {
+                title: uiContent.home.fallbackPillars[1].title,
+                description: about.paragraph2 || uiContent.home.fallbackPillars[1].description,
+                href: uiContent.home.fallbackPillars[1].href,
+                icon: uiContent.home.fallbackPillars[1].icon,
+              },
+              {
+                title: uiContent.home.fallbackPillars[2].title,
+                description: uiContent.home.fallbackPillars[2].description,
+                href: uiContent.home.fallbackPillars[2].href,
+                icon: uiContent.home.fallbackPillars[2].icon,
+              },
             ]).map((pillar, i) => {
               const Icon = pillar.icon === 'heart' ? Heart : pillar.icon === 'gamepad' ? Gamepad2 : Sparkles;
               return (
@@ -180,7 +196,7 @@ export default function HomePage() {
                     </h3>
                     <p className="text-slate-600 text-base leading-[1.8] mb-4">{pillar.description}</p>
                     <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--bf-accent)]">
-                      Детальніше
+                      {uiContent.home.pillarMore}
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </motion.div>
@@ -225,7 +241,7 @@ export default function HomePage() {
             <p className="text-4xl sm:text-5xl md:text-6xl text-slate-800 mb-3 tracking-tight">
               {values.title}
             </p>
-            <p className="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto">Принципи, якими ми керуємося при створенні кожної гри</p>
+            <p className="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto">{uiContent.home.valuesSubtitle}</p>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -310,13 +326,13 @@ export default function HomePage() {
                 <Gamepad2 className="w-7 h-7 text-[var(--bf-accent)]" />
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 group-hover:text-[var(--bf-accent)] transition-colors">
-                Наші ігри
+                {uiContent.home.previewGamesTitle}
               </h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                Каталог настільних ігор Blue Ferret. Кожна гра — окремий світ мрій, механік та атмосфери.
+                {uiContent.home.previewGamesDescription}
               </p>
               <span className="inline-flex items-center gap-2 text-[var(--bf-accent)] font-semibold group-hover:gap-3 transition-all">
-                Переглянути
+                {uiContent.home.previewGamesAction}
                 <ArrowRight className="w-5 h-5" />
               </span>
             </Link>
@@ -328,13 +344,13 @@ export default function HomePage() {
                 <Heart className="w-7 h-7 text-[var(--kik-accent)]" />
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 group-hover:text-[var(--kik-accent)] transition-colors">
-                KIK вдома
+                {uiContent.home.previewKikTitle}
               </h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                Платформа підтримки авторських проєктів. Підтримуйте цікаві ігри та станьте частиною їхньої історії.
+                {uiContent.home.previewKikDescription}
               </p>
               <span className="inline-flex items-center gap-2 text-[var(--kik-accent)] font-semibold group-hover:gap-3 transition-all">
-                Дізнатися більше
+                {uiContent.home.previewKikAction}
                 <ArrowRight className="w-5 h-5" />
               </span>
             </Link>
@@ -358,13 +374,13 @@ export default function HomePage() {
           className="relative max-w-4xl mx-auto text-center z-10 pointer-events-auto"
         >
           <p className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-slate-800 mb-5 sm:mb-8 tracking-tight leading-[0.98]">
-            {cta?.title ?? 'Готові відкрити новий світ?'}
+            {cta?.title ?? uiContent.home.fallbackCta.title}
           </p>
           <h2 className="text-lg sm:text-2xl md:text-3xl text-[var(--bf-accent)] mb-4">
-            {cta?.subtitle ?? 'Відкрийте світ настільних ігор'}
+            {cta?.subtitle ?? uiContent.home.fallbackCta.subtitle}
           </h2>
           <p className="text-slate-600 text-base sm:text-lg mb-10 sm:mb-12 max-w-2xl mx-auto">
-            {cta?.description ?? 'Досліджуйте наші ігри, підтримуйте авторські проєкти на KIK вдома — або просто напишіть нам.'}
+            {cta?.description ?? uiContent.home.fallbackCta.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center">
             <Link
@@ -373,7 +389,7 @@ export default function HomePage() {
               className="group relative z-20 inline-flex w-full max-w-xs sm:w-auto items-center justify-center gap-3 px-8 sm:px-12 py-4 sm:py-5 bg-[var(--bf-accent)] text-white font-bold text-base sm:text-lg rounded-2xl hover:bg-[var(--bf-accent-hover)] transition-colors shadow-[0_14px_30px_-18px_rgba(0,159,227,0.5)] touch-target"
             >
               <Gamepad2 className="w-6 h-6" />
-              Переглянути ігри
+              {uiContent.home.ctaPrimaryLarge}
             </Link>
             <Link
               href="/kik/"
@@ -381,13 +397,13 @@ export default function HomePage() {
               className="group relative z-20 inline-flex w-full max-w-xs sm:w-auto items-center justify-center gap-3 px-8 sm:px-12 py-4 sm:py-5 bg-white text-[var(--bf-accent)] font-bold text-base sm:text-lg rounded-2xl border-2 border-[var(--bf-accent)]/50 hover:bg-[var(--bf-accent-muted)] hover:border-[var(--bf-accent)] transition-colors touch-target shadow-[0_12px_24px_-18px_rgba(15,23,42,0.35)]"
             >
               <Heart className="w-6 h-6" />
-              Кік-вдома
+              {uiContent.home.ctaSecondaryLarge}
             </Link>
             <Link
               href="/kontakty/"
               className="group inline-flex items-center justify-center gap-2 px-8 sm:px-12 py-4 sm:py-6 text-slate-600 font-semibold hover:text-[var(--bf-accent)] transition-all text-base sm:text-lg"
             >
-              Контакти
+              {uiContent.home.ctaTertiary}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1" />
             </Link>
           </div>

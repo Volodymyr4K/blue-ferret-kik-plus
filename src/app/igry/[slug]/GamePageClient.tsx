@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { Game } from '@/data/games';
 import RotatableBox from '@/components/RotatableBox';
+import uiContent from '@/data/ui-content';
 
 const STAGE_ORDER = ['announcement', 'preorder', 'production', 'onsale'] as const;
 type StageKey = (typeof STAGE_ORDER)[number];
@@ -94,27 +95,16 @@ export default function GamePageClient({ game }: { game: Game }) {
   const progressPercent = Math.round((activeStages / totalStages) * 100);
   const highlights = game.slug === 'trymaysia'
     ? [
-        { icon: Anchor, text: 'Морська атмосфера в кожній партії' },
-        { icon: Rocket, text: 'Розробка рухається за планом' },
-        { icon: Target, text: 'Команда тримає фокус на якості' },
+        { icon: Anchor, text: uiContent.gamePage.highlightsTrymaysia[0] },
+        { icon: Rocket, text: uiContent.gamePage.highlightsTrymaysia[1] },
+        { icon: Target, text: uiContent.gamePage.highlightsTrymaysia[2] },
       ]
     : [
-        { icon: Rocket, text: 'Розробка рухається за планом' },
-        { icon: Target, text: 'Команда тримає фокус на якості' },
+        { icon: Rocket, text: uiContent.gamePage.highlightsDefault[0] },
+        { icon: Target, text: uiContent.gamePage.highlightsDefault[1] },
       ];
-  const stageBadgeLabels = {
-    active: 'ЧЕРНЕТКА',
-    locked: 'СКОРО',
-    archived: 'Архів',
-    hidden: 'Приховано',
-  } as const;
-
-  const statusLabels = {
-    announcement: 'Анонс',
-    production: 'Виробництво',
-    preorder: 'Передзамовлення',
-    onsale: 'У продажі',
-  } as const;
+  const stageBadgeLabels = uiContent.gamePage.stageBadge;
+  const statusLabels = uiContent.gamePage.statusLabels;
 
   // Generate dark theme colors from palette
   const hex2rgb = (hex: string) => {
@@ -405,7 +395,7 @@ export default function GamePageClient({ game }: { game: Game }) {
           }
         >
           <span className="text-white/50 text-sm tracking-[0.2em] uppercase">
-            Зануритися
+            {uiContent.gamePage.dive}
           </span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
@@ -431,14 +421,13 @@ export default function GamePageClient({ game }: { game: Game }) {
             className="text-center mb-10 sm:mb-14"
           >
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-white/30 mb-4">
-              Про гру
+              {uiContent.gamePage.aboutLabel}
             </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white/90 mb-4">
-              Паспорт пригоди
+              {uiContent.gamePage.passportTitle}
             </h2>
             <p className="text-white/40 text-base sm:text-lg max-w-2xl mx-auto">
-              Коротко про формат гри та поточний стан розробки, щоб одразу
-              зрозуміти, чого чекати від «{game.name}».
+              {uiContent.gamePage.passportSubtitleTemplate.replace('{name}', game.name)}
             </p>
           </motion.div>
 
@@ -448,18 +437,18 @@ export default function GamePageClient({ game }: { game: Game }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {[
                 {
-                  label: 'ГРАВЦІ',
+                  label: uiContent.gamePage.passportStats.players,
                   value: game.passport?.players,
                   icon: Users,
                 },
                 {
-                  label: 'ТРИВАЛІСТЬ',
+                  label: uiContent.gamePage.passportStats.duration,
                   value: game.passport?.duration,
                   icon: Clock,
                 },
-                { label: 'ВІК', value: game.passport?.age, icon: Baby },
+                { label: uiContent.gamePage.passportStats.age, value: game.passport?.age, icon: Baby },
                 {
-                  label: 'АВТОРКА',
+                  label: uiContent.gamePage.passportStats.author,
                   value: game.passport?.author,
                   icon: Pen,
                 },
@@ -500,7 +489,7 @@ export default function GamePageClient({ game }: { game: Game }) {
               className="p-5 sm:p-8 rounded-xl" style={{ backgroundColor: bg3, border: `1px solid ${border1}` }}
             >
               <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/30 mb-3">
-                Стан проєкту
+                {uiContent.gamePage.projectState}
               </p>
               <h3 className="text-2xl font-bold text-white/90 mb-5">
                 {statusLabels[game.status]}
@@ -522,9 +511,11 @@ export default function GamePageClient({ game }: { game: Game }) {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-1 text-xs text-white/40 mb-6">
-                <span>{progressPercent}% готовності</span>
+                <span>{uiContent.gamePage.readinessTemplate.replace('{value}', String(progressPercent))}</span>
                 <span>
-                  {activeStages}/{totalStages} етапи відкрито
+                  {uiContent.gamePage.stagesOpenTemplate
+                    .replace('{active}', String(activeStages))
+                    .replace('{total}', String(totalStages))}
                 </span>
               </div>
 
@@ -572,16 +563,16 @@ export default function GamePageClient({ game }: { game: Game }) {
             className="flex justify-center mb-10 sm:mb-16"
           >
             {assets?.sectionTitle ? (
-              <img
-                src={assets.sectionTitle}
-                alt="Про що ж гра?"
-                className="w-[220px] sm:w-[400px] md:w-[500px] h-auto"
-              />
-            ) : (
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white/90">
-                Про що гра?
-              </h2>
-            )}
+                <img
+                  src={assets.sectionTitle}
+                  alt={uiContent.gamePage.aboutImageAlt}
+                  className="w-[220px] sm:w-[400px] md:w-[500px] h-auto"
+                />
+              ) : (
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white/90">
+                  {uiContent.gamePage.aboutFallbackTitle}
+                </h2>
+              )}
           </motion.div>
 
           {/* Content — cover + description */}
@@ -694,12 +685,12 @@ export default function GamePageClient({ game }: { game: Game }) {
             className="mb-8 sm:mb-10"
           >
             <p className="text-xs font-semibold tracking-[0.22em] uppercase text-white/35 mb-3">
-              Прогрес
+              {uiContent.gamePage.progressLabel}
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white/90 mb-3">
-              Етапи проєкту
+              {uiContent.gamePage.stagesTitle}
             </h2>
-            <p className="text-white/45 text-sm sm:text-base">Стан запуску кожного етапу.</p>
+            <p className="text-white/45 text-sm sm:text-base">{uiContent.gamePage.stagesSubtitle}</p>
           </motion.div>
 
           <div className="space-y-5 sm:space-y-6">
@@ -715,7 +706,7 @@ export default function GamePageClient({ game }: { game: Game }) {
               const preview =
                 stage.content && stage.content.length > 170
                   ? `${stage.content.slice(0, 170)}…`
-                  : stage.content || 'Секція в роботі';
+                  : stage.content || uiContent.gamePage.previewFallback;
 
               return (
                 <motion.article
@@ -805,7 +796,7 @@ export default function GamePageClient({ game }: { game: Game }) {
                   {isActive ? (
                     <>
                       {!isExpanded && (
-                        <p className="text-white/55 text-xs sm:text-sm">Натисни, щоб відкрити етап.</p>
+                        <p className="text-white/55 text-xs sm:text-sm">{uiContent.gamePage.clickToOpen}</p>
                       )}
                       <motion.div
                         initial={false}
@@ -836,7 +827,7 @@ export default function GamePageClient({ game }: { game: Game }) {
                     </>
                   ) : (
                     <div className="mt-3 text-sm sm:text-base text-white/52">
-                      Секція ще не заповнена
+                      {uiContent.gamePage.sectionNotFilled}
                     </div>
                   )}
 

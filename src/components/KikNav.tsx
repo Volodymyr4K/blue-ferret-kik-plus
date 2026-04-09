@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowLeft, FolderKanban, Info } from 'lucide-react';
+import uiContent from '@/data/ui-content';
 
 export default function KikNav() {
   const pathname = usePathname();
@@ -21,7 +22,7 @@ export default function KikNav() {
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-2 py-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors text-sm font-medium"
-            aria-label="Повернутися на головну"
+            aria-label={uiContent.kikNav.backHomeAria}
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Blue Ferret</span>
@@ -30,11 +31,11 @@ export default function KikNav() {
           <div className="flex items-center gap-1 sm:gap-2">
             <Link href="/kik/pro-kik" className={linkClass('/kik/pro-kik')}>
               <Info className="w-4 h-4" />
-              <span className="hidden sm:inline">Про КІК</span>
+              <span className="hidden sm:inline">{uiContent.kikNav.about}</span>
             </Link>
             <Link href="/kik/proekty" className={linkClass('/kik/proekty')}>
               <FolderKanban className="w-4 h-4" />
-              <span className="hidden sm:inline">Проєкти</span>
+              <span className="hidden sm:inline">{uiContent.kikNav.projects}</span>
             </Link>
           </div>
         </div>

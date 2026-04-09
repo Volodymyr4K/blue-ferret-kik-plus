@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowRight, CreditCard, Sparkles } from 'lucide-react';
 import type { ProjectSupportTier } from '@/data/projects';
+import uiContent from '@/data/ui-content';
 
 interface SupportOptionsClientProps {
   projectId: string;
@@ -34,7 +35,12 @@ export default function SupportOptionsClient({
 
   const createInvoice = async (amount: number, title: string, key: string) => {
     if (!Number.isFinite(amount) || amount < minDonation) {
-      setError(`Мінімальна сума підтримки — ${formatMoney(minDonation)}.`);
+      setError(
+        uiContent.supportOptions.minDonationErrorTemplate.replace(
+          '{amount}',
+          formatMoney(minDonation)
+        )
+      );
       return;
     }
 
@@ -44,7 +50,10 @@ export default function SupportOptionsClient({
     try {
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const amountKop = Math.round(amount * 100);
-      const safeTitle = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-zа-яіїєґ0-9-]/gi, '');
+      const safeTitle = title
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\p{L}\p{N}-]/gu, '');
 
       const res = await fetch('/api/mono/invoice', {
         method: 'POST',
@@ -58,12 +67,12 @@ export default function SupportOptionsClient({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Не вдалося створити оплату');
-      if (!data.pageUrl) throw new Error('Не отримано посилання на оплату');
+      if (!res.ok) throw new Error(data.error || uiContent.supportOptions.createFailed);
+      if (!data.pageUrl) throw new Error(uiContent.supportOptions.missingPaymentLink);
 
       window.location.href = data.pageUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Помилка оплати');
+      setError(err instanceof Error ? err.message : uiContent.supportOptions.paymentError);
       setLoadingKey(null);
     }
   };
@@ -74,10 +83,10 @@ export default function SupportOptionsClient({
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
-              Підтримка без нагороди
+              {uiContent.supportOptions.withoutRewardTitle}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Можна підтримати проєкт будь-якою сумою без вибору набору. Мінімум — {formatMoney(minDonation)}.
+              {uiContent.supportOptions.withoutRewardDescriptionTemplate.replace('{amount}', formatMoney(minDonation))}
             </p>
           </div>
 
@@ -89,15 +98,15 @@ export default function SupportOptionsClient({
               value={customAmount}
               onChange={(e) => setCustomAmount(e.target.value)}
               className="input-field flex-1 min-w-0"
-              aria-label="Сума підтримки"
+              aria-label={uiContent.supportOptions.amountAria}
             />
             <button
               type="button"
-              onClick={() => createInvoice(Number(customAmount), 'Підтримка без нагороди', 'custom')}
+              onClick={() => createInvoice(Number(customAmount), uiContent.supportOptions.withoutRewardButtonLabel, 'custom')}
               disabled={loadingKey === 'custom'}
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loadingKey === 'custom' ? 'Створення…' : 'Підтримати'}
+              {loadingKey === 'custom' ? uiContent.supportOptions.creating : uiContent.supportOptions.supportButton}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -119,7 +128,7 @@ export default function SupportOptionsClient({
                   {tier.featured && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--kik-accent)]/12 text-[var(--kik-accent)] text-xs font-semibold border border-[var(--kik-accent)]/25 mb-2">
                       <Sparkles className="w-3.5 h-3.5" />
-                      Рекомендовано
+                      {uiContent.supportOptions.featured}
                     </span>
                   )}
                   <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">{tier.title}</h3>
@@ -146,7 +155,7 @@ export default function SupportOptionsClient({
                     disabled={isLoading}
                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--kik-accent)] text-white font-semibold hover:bg-[var(--teal-accent)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? 'Створення…' : 'Підтримати'}
+                    {isLoading ? uiContent.supportOptions.creating : uiContent.supportOptions.supportButton}
                     <CreditCard className="w-4 h-4" />
                   </button>
                 </div>

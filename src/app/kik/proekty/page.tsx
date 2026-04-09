@@ -8,6 +8,7 @@ import { FolderKanban, ShieldCheck, TimerReset, CheckCircle2 } from 'lucide-reac
 import projects from '@/data/projects';
 import ProjectCard from './ProjectCard';
 import SectionHeader from '@/components/SectionHeader';
+import uiContent from '@/data/ui-content';
 
 function ProjectsContent() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -40,7 +41,7 @@ function ProjectsContent() {
           >
             <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base leading-snug">
-              Оплату отримано! Дякуємо за підтримку проєкту.
+              {uiContent.projectsPage.paymentSuccess}
             </span>
           </motion.div>
         )}
@@ -55,23 +56,23 @@ function ProjectsContent() {
         <div className="relative max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center">
             <SectionHeader
-              label="Проєкти"
-              title="Авторські ігри"
-              subtitle="Підбірка проєктів платформи KIK вдома: етапи, оновлення та поточний прогрес."
+              label={uiContent.projectsPage.label}
+              title={uiContent.projectsPage.title}
+              subtitle={uiContent.projectsPage.subtitle}
               className="mb-6 sm:mb-8"
             />
             <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <FolderKanban className="w-4 h-4 text-[var(--kik-accent)]" />
-                {projects.length} проєктів
+                {projects.length} {uiContent.projectsPage.projectsCount}
               </span>
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <ShieldCheck className="w-4 h-4 text-[var(--kik-accent)]" />
-                {activeProjects} активних
+                {activeProjects} {uiContent.projectsPage.activeCount}
               </span>
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white/90 border border-slate-200/80 shadow-sm">
                 <TimerReset className="w-4 h-4 text-[var(--kik-accent)]" />
-                Оновлення в стрічці
+                {uiContent.projectsPage.updates}
               </span>
             </div>
           </motion.div>
@@ -101,7 +102,7 @@ function ProjectsContent() {
 
 export default function ProjectsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Завантаження...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">{uiContent.projectsPage.loading}</div>}>
       <ProjectsContent />
     </Suspense>
   );

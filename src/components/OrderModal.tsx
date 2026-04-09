@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CreditCard } from 'lucide-react';
+import uiContent from '@/data/ui-content';
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Помилка створення оплати');
+        throw new Error(data.error || uiContent.orderModal.createPaymentError);
       }
 
       if (data.pageUrl) {
@@ -55,9 +56,9 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
         return;
       }
 
-      throw new Error('Не отримано посилання на оплату');
+      throw new Error(uiContent.orderModal.missingPaymentLink);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Помилка оплати');
+      setError(err instanceof Error ? err.message : uiContent.orderModal.paymentError);
       setLoading(false);
     }
   };
@@ -83,13 +84,13 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.2),0_0_0_1px_rgba(0,0,0,0.05)] border-2 border-slate-200/60 z-50 p-6 lg:p-8 mx-4"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="heading-2 text-xl sm:text-2xl">Оформити замовлення</h2>
-              <button onClick={onClose} className="p-2.5 rounded-xl hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700" aria-label="Закрити">
+              <h2 className="heading-2 text-xl sm:text-2xl">{uiContent.orderModal.title}</h2>
+              <button onClick={onClose} className="p-2.5 rounded-xl hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700" aria-label={uiContent.orderModal.closeAria}>
                 <X className="w-5 h-5" />
               </button>
             </div>
             <p className="text-body mb-6">
-              Гра: <strong className="text-slate-900">{gameName}</strong>
+              {uiContent.orderModal.gamePrefix} <strong className="text-slate-900">{gameName}</strong>
               {gamePrice && (
                 <span className="ml-2 text-bf font-bold">
                   {gamePrice} ₴
@@ -100,7 +101,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
             {canPayMono && (
               <div className="mb-6 p-5 rounded-2xl bg-slate-50/80 border-2 border-slate-200/60">
                 <p className="text-caption mb-4 pb-4 border-b border-slate-200/80">
-                  Оплата карткою Visa/Mastercard через <strong className="text-slate-800">Plata by Mono</strong>
+                  {uiContent.orderModal.monoText} <strong className="text-slate-800">{uiContent.orderModal.monoBrand}</strong>
                 </p>
                 <button
                   type="button"
@@ -109,11 +110,11 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
                   className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed border-2 border-slate-900/20 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.3)]"
                 >
                   {loading ? (
-                    <span className="animate-pulse">Створення оплати...</span>
+                    <span className="animate-pulse">{uiContent.orderModal.creating}</span>
                   ) : (
                     <>
                       <CreditCard className="w-5 h-5" />
-                      Оплатити {gamePrice} ₴
+                      {uiContent.orderModal.payButtonTemplate.replace('{price}', String(gamePrice))}
                     </>
                   )}
                 </button>
@@ -121,19 +122,19 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
                   <p className="mt-2 text-sm text-red-600">{error}</p>
                 )}
                 <p className="mt-3 text-xs text-slate-500 text-center">
-                  Безпечна оплата через Monobank
+                  {uiContent.orderModal.safePayment}
                 </p>
               </div>
             )}
 
             <p className="text-sm text-slate-500 mb-4">
-              {canPayMono ? 'Або залиште заявку — ми зв\'яжемося з вами:' : 'Залиште заявку — ми зв\'яжемося з вами:'}
+              {canPayMono ? uiContent.orderModal.requestInstead : uiContent.orderModal.requestOnly}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
-                placeholder="Ім'я *"
+                placeholder={uiContent.orderModal.placeholderName}
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -141,7 +142,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
               />
               <input
                 type="tel"
-                placeholder="Телефон *"
+                placeholder={uiContent.orderModal.placeholderPhone}
                 required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -149,7 +150,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
               />
               <input
                 type="email"
-                placeholder="Email *"
+                placeholder={uiContent.orderModal.placeholderEmail}
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -157,13 +158,13 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
               />
               <input
                 type="text"
-                placeholder="Адреса доставки"
+                placeholder={uiContent.orderModal.placeholderAddress}
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 className={inputClass}
               />
               <textarea
-                placeholder="Коментар"
+                placeholder={uiContent.orderModal.placeholderComment}
                 rows={3}
                 value={formData.comment}
                 onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
@@ -173,7 +174,7 @@ export default function OrderModal({ isOpen, onClose, gameName, gamePrice }: Ord
                 type="submit"
                 className="w-full py-4 btn btn-primary rounded-xl shadow-[0_0_25px_-5px_rgba(0,159,227,0.35)] hover:shadow-[0_0_35px_-8px_rgba(0,159,227,0.45)]"
               >
-                Надіслати заявку
+                {uiContent.orderModal.submitRequest}
               </button>
             </form>
           </motion.div>

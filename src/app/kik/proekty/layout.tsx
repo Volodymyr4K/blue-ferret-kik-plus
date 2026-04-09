@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
+import uiContent from '@/data/ui-content';
 
 export const metadata: Metadata = {
-  title: 'Проєкти | KIK вдома',
-  description: 'Каталог авторських проєктів платформи KIK вдома',
+  title: uiContent.metadata.kikProjectsTitle,
+  description: uiContent.metadata.kikProjectsDescription,
 };
 
 export default function ProjectsLayout({
