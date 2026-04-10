@@ -60,7 +60,7 @@ function getGameAssets(slug: string) {
       sectionTitle: '/images/trymaysia/pro-scho-gra.png',
       heroBackgroundVideoMp4: '/images/trymaysia/moryaky.mp4',
       heroBackgroundVideoWebm: '/images/trymaysia/moryaky.webm',
-      heroBackgroundFallback: '/images/trymaysia/moryaky.gif',
+      heroBackgroundFallback: '/images/trymaysia/box-front-center-v11.jpg',
       boxMockup: '/images/trymaysia/box-front-center-v11.jpg',
       boxBack: '/images/trymaysia/box-back-center-v11.jpg',
       boxTop: '/images/trymaysia/box-top-v11.jpg',

@@ -22,6 +22,7 @@ const ALLOWED_IMAGE_EXTENSIONS = new Set([
 ]);
 
 const MAX_UPLOAD_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const MAX_PUBLIC_ASSET_BYTES = 25 * 1024 * 1024;
 const MIN_UPLOAD_WIDTH = 800;
 const MIN_UPLOAD_HEIGHT = 600;
 
@@ -47,6 +48,19 @@ function collectPaths(value: unknown, acc = new Set<string>()): Set<string> {
 
 function fail(message: string): never {
   throw new Error(message);
+}
+
+function collectPublicFiles(dir: string, acc: string[] = []): string[] {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      collectPublicFiles(fullPath, acc);
+    } else if (entry.isFile()) {
+      acc.push(fullPath);
+    }
+  }
+  return acc;
 }
 
 const mediaPaths = collectPaths({
@@ -93,6 +107,21 @@ for (const mediaPath of mediaPaths) {
   if (dimensions.width < MIN_UPLOAD_WIDTH || dimensions.height < MIN_UPLOAD_HEIGHT) {
     fail(
       `Upload image is too small: ${mediaPath} (${dimensions.width}x${dimensions.height}). Minimum: ${MIN_UPLOAD_WIDTH}x${MIN_UPLOAD_HEIGHT}`
+    );
+  }
+}
+
+const publicFiles = collectPublicFiles(publicDir);
+for (const filePath of publicFiles) {
+  const stat = fs.statSync(filePath);
+  if (stat.size > MAX_PUBLIC_ASSET_BYTES) {
+    const relativePath = path.relative(publicDir, filePath);
+    fail(
+      `Public asset exceeds Cloudflare Pages 25 MiB limit: ${relativePath} (${(
+        stat.size /
+        1024 /
+        1024
+      ).toFixed(1)} MiB)`
     );
   }
 }
