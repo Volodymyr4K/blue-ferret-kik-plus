@@ -21,9 +21,9 @@ const ALLOWED_IMAGE_EXTENSIONS = new Set([
   '.avif',
 ]);
 
-const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024;
-const MIN_UPLOAD_WIDTH = 600;
-const MIN_UPLOAD_HEIGHT = 400;
+const MAX_UPLOAD_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const MIN_UPLOAD_WIDTH = 800;
+const MIN_UPLOAD_HEIGHT = 600;
 
 function collectPaths(value: unknown, acc = new Set<string>()): Set<string> {
   if (typeof value === 'string') {
@@ -71,15 +71,18 @@ for (const mediaPath of mediaPaths) {
 
   const stat = fs.statSync(absolutePath);
   const isUpload = mediaPath.startsWith('/uploads/');
-  if (isUpload && stat.size > MAX_FILE_SIZE_BYTES) {
+  if (isUpload && stat.size > MAX_UPLOAD_FILE_SIZE_BYTES) {
     fail(
       `Media file is too large (${Math.round(stat.size / 1024)} KB): ${mediaPath}. Max: ${
-        MAX_FILE_SIZE_BYTES / 1024
+        MAX_UPLOAD_FILE_SIZE_BYTES / 1024
       } KB`
     );
   }
 
   const isSvg = extension === '.svg';
+  if (isUpload && isSvg) {
+    fail(`SVG uploads are not allowed for safety reasons: ${mediaPath}`);
+  }
   if (!isUpload || isSvg) continue;
 
   const dimensions = imageSize(absolutePath);

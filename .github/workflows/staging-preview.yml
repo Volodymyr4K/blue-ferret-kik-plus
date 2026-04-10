@@ -50,6 +50,9 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://blueferret.com.ua
         run: npm run build
 
+      - name: Smoke test static preview
+        run: npm run smoke
+
       - name: Upload staging preview artifact
         uses: actions/upload-artifact@v4
         with:

@@ -68,11 +68,21 @@ for (const project of projects) {
 
 const gameIds = new Set(games.map((item) => item.id));
 const gameBasicIds = new Set(gamesBasic.map((item) => item.id));
+const gamesById = new Map(games.map((item) => [item.id, item]));
+const gamesBasicById = new Map(gamesBasic.map((item) => [item.id, item]));
 for (const id of gameIds) {
   assert(gameBasicIds.has(id), `Missing manager/basic game override for "${id}"`);
 }
 for (const id of gameBasicIds) {
   assert(gameIds.has(id), `Orphan manager/basic game override "${id}"`);
+}
+for (const [id, baseGame] of gamesById) {
+  const override = gamesBasicById.get(id);
+  assert(override, `Missing manager/basic game override for "${id}"`);
+  assert(
+    override.slug === baseGame.slug,
+    `Immutable slug mismatch for game "${id}": base=${baseGame.slug}, basic=${override.slug}`
+  );
 }
 
 const projectIds = new Set(projects.map((item) => item.id));

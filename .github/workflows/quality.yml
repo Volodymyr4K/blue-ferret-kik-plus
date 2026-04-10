@@ -46,3 +46,6 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://blueferret.com.ua
         run: npm run build
+
+      - name: Smoke test exported site
+        run: npm run smoke

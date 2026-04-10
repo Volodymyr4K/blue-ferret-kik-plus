@@ -106,6 +106,8 @@ npm run check    # Повна перевірка: content schema + typecheck + l
   - `npm run validate:media`
   - `npm run validate:links`
   - `npm run validate:copy`
+- Smoke-тест зібраного сайту:
+  - `npm run smoke`
 - CI workflow:
   - `.github/workflows/quality.yml`
   - `.github/workflows/security-audit.yml`

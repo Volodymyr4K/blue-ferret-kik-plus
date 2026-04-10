@@ -189,7 +189,8 @@ export default function AdminGuidePage() {
   const publishUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/compare/main...staging?expand=1`;
   const checksUrl = qualityRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/quality.yml`;
   const isQualityGreen = qualityRun?.status === 'completed' && qualityRun.conclusion === 'success';
-  const qualityBlocksPublish = Boolean(qualityRun) && !isQualityGreen;
+  const qualityStateUnknown = qualityRun === null;
+  const qualityBlocksPublish = !isQualityGreen;
   const checklistComplete = confirmPagesChecked && confirmTextChecked && confirmStatusChecked;
   const canPublish = checklistComplete && !qualityBlocksPublish;
   const seoTitleInfo = summarizeLength(seoTitle.trim().length, 45, 65);
@@ -478,7 +479,9 @@ export default function AdminGuidePage() {
             <p className="text-xs text-slate-500 mt-3">
               {!checklistComplete
                 ? 'Щоб опублікувати, відмітьте всі пункти чекліста.'
-                : qualityBlocksPublish
+                : qualityStateUnknown
+                  ? 'Публікація заблокована: не вдалося отримати статус Quality Gate.'
+                  : qualityBlocksPublish
                   ? 'Публікація заблокована: Quality Gate ще не успішний.'
                   : 'Готово до публікації.'}
             </p>

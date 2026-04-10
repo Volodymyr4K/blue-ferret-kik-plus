@@ -1,6 +1,41 @@
 import { z } from 'zod';
 
 const nonEmptyText = z.string().trim().min(1);
+const PLACEHOLDER_VALUES = new Set([
+  '-',
+  '--',
+  '...',
+  'test',
+  'testing',
+  'lorem',
+  'lorem ipsum',
+  'todo',
+  'tbd',
+  'n/a',
+  'na',
+  'none',
+]);
+
+function hasMeaningfulText(value: string) {
+  return !PLACEHOLDER_VALUES.has(value.trim().toLowerCase());
+}
+
+function boundedText(min: number, max: number) {
+  return z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .refine(hasMeaningfulText, 'Placeholder text is not allowed');
+}
+
+function optionalBoundedText(min: number, max: number) {
+  return z.preprocess(
+    (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
+    boundedText(min, max).optional()
+  );
+}
+
 const optionalText = z.string().trim().optional();
 
 const slugSchema = z
@@ -64,11 +99,11 @@ const safeLinkSchema = z
 const gameStageSchema = z
   .object({
     state: z.enum(['active', 'locked', 'archived', 'hidden']),
-    title: nonEmptyText,
-    content: optionalText,
+    title: boundedText(2, 72),
+    content: optionalBoundedText(10, 2000),
     image: mediaPathSchema.optional(),
     lastUpdate: dateSchema.optional(),
-    ctaText: optionalText,
+    ctaText: optionalBoundedText(2, 36),
     ctaLink: safeLinkSchema.optional(),
   })
   .strict();
@@ -86,10 +121,10 @@ const gameSchema = z
   .object({
     id: slugSchema,
     slug: slugSchema,
-    name: nonEmptyText,
-    slogan: optionalText,
-    shortDescription: nonEmptyText,
-    aboutGame: optionalText,
+    name: boundedText(2, 64),
+    slogan: optionalBoundedText(2, 96),
+    shortDescription: boundedText(10, 260),
+    aboutGame: optionalBoundedText(20, 1500),
     status: z.enum(['announcement', 'production', 'preorder', 'onsale']),
     heroImage: mediaPathSchema.optional(),
     coverImage: mediaPathSchema.optional(),
@@ -111,11 +146,11 @@ const gameSchema = z
 const projectSupportTierSchema = z
   .object({
     id: slugSchema,
-    title: nonEmptyText,
-    description: nonEmptyText,
+    title: boundedText(2, 64),
+    description: boundedText(8, 300),
     amount: z.number().finite().min(1),
     featured: z.boolean().optional(),
-    includes: z.array(nonEmptyText).optional(),
+    includes: z.array(boundedText(2, 120)).optional(),
   })
   .strict();
 
@@ -134,15 +169,15 @@ const projectSupportSchema = z
 const projectSchema = z
   .object({
     id: slugSchema,
-    name: nonEmptyText,
-    shortDescription: nonEmptyText,
+    name: boundedText(2, 72),
+    shortDescription: boundedText(10, 260),
     status: z.enum(['active', 'preparing', 'complete']),
-    statusLabel: nonEmptyText,
+    statusLabel: boundedText(2, 36),
     raised: z.number().finite().min(0),
     goal: z.number().finite().min(0),
     currency: z.enum(['UAH']),
     lastUpdate: dateSchema,
-    updatePreview: nonEmptyText,
+    updatePreview: boundedText(10, 220),
     coverImage: mediaPathSchema.optional(),
     link: internalPathSchema,
     support: projectSupportSchema.optional(),
@@ -157,10 +192,10 @@ const gameBasicOverrideSchema = z
   .object({
     id: slugSchema,
     slug: slugSchema,
-    name: nonEmptyText,
-    slogan: optionalText,
-    shortDescription: nonEmptyText,
-    aboutGame: optionalText,
+    name: boundedText(2, 64),
+    slogan: optionalBoundedText(2, 96),
+    shortDescription: boundedText(10, 260),
+    aboutGame: optionalBoundedText(20, 1500),
     status: z.enum(['announcement', 'production', 'preorder', 'onsale']),
     heroImage: optionalMediaPathSchema,
     coverImage: optionalMediaPathSchema,
@@ -182,15 +217,15 @@ const gameBasicOverrideSchema = z
 const projectBasicOverrideSchema = z
   .object({
     id: slugSchema,
-    name: nonEmptyText,
-    shortDescription: nonEmptyText,
+    name: boundedText(2, 72),
+    shortDescription: boundedText(10, 260),
     status: z.enum(['active', 'preparing', 'complete']),
-    statusLabel: nonEmptyText,
+    statusLabel: boundedText(2, 36),
     raised: z.number().finite().min(0),
     goal: z.number().finite().min(0),
     currency: z.enum(['UAH']),
     lastUpdate: dateSchema,
-    updatePreview: nonEmptyText,
+    updatePreview: boundedText(10, 220),
     coverImage: optionalMediaPathSchema,
     link: internalPathSchema,
     support: projectSupportSchema.optional(),

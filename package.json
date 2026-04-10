@@ -10,7 +10,8 @@
     "validate:media": "tsx scripts/validate-media.ts",
     "validate:links": "tsx scripts/validate-links.ts",
     "validate:copy": "tsx scripts/validate-copy.ts",
-    "check": "npm run validate:content && npm run validate:media && npm run validate:links && npm run validate:copy && npm run typecheck && npm run lint && npm run build",
+    "smoke": "tsx scripts/smoke-site.ts",
+    "check": "npm run validate:content && npm run validate:media && npm run validate:links && npm run validate:copy && npm run typecheck && npm run lint && npm run build && npm run smoke",
     "start": "next start",
     "lint": "eslint"
   },
