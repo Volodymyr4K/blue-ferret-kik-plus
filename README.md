@@ -33,7 +33,7 @@
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # Статичний export у папку out/ для GitHub Pages
+npm run build    # Статичний export у папку out/ для Cloudflare Pages
 npm run check    # Повна перевірка: content schema + typecheck + lint + build
 ```
 
@@ -55,11 +55,20 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 Кожна гра має 4 етапи: Анонс → Виробництво → Передзамовлення → У вільному продажі.  
 Заблоковані етапи візуально затемнені з іконкою замка.
 
-## Деплой на GitHub Pages
+## Деплой на Cloudflare Pages
 
-- У репозиторії є workflow: `.github/workflows/deploy-pages.yml`
-- Після push у `main` сайт автоматично деплоїться у GitHub Pages
-- Кастомний домен: `blueferret.com.ua` (файл `public/CNAME`)
+Рекомендований прод-деплой для цього проєкту: **Cloudflare Pages** (статичний сайт без серверів).
+
+Базові налаштування в Cloudflare:
+1. `Workers & Pages` → `Create` → `Pages` → `Connect to Git`
+2. Репозиторій: `Volodymyr4K/blue-ferret-kik-plus`
+3. Production branch: `main`
+4. Build command: `npm ci && npm run check`
+5. Build output directory: `out`
+6. Environment variable: `NEXT_PUBLIC_SITE_URL=https://blueferret.com.ua`
+7. Додати custom domain: `blueferret.com.ua`
+
+Після цього Cloudflare буде автоматично деплоїти `main`, а для pull request/branch створювати preview deployments.
 
 ## Адмінка (Pages CMS)
 
@@ -77,13 +86,13 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 
 1. Відкрити `https://app.pagescms.org`
 2. Увійти через GitHub і вибрати репозиторій `Volodymyr4K/blue-ferret-kik-plus`
-3. Редагувати контент у секціях `Каталог` і `Сайт`
-4. Зберігати зміни у гілку `staging`
-5. Створити PR `staging -> main`
-6. Після зеленого `Quality Gate` зробити merge
+3. Редагувати контент переважно в секції `Менеджер (базовий режим)`
+4. Натиснути `Save changes` у CMS
+5. Перейти на `/admin-guide` і натиснути `Я зберегла зміни`
+6. У вікні вибрати: `Переглянути Preview` або `Опублікувати` (після чекліста та зеленого Quality Gate)
 
 Для менеджера доступна сторінка-помічник: `/admin-guide` (slug/metadata підказки + швидкі посилання).
-На ній також є live-блок `Стан перевірок` (Quality Gate + Staging Preview) з посиланнями на останні workflow runs.
+На ній також є live-блок `Стан перевірок` (Quality Gate + Staging Preview).
 У CMS є два режими:
 - `Менеджер (базовий режим)` — покриває весь щоденний менеджерський контент (ігри, проєкти, тексти сайту/UI)
 - `Адмін (розширений режим)` — детальні технічні поля
@@ -118,7 +127,7 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 
 ## Важливо про оплату (Mono)
 
-GitHub Pages — це лише статичний хостинг, тому API-роути для Mono у `src/app/api/*` вимкнено для цього деплою.
+Cloudflare Pages у цій конфігурації працює як статичний хостинг, тому API-роути для Mono у `src/app/api/*` вимкнено для цього деплою.
 Заготовки серверної логіки збережені в `src/server/mono/*` для майбутнього переносу на серверний хостинг.
 
 Додатково встановлено прапорець безпеки:

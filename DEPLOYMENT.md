@@ -1,63 +1,37 @@
-# Інструкція для деплою (бекенд)
+# Інструкція для деплою (Cloudflare Pages)
 
-## Версія: 1.0.0
+## 1) Що деплоїмо
 
-## Передумови
+Проєкт зібраний як статичний експорт Next.js (`output: export`), тому для продакшену використовуємо Cloudflare Pages.
 
-- Node.js 18+
-- npm або yarn
+Результат збірки: папка `out/`.
 
-## Швидкий старт
+## 2) Налаштування в Cloudflare (одноразово)
 
-```bash
-npm install
-cp .env.example .env
-# Відредагуйте .env — додайте MONO_API_TOKEN та NEXT_PUBLIC_SITE_URL
-npm run build
-npm start
-```
+1. Відкрити Cloudflare Dashboard → `Workers & Pages`.
+2. Натиснути `Create` → `Pages` → `Connect to Git`.
+3. Підключити GitHub-репозиторій `Volodymyr4K/blue-ferret-kik-plus`.
+4. Для проєкту Pages вказати:
+   - Production branch: `main`
+   - Build command: `npm ci && npm run check`
+   - Build output directory: `out`
+5. Додати environment variable:
+   - `NEXT_PUBLIC_SITE_URL=https://blueferret.com.ua`
+6. У вкладці `Custom domains` додати `blueferret.com.ua`.
 
-## Змінні середовища
+## 3) Поточний процес релізу
 
-| Змінна | Опис | Обов'язкова |
-|--------|------|-------------|
-| `MONO_API_TOKEN` | Токен API Monobank (Plata by Mono) | Так, для оплати |
-| `NEXT_PUBLIC_SITE_URL` | Публічний URL сайту (напр. https://blueferret.com.ua) | Так, для webhook і редіректів |
-| `NEXT_PUBLIC_ENABLE_PAYMENTS` | Увімкнення онлайн-оплати (`true`/`false`) | Ні, за замовчуванням `false` |
+1. Менеджер вносить зміни через Pages CMS.
+2. Після перевірки публікує зміни.
+3. Cloudflare автоматично робить production deploy з `main`.
 
-## API endpoints
+## 4) Що вже налаштовано в репозиторії
 
-- `POST /api/mono/invoice` — створення рахунку для оплати
-- `POST /api/mono/webhook` — webhook для Mono (налаштувати в кабінеті Monobank)
+- `.github/workflows/quality.yml` — quality gate (валідації + typecheck + lint + build).
+- `.github/workflows/staging-preview.yml` — preview build-артефакт для staging/PR.
+- `.github/workflows/deploy-pages.yml` — legacy workflow для GitHub Pages, залишений лише як manual fallback.
 
-## Webhook (Mono)
+## 5) Важливо про оплату (відкладено)
 
-У кабінеті [web.monobank.ua](https://web.monobank.ua) вкажіть URL:
-```
-https://ваш-домен.com/api/mono/webhook
-```
-
-## Структура даних (для інтеграції з CMS)
-
-- **Ігри**: `src/content/games.json`
-- **Проєкти KIK**: `src/content/projects.json`
-- **Контент сайту**: `src/content/site-content.json`
-- **UI-тексти**: `src/content/ui-content.json`
-
-`src/data/*.ts` — адаптери з типами, що читають ці JSON.
-
-## Production build
-
-```bash
-npm run validate:content
-npm run validate:media
-npm run typecheck
-npm run lint
-npm run build
-```
-
-Вихід: `out/` — статичний сайт для GitHub Pages.
-
-Важливо:
-- На GitHub Pages API-роути `src/app/api/*` не виконуються.
-- Моноплатіжна серверна логіка (`src/server/mono/*`) збережена для майбутнього серверного хостингу.
+Оплата зараз вимкнена (`NEXT_PUBLIC_ENABLE_PAYMENTS=false`), а API-роути `src/app/api/*` не використовуються в статичному деплої.
+Серверна логіка Mono збережена в `src/server/mono/*` для майбутнього серверного хостингу.

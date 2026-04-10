@@ -34,6 +34,15 @@ type WorkflowRunStatus = {
   created_at: string;
 };
 
+type ContentCommitSummary = {
+  sha: string;
+  message: string;
+  author: string;
+  createdAt: string;
+  htmlUrl: string;
+  files: string[];
+};
+
 const REPO_OWNER = 'Volodymyr4K';
 const REPO_NAME = 'blue-ferret-kik-plus';
 
@@ -64,21 +73,105 @@ function statusClass(run: WorkflowRunStatus | null) {
   return 'text-slate-700 bg-slate-100';
 }
 
+function summarizeLength(length: number, min: number, max: number) {
+  if (length === 0) {
+    return {
+      label: 'Порожньо',
+      className: 'text-slate-700 bg-slate-100',
+    };
+  }
+  if (length < min) {
+    return {
+      label: `Коротко (${min}-${max})`,
+      className: 'text-amber-700 bg-amber-100',
+    };
+  }
+  if (length > max) {
+    return {
+      label: `Задовго (${min}-${max})`,
+      className: 'text-rose-700 bg-rose-100',
+    };
+  }
+  return {
+    label: `Норма (${min}-${max})`,
+    className: 'text-emerald-700 bg-emerald-100',
+  };
+}
+
+async function fetchRecentContentCommits(): Promise<ContentCommitSummary[]> {
+  const commitsUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?sha=staging&path=src/content&per_page=6`;
+  const commitsResponse = await fetch(commitsUrl, {
+    headers: { Accept: 'application/vnd.github+json' },
+  });
+  if (!commitsResponse.ok) {
+    return [];
+  }
+
+  const commitsPayload = (await commitsResponse.json()) as Array<{
+    sha: string;
+    html_url: string;
+    commit?: {
+      message?: string;
+      author?: { name?: string; date?: string };
+    };
+  }>;
+
+  const enriched = await Promise.all(
+    commitsPayload.map(async (item) => {
+      const detailsUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits/${item.sha}`;
+      const detailsResponse = await fetch(detailsUrl, {
+        headers: { Accept: 'application/vnd.github+json' },
+      });
+
+      let files: string[] = [];
+      if (detailsResponse.ok) {
+        const details = (await detailsResponse.json()) as {
+          files?: Array<{ filename?: string }>;
+        };
+        files = (details.files ?? [])
+          .map((file) => file.filename ?? '')
+          .filter((filename) => filename.startsWith('src/content/'))
+          .map((filename) => filename.replace('src/content/', ''));
+      }
+
+      return {
+        sha: item.sha,
+        message: item.commit?.message?.split('\n')[0] ?? 'Без повідомлення',
+        author: item.commit?.author?.name ?? 'Невідомо',
+        createdAt: item.commit?.author?.date ?? '',
+        htmlUrl: item.html_url,
+        files,
+      } satisfies ContentCommitSummary;
+    })
+  );
+
+  return enriched;
+}
+
 export default function AdminGuidePage() {
   const [gameName, setGameName] = useState('');
   const [projectName, setProjectName] = useState('');
   const [customDescription, setCustomDescription] = useState('');
+  const [seoTitle, setSeoTitle] = useState('');
+  const [seoDescription, setSeoDescription] = useState('');
   const [qualityRun, setQualityRun] = useState<WorkflowRunStatus | null>(null);
   const [stagingRun, setStagingRun] = useState<WorkflowRunStatus | null>(null);
+  const [recentContentCommits, setRecentContentCommits] = useState<ContentCommitSummary[] | null>(null);
+  const [decisionOpen, setDecisionOpen] = useState(false);
+  const [confirmPagesChecked, setConfirmPagesChecked] = useState(false);
+  const [confirmTextChecked, setConfirmTextChecked] = useState(false);
+  const [confirmStatusChecked, setConfirmStatusChecked] = useState(false);
 
   useEffect(() => {
     void (async () => {
-      const [quality, staging] = await Promise.all([
+      const [quality, staging, commits] = await Promise.all([
         fetchLatestWorkflowRun('quality.yml'),
         fetchLatestWorkflowRun('staging-preview.yml'),
+        fetchRecentContentCommits(),
       ]);
       setQualityRun(quality);
       setStagingRun(staging);
+      setRecentContentCommits(commits);
     })();
   }, []);
 
@@ -91,6 +184,16 @@ export default function AdminGuidePage() {
     () => uiContent.metadata.projectTitleTemplate.replace('{name}', projectName || 'Назва проєкту'),
     [projectName]
   );
+  const pagesCmsUrl = 'https://app.pagescms.org';
+  const previewRunUrl = stagingRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/staging-preview.yml`;
+  const publishUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/compare/main...staging?expand=1`;
+  const checksUrl = qualityRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/quality.yml`;
+  const isQualityGreen = qualityRun?.status === 'completed' && qualityRun.conclusion === 'success';
+  const qualityBlocksPublish = Boolean(qualityRun) && !isQualityGreen;
+  const checklistComplete = confirmPagesChecked && confirmTextChecked && confirmStatusChecked;
+  const canPublish = checklistComplete && !qualityBlocksPublish;
+  const seoTitleInfo = summarizeLength(seoTitle.trim().length, 45, 65);
+  const seoDescriptionInfo = summarizeLength(seoDescription.trim().length, 120, 160);
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6">
@@ -98,22 +201,37 @@ export default function AdminGuidePage() {
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Портал менеджера контенту</h1>
           <p className="text-slate-600">
-            Ця сторінка допомагає редагувати контент без технічних дій: швидкі посилання, генерація slug та превʼю метаданих.
-          </p>
-          <p className="text-slate-500 text-sm mt-2">
-            У CMS працюйте переважно в секції <strong>Менеджер (базовий режим)</strong> — вона покриває весь операційний контент.
+            Простий сценарій: редагуйте контент у CMS, натискайте збереження, потім тут обирайте один із двох варіантів: Preview або Опублікувати.
           </p>
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Швидкі дії</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Головні дії</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white text-center font-semibold">
+              1. Відкрити адмінку (CMS)
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmPagesChecked(false);
+                setConfirmTextChecked(false);
+                setConfirmStatusChecked(false);
+                setDecisionOpen(true);
+              }}
+              className="px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 text-center font-semibold"
+            >
+              2. Я зберегла зміни
+            </button>
+          </div>
+          <p className="text-sm text-slate-500 mt-3">
+            У CMS редагуйте переважно секцію <strong>Менеджер (базовий режим)</strong>.
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Швидка перевірка контенту</h2>
           <div className="grid sm:grid-cols-2 gap-3">
-            <a href="https://app.pagescms.org" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white text-center font-semibold">
-              Відкрити Pages CMS
-            </a>
-            <a href="https://github.com/Volodymyr4K/blue-ferret-kik-plus/pulls" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
-              Відкрити Pull Requests
-            </a>
             <Link href="/igry" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
               Перевірити каталог ігор
             </Link>
@@ -133,13 +251,13 @@ export default function AdminGuidePage() {
                   {statusLabel(qualityRun)}
                 </span>
               </div>
-              <p className="text-sm text-slate-600 mb-3">
-                {qualityRun
-                  ? `Гілка: ${qualityRun.head_branch} • ${new Date(qualityRun.created_at).toLocaleString('uk-UA')}`
-                  : 'Не вдалося отримати дані workflow.'}
-              </p>
-              <a
-                href={qualityRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/quality.yml`}
+                <p className="text-sm text-slate-600 mb-3">
+                  {qualityRun
+                    ? `Гілка: ${qualityRun.head_branch} • ${new Date(qualityRun.created_at).toLocaleString('uk-UA')}`
+                    : 'Не вдалося отримати дані workflow.'}
+                </p>
+                <a
+                href={checksUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-semibold text-slate-900 underline"
@@ -155,19 +273,93 @@ export default function AdminGuidePage() {
                   {statusLabel(stagingRun)}
                 </span>
               </div>
-              <p className="text-sm text-slate-600 mb-3">
+                <p className="text-sm text-slate-600 mb-3">
                 {stagingRun
                   ? `Гілка: ${stagingRun.head_branch} • ${new Date(stagingRun.created_at).toLocaleString('uk-UA')}`
                   : 'Не вдалося отримати дані workflow.'}
               </p>
               <a
-                href={stagingRun?.html_url || `https://github.com/${REPO_OWNER}/${REPO_NAME}/actions/workflows/staging-preview.yml`}
+                href={previewRunUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-semibold text-slate-900 underline"
               >
                 Відкрити preview run
               </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Останні зміни контенту</h2>
+          {recentContentCommits === null ? (
+            <p className="text-slate-500 text-sm">Завантаження...</p>
+          ) : recentContentCommits.length === 0 ? (
+            <p className="text-slate-500 text-sm">Не вдалося отримати історію змін або змін у `src/content` поки немає.</p>
+          ) : (
+            <div className="space-y-3">
+              {recentContentCommits.map((commit) => (
+                <div key={commit.sha} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="font-semibold text-slate-900">{commit.message}</p>
+                  <p className="text-sm text-slate-600 mt-1">
+                    {commit.author} •{' '}
+                    {commit.createdAt
+                      ? new Date(commit.createdAt).toLocaleString('uk-UA')
+                      : 'без дати'}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-2">
+                    {commit.files.length > 0
+                      ? `Файли: ${commit.files.slice(0, 4).join(', ')}${commit.files.length > 4 ? ` +${commit.files.length - 4}` : ''}`
+                      : 'Файли контенту не визначені'}
+                  </p>
+                  <a
+                    href={commit.htmlUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-slate-900 underline mt-2 inline-block"
+                  >
+                    Відкрити коміт
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+          <h2 className="text-xl font-bold text-slate-900">SEO-помічник для тексту</h2>
+          <p className="text-sm text-slate-600">
+            Вставте фінальні `title` і `description` перед публікацією. Блок покаже, чи довжина в безпечному діапазоні.
+          </p>
+          <input
+            type="text"
+            value={seoTitle}
+            onChange={(event) => setSeoTitle(event.target.value)}
+            placeholder="SEO Title"
+            className="w-full border border-slate-300 rounded-xl px-4 py-3"
+          />
+          <textarea
+            value={seoDescription}
+            onChange={(event) => setSeoDescription(event.target.value)}
+            placeholder="SEO Description"
+            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[100px]"
+          />
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm text-slate-700">Title: {seoTitle.trim().length} символів</p>
+                <span className={`text-xs px-2 py-1 rounded-full ${seoTitleInfo.className}`}>
+                  {seoTitleInfo.label}
+                </span>
+              </div>
+            </div>
+            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm text-slate-700">Description: {seoDescription.trim().length} символів</p>
+                <span className={`text-xs px-2 py-1 rounded-full ${seoDescriptionInfo.className}`}>
+                  {seoDescriptionInfo.label}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -223,6 +415,101 @@ export default function AdminGuidePage() {
           </div>
         </div>
       </div>
+
+      {decisionOpen ? (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 p-4 flex items-center justify-center">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+            <h2 className="text-xl font-bold text-slate-900 mb-2">Зміни збережено</h2>
+            <p className="text-slate-600 mb-5">
+              Перед публікацією відмітьте короткий чекліст.
+            </p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 mb-4 space-y-3">
+              <label className="flex items-start gap-3 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={confirmPagesChecked}
+                  onChange={(event) => setConfirmPagesChecked(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>Перевірила сторінки: головна, ігри, проєкти.</span>
+              </label>
+              <label className="flex items-start gap-3 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={confirmTextChecked}
+                  onChange={(event) => setConfirmTextChecked(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>Перевірила тексти, дати та зображення без помилок.</span>
+              </label>
+              <label className="flex items-start gap-3 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={confirmStatusChecked}
+                  onChange={(event) => setConfirmStatusChecked(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>У блоці “Стан перевірок” немає помилки.</span>
+              </label>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <a
+                href={previewRunUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold"
+              >
+                Переглянути Preview
+              </a>
+              <a
+                href={publishUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-disabled={!canPublish}
+                className={`px-4 py-3 rounded-xl text-center font-semibold ${
+                  canPublish
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-300 text-slate-500 pointer-events-none'
+                }`}
+              >
+                Опублікувати
+              </a>
+            </div>
+            <p className="text-xs text-slate-500 mt-3">
+              {!checklistComplete
+                ? 'Щоб опублікувати, відмітьте всі пункти чекліста.'
+                : qualityBlocksPublish
+                  ? 'Публікація заблокована: Quality Gate ще не успішний.'
+                  : 'Готово до публікації.'}
+            </p>
+            <div className="flex items-center gap-4 mt-2">
+              <a
+                href={checksUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-700 underline"
+              >
+                Відкрити Quality Gate
+              </a>
+              <a
+                href={previewRunUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-slate-700 underline"
+              >
+                Відкрити Staging Preview
+              </a>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDecisionOpen(false)}
+              className="mt-4 w-full px-4 py-2 rounded-xl text-slate-700 border border-slate-200"
+            >
+              Закрити
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
