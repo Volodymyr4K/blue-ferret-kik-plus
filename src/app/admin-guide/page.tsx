@@ -168,6 +168,7 @@ async function fetchRecentContentCommits(): Promise<ContentCommitSummary[]> {
 }
 
 export default function AdminGuidePage() {
+  const [wizardStep, setWizardStep] = useState<1 | 2 | 3 | 4>(1);
   const [gameName, setGameName] = useState('');
   const [projectName, setProjectName] = useState('');
   const [customDescription, setCustomDescription] = useState('');
@@ -188,6 +189,7 @@ export default function AdminGuidePage() {
   const [stagingRun, setStagingRun] = useState<WorkflowRunStatus | null>(null);
   const [recentContentCommits, setRecentContentCommits] = useState<ContentCommitSummary[] | null>(null);
   const [decisionOpen, setDecisionOpen] = useState(false);
+  const [confirmSavedChecked, setConfirmSavedChecked] = useState(false);
   const [confirmPagesChecked, setConfirmPagesChecked] = useState(false);
   const [confirmTextChecked, setConfirmTextChecked] = useState(false);
   const [confirmStatusChecked, setConfirmStatusChecked] = useState(false);
@@ -225,7 +227,8 @@ export default function AdminGuidePage() {
   const isQualityGreen = qualityRun?.status === 'completed' && qualityRun.conclusion === 'success';
   const qualityStateUnknown = qualityRun === null;
   const qualityBlocksPublish = !isQualityGreen;
-  const checklistComplete = confirmPagesChecked && confirmTextChecked && confirmStatusChecked;
+  const previewChecklistComplete = confirmSavedChecked && confirmPagesChecked && confirmTextChecked;
+  const checklistComplete = previewChecklistComplete && confirmStatusChecked;
   const canPublish = checklistComplete && !qualityBlocksPublish;
   const seoTitleInfo = summarizeLength(seoTitle.trim().length, 45, 65);
   const seoDescriptionInfo = summarizeLength(seoDescription.trim().length, 120, 160);
@@ -362,27 +365,134 @@ export default function AdminGuidePage() {
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Головні дії</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white text-center font-semibold">
-              1. Відкрити адмінку (CMS)
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                setConfirmPagesChecked(false);
-                setConfirmTextChecked(false);
-                setConfirmStatusChecked(false);
-                setDecisionOpen(true);
-              }}
-              className="px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 text-center font-semibold"
-            >
-              2. Я зберегла зміни
-            </button>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Майстер публікації (4 кроки)</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+            {[1, 2, 3, 4].map((step) => (
+              <button
+                key={step}
+                type="button"
+                onClick={() => setWizardStep(step as 1 | 2 | 3 | 4)}
+                className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
+                  wizardStep === step
+                    ? 'bg-slate-900 text-white border-slate-900'
+                    : 'bg-white text-slate-700 border-slate-300'
+                }`}
+              >
+                Крок {step}
+              </button>
+            ))}
           </div>
-          <p className="text-sm text-slate-500 mt-3">
-            У CMS редагуйте переважно секцію <strong>Менеджер (базовий режим)</strong>.
-          </p>
+
+          {wizardStep === 1 ? (
+            <div className="space-y-3">
+              <p className="text-slate-700">Відкрийте CMS і внесіть зміни в секції <strong>Менеджер (базовий режим)</strong>.</p>
+              <div className="flex flex-wrap gap-2">
+                <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold">
+                  Відкрити CMS
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(2)}
+                  className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold"
+                >
+                  Далі: перевірка
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {wizardStep === 2 ? (
+            <div className="space-y-3">
+              <p className="text-slate-700">Поставте галочки перед preview.</p>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                <label className="flex items-start gap-3 text-sm text-slate-800">
+                  <input
+                    type="checkbox"
+                    checked={confirmSavedChecked}
+                    onChange={(event) => setConfirmSavedChecked(event.target.checked)}
+                    className="mt-0.5"
+                  />
+                  <span>Я натиснула `Save changes` у CMS.</span>
+                </label>
+                <label className="flex items-start gap-3 text-sm text-slate-800">
+                  <input
+                    type="checkbox"
+                    checked={confirmPagesChecked}
+                    onChange={(event) => setConfirmPagesChecked(event.target.checked)}
+                    className="mt-0.5"
+                  />
+                  <span>Я перевірила головну, ігри та проєкти.</span>
+                </label>
+                <label className="flex items-start gap-3 text-sm text-slate-800">
+                  <input
+                    type="checkbox"
+                    checked={confirmTextChecked}
+                    onChange={(event) => setConfirmTextChecked(event.target.checked)}
+                    className="mt-0.5"
+                  />
+                  <span>Я перевірила тексти, дати та фото.</span>
+                </label>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <a href={previewRunUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
+                  Відкрити Preview
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(3)}
+                  disabled={!previewChecklistComplete}
+                  className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+                >
+                  Далі: фінальна перевірка
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {wizardStep === 3 ? (
+            <div className="space-y-3">
+              <p className="text-slate-700">Переконайтеся, що автоматичні перевірки пройшли без помилки.</p>
+              <label className="flex items-start gap-3 text-sm text-slate-800 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <input
+                  type="checkbox"
+                  checked={confirmStatusChecked}
+                  onChange={(event) => setConfirmStatusChecked(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>У блоці “Стан перевірок” `Quality Gate` успішний.</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <a href={checksUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
+                  Відкрити Quality Gate
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(4)}
+                  disabled={!confirmStatusChecked}
+                  className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+                >
+                  Далі: публікація
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {wizardStep === 4 ? (
+            <div className="space-y-3">
+              <p className="text-slate-700">Фінальний крок: відкрийте вікно публікації та оберіть Preview або Publish.</p>
+              <button
+                type="button"
+                onClick={() => setDecisionOpen(true)}
+                disabled={!checklistComplete}
+                className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+              >
+                Відкрити вікно публікації
+              </button>
+              <p className="text-xs text-slate-500">
+                Якщо кнопка неактивна, поверніться до попередніх кроків і завершіть чекліст.
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
@@ -730,6 +840,15 @@ export default function AdminGuidePage() {
               Перед публікацією відмітьте короткий чекліст.
             </p>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 mb-4 space-y-3">
+              <label className="flex items-start gap-3 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={confirmSavedChecked}
+                  onChange={(event) => setConfirmSavedChecked(event.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>Я натиснула `Save changes` у CMS.</span>
+              </label>
               <label className="flex items-start gap-3 text-sm text-slate-800">
                 <input
                   type="checkbox"
