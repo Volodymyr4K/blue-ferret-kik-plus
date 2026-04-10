@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import gamesData from '@/content/games.json';
 import uiContent from '@/data/ui-content';
 
 const CYRILLIC_MAP: Record<string, string> = {
@@ -45,6 +46,7 @@ type ContentCommitSummary = {
 
 const REPO_OWNER = 'Volodymyr4K';
 const REPO_NAME = 'blue-ferret-kik-plus';
+const PLACEHOLDER_VALUES = new Set(['test', 'testing', 'lorem', 'lorem ipsum', 'todo', 'tbd', 'n/a', 'na', 'none', '-', '--', '...']);
 
 async function fetchLatestWorkflowRun(workflowFile: string): Promise<WorkflowRunStatus | null> {
   const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${workflowFile}/runs?per_page=1`;
@@ -96,6 +98,23 @@ function summarizeLength(length: number, min: number, max: number) {
     label: `Норма (${min}-${max})`,
     className: 'text-emerald-700 bg-emerald-100',
   };
+}
+
+function isLikelyPlaceholder(value: string) {
+  return PLACEHOLDER_VALUES.has(value.trim().toLowerCase());
+}
+
+function isValidHexColor(value: string) {
+  return /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value.trim());
+}
+
+function isValidMediaPath(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (!trimmed.startsWith('/')) return false;
+  if (trimmed.startsWith('//')) return false;
+  if (/\s/.test(trimmed)) return false;
+  return trimmed.startsWith('/images/') || trimmed.startsWith('/uploads/');
 }
 
 async function fetchRecentContentCommits(): Promise<ContentCommitSummary[]> {
@@ -154,6 +173,17 @@ export default function AdminGuidePage() {
   const [customDescription, setCustomDescription] = useState('');
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [newGameName, setNewGameName] = useState('');
+  const [newGameSlogan, setNewGameSlogan] = useState('');
+  const [newGameShortDescription, setNewGameShortDescription] = useState('');
+  const [newGameAbout, setNewGameAbout] = useState('');
+  const [newGameStatus, setNewGameStatus] = useState<'announcement' | 'production' | 'preorder' | 'onsale'>('announcement');
+  const [newGamePrice, setNewGamePrice] = useState('0');
+  const [newGameHeroImage, setNewGameHeroImage] = useState('');
+  const [newGameCoverImage, setNewGameCoverImage] = useState('');
+  const [newGamePalette, setNewGamePalette] = useState('');
+  const [newGameAccent, setNewGameAccent] = useState('');
+  const [copyFeedback, setCopyFeedback] = useState('');
   const [qualityRun, setQualityRun] = useState<WorkflowRunStatus | null>(null);
   const [stagingRun, setStagingRun] = useState<WorkflowRunStatus | null>(null);
   const [recentContentCommits, setRecentContentCommits] = useState<ContentCommitSummary[] | null>(null);
@@ -176,6 +206,10 @@ export default function AdminGuidePage() {
   }, []);
 
   const generatedSlug = useMemo(() => slugify(gameName), [gameName]);
+  const generatedNewGameId = useMemo(() => slugify(newGameName), [newGameName]);
+  const generatedNewGameSlug = useMemo(() => slugify(newGameName), [newGameName]);
+  const existingGameIds = useMemo(() => new Set(gamesData.map((item) => item.id)), []);
+  const existingGameSlugs = useMemo(() => new Set(gamesData.map((item) => item.slug)), []);
   const gameMetaTitle = useMemo(
     () => uiContent.metadata.gameTitleTemplate.replace('{name}', gameName || 'Назва гри'),
     [gameName]
@@ -195,6 +229,127 @@ export default function AdminGuidePage() {
   const canPublish = checklistComplete && !qualityBlocksPublish;
   const seoTitleInfo = summarizeLength(seoTitle.trim().length, 45, 65);
   const seoDescriptionInfo = summarizeLength(seoDescription.trim().length, 120, 160);
+  const newGameErrors = useMemo(() => {
+    const errors: string[] = [];
+    const name = newGameName.trim();
+    const slogan = newGameSlogan.trim();
+    const shortDescription = newGameShortDescription.trim();
+    const about = newGameAbout.trim();
+    const heroImage = newGameHeroImage.trim();
+    const coverImage = newGameCoverImage.trim();
+    const palette = newGamePalette.trim();
+    const accent = newGameAccent.trim();
+    const price = Number(newGamePrice);
+
+    if (!generatedNewGameId) {
+      errors.push('Назва гри обов’язкова: без неї не можна згенерувати ID/slug.');
+    }
+    if (generatedNewGameId && existingGameIds.has(generatedNewGameId)) {
+      errors.push(`ID вже існує: ${generatedNewGameId}`);
+    }
+    if (generatedNewGameSlug && existingGameSlugs.has(generatedNewGameSlug)) {
+      errors.push(`Slug вже існує: ${generatedNewGameSlug}`);
+    }
+    if (name.length < 2 || name.length > 64) {
+      errors.push('Назва гри: від 2 до 64 символів.');
+    }
+    if (isLikelyPlaceholder(name)) {
+      errors.push('Назва гри схожа на placeholder.');
+    }
+    if (slogan && (slogan.length < 2 || slogan.length > 96)) {
+      errors.push('Слоган: від 2 до 96 символів.');
+    }
+    if (slogan && isLikelyPlaceholder(slogan)) {
+      errors.push('Слоган схожий на placeholder.');
+    }
+    if (shortDescription.length < 10 || shortDescription.length > 260) {
+      errors.push('Короткий опис: від 10 до 260 символів.');
+    }
+    if (isLikelyPlaceholder(shortDescription)) {
+      errors.push('Короткий опис схожий на placeholder.');
+    }
+    if (about && (about.length < 20 || about.length > 1500)) {
+      errors.push('Повний опис: від 20 до 1500 символів або залиште пусто.');
+    }
+    if (about && isLikelyPlaceholder(about)) {
+      errors.push('Повний опис схожий на placeholder.');
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      errors.push('Ціна має бути числом >= 0.');
+    }
+    if (!heroImage || !isValidMediaPath(heroImage)) {
+      errors.push('Hero зображення: тільки /images/... або /uploads/...');
+    }
+    if (coverImage && !isValidMediaPath(coverImage)) {
+      errors.push('Обкладинка: тільки /images/... або /uploads/...');
+    }
+    if (palette && !isValidHexColor(palette)) {
+      errors.push('Основний колір має бути у форматі #RRGGBB або #RGB.');
+    }
+    if (accent && !isValidHexColor(accent)) {
+      errors.push('Акцентний колір має бути у форматі #RRGGBB або #RGB.');
+    }
+
+    return errors;
+  }, [
+    newGameName,
+    newGameSlogan,
+    newGameShortDescription,
+    newGameAbout,
+    newGamePrice,
+    newGameHeroImage,
+    newGameCoverImage,
+    newGamePalette,
+    newGameAccent,
+    generatedNewGameId,
+    generatedNewGameSlug,
+    existingGameIds,
+    existingGameSlugs,
+  ]);
+  const canPrepareNewGame = newGameErrors.length === 0;
+  const newGameCard = useMemo(() => {
+    if (!canPrepareNewGame) return '';
+    return [
+      `ID: ${generatedNewGameId}`,
+      `Slug: ${generatedNewGameSlug}`,
+      `Назва: ${newGameName.trim()}`,
+      `Слоган: ${newGameSlogan.trim() || '—'}`,
+      `Короткий опис: ${newGameShortDescription.trim()}`,
+      `Повний опис: ${newGameAbout.trim() || '—'}`,
+      `Статус: ${newGameStatus}`,
+      `Ціна: ${newGamePrice}`,
+      `Hero: ${newGameHeroImage.trim()}`,
+      `Обкладинка: ${newGameCoverImage.trim() || '—'}`,
+      `Palette: ${newGamePalette.trim() || '—'}`,
+      `Accent: ${newGameAccent.trim() || '—'}`,
+    ].join('\n');
+  }, [
+    canPrepareNewGame,
+    generatedNewGameId,
+    generatedNewGameSlug,
+    newGameName,
+    newGameSlogan,
+    newGameShortDescription,
+    newGameAbout,
+    newGameStatus,
+    newGamePrice,
+    newGameHeroImage,
+    newGameCoverImage,
+    newGamePalette,
+    newGameAccent,
+  ]);
+
+  async function copyToClipboard(value: string, successMessage: string) {
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyFeedback(successMessage);
+      window.setTimeout(() => setCopyFeedback(''), 2200);
+    } catch {
+      setCopyFeedback('Не вдалося скопіювати. Скопіюйте вручну.');
+      window.setTimeout(() => setCopyFeedback(''), 2200);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6">
@@ -363,6 +518,156 @@ export default function AdminGuidePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+          <h2 className="text-xl font-bold text-slate-900">Додати нову гру безпечно</h2>
+          <p className="text-sm text-slate-600">
+            Заповніть мінімальні поля. Система автоматично перевірить контент, згенерує `id/slug` і дасть готову картку значень для вставки у CMS.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input
+              type="text"
+              value={newGameName}
+              onChange={(event) => setNewGameName(event.target.value)}
+              placeholder="Назва гри"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+            <input
+              type="text"
+              value={newGameSlogan}
+              onChange={(event) => setNewGameSlogan(event.target.value)}
+              placeholder="Слоган (опціонально)"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+          </div>
+
+          <textarea
+            value={newGameShortDescription}
+            onChange={(event) => setNewGameShortDescription(event.target.value)}
+            placeholder="Короткий опис (10-260 символів)"
+            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
+          />
+          <textarea
+            value={newGameAbout}
+            onChange={(event) => setNewGameAbout(event.target.value)}
+            placeholder="Повний опис (опціонально, 20-1500 символів)"
+            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
+          />
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input
+              type="text"
+              value={newGameHeroImage}
+              onChange={(event) => setNewGameHeroImage(event.target.value)}
+              placeholder="Hero image, напр. /uploads/games/new-game-hero.webp"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+            <input
+              type="text"
+              value={newGameCoverImage}
+              onChange={(event) => setNewGameCoverImage(event.target.value)}
+              placeholder="Cover image (опціонально)"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+          </div>
+
+          <div className="grid sm:grid-cols-4 gap-3">
+            <select
+              value={newGameStatus}
+              onChange={(event) => setNewGameStatus(event.target.value as 'announcement' | 'production' | 'preorder' | 'onsale')}
+              className="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white"
+            >
+              <option value="announcement">announcement</option>
+              <option value="production">production</option>
+              <option value="preorder">preorder</option>
+              <option value="onsale">onsale</option>
+            </select>
+            <input
+              type="number"
+              min="0"
+              value={newGamePrice}
+              onChange={(event) => setNewGamePrice(event.target.value)}
+              placeholder="Ціна"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+            <input
+              type="text"
+              value={newGamePalette}
+              onChange={(event) => setNewGamePalette(event.target.value)}
+              placeholder="Palette #RRGGBB"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+            <input
+              type="text"
+              value={newGameAccent}
+              onChange={(event) => setNewGameAccent(event.target.value)}
+              placeholder="Accent #RRGGBB"
+              className="w-full border border-slate-300 rounded-xl px-4 py-3"
+            />
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+              <p className="text-xs text-slate-500 mb-1">Авто ID</p>
+              <p className="font-mono text-slate-900">{generatedNewGameId || '—'}</p>
+            </div>
+            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+              <p className="text-xs text-slate-500 mb-1">Авто Slug</p>
+              <p className="font-mono text-slate-900">{generatedNewGameSlug || '—'}</p>
+            </div>
+          </div>
+
+          <div className={`rounded-xl border px-4 py-3 ${canPrepareNewGame ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
+            <p className={`font-semibold mb-2 ${canPrepareNewGame ? 'text-emerald-800' : 'text-rose-800'}`}>
+              {canPrepareNewGame ? 'Готово: можна додавати гру в CMS.' : 'Виправте перед додаванням:'}
+            </p>
+            {canPrepareNewGame ? (
+              <p className="text-sm text-emerald-800">Валідація пройдена. Дублів ID/slug не знайдено.</p>
+            ) : (
+              <ul className="list-disc pl-5 text-sm text-rose-800 space-y-1">
+                {newGameErrors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+            <p className="text-sm font-semibold text-slate-900">Як додати гру в CMS без ризику:</p>
+            <p className="text-sm text-slate-700">1. Додайте запис у `Адмін (розширений режим) → Ігри (товари)`.</p>
+            <p className="text-sm text-slate-700">2. Додайте запис у `Менеджер (базовий режим) → Ігри (базово)` з тим самим ID.</p>
+            <p className="text-sm text-slate-700">3. Скопіюйте авто `ID` і `Slug` звідси, не придумуйте вручну.</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => void copyToClipboard(generatedNewGameId, 'ID скопійовано')}
+              disabled={!generatedNewGameId}
+              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
+            >
+              Скопіювати ID
+            </button>
+            <button
+              type="button"
+              onClick={() => void copyToClipboard(generatedNewGameSlug, 'Slug скопійовано')}
+              disabled={!generatedNewGameSlug}
+              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
+            >
+              Скопіювати Slug
+            </button>
+            <button
+              type="button"
+              onClick={() => void copyToClipboard(newGameCard, 'Картку значень скопійовано')}
+              disabled={!canPrepareNewGame}
+              className="px-4 py-2 rounded-xl bg-slate-900 text-white disabled:opacity-50"
+            >
+              Скопіювати картку значень
+            </button>
+          </div>
+          {copyFeedback ? <p className="text-xs text-slate-600">{copyFeedback}</p> : null}
         </div>
 
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
