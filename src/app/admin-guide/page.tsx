@@ -168,6 +168,8 @@ async function fetchRecentContentCommits(): Promise<ContentCommitSummary[]> {
 }
 
 export default function AdminGuidePage() {
+  const [mode, setMode] = useState<'basic' | 'full'>('basic');
+  const [fullTab, setFullTab] = useState<'editing' | 'quality' | 'tools'>('editing');
   const [wizardStep, setWizardStep] = useState<1 | 2 | 3 | 4>(1);
   const [gameName, setGameName] = useState('');
   const [projectName, setProjectName] = useState('');
@@ -360,476 +362,600 @@ export default function AdminGuidePage() {
         <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Портал менеджера контенту</h1>
           <p className="text-slate-600">
-            Простий сценарій: редагуйте контент у CMS, натискайте збереження, потім тут обирайте один із двох варіантів: Preview або Опублікувати.
+            Один портал для всього процесу. Редагування контенту відбувається в Pages CMS, а тут ви керуєте кроками, перевіркою і публікацією.
           </p>
-        </div>
-
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Майстер публікації (4 кроки)</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
-            {[1, 2, 3, 4].map((step) => (
-              <button
-                key={step}
-                type="button"
-                onClick={() => setWizardStep(step as 1 | 2 | 3 | 4)}
-                className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
-                  wizardStep === step
-                    ? 'bg-slate-900 text-white border-slate-900'
-                    : 'bg-white text-slate-700 border-slate-300'
-                }`}
-              >
-                Крок {step}
-              </button>
-            ))}
-          </div>
-
-          {wizardStep === 1 ? (
-            <div className="space-y-3">
-              <p className="text-slate-700">Відкрийте CMS і внесіть зміни в секції <strong>Менеджер (базовий режим)</strong>.</p>
-              <div className="flex flex-wrap gap-2">
-                <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold">
-                  Відкрити CMS
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setWizardStep(2)}
-                  className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold"
-                >
-                  Далі: перевірка
-                </button>
-              </div>
-            </div>
-          ) : null}
-
-          {wizardStep === 2 ? (
-            <div className="space-y-3">
-              <p className="text-slate-700">Поставте галочки перед preview.</p>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
-                <label className="flex items-start gap-3 text-sm text-slate-800">
-                  <input
-                    type="checkbox"
-                    checked={confirmSavedChecked}
-                    onChange={(event) => setConfirmSavedChecked(event.target.checked)}
-                    className="mt-0.5"
-                  />
-                  <span>Я натиснула `Save changes` у CMS.</span>
-                </label>
-                <label className="flex items-start gap-3 text-sm text-slate-800">
-                  <input
-                    type="checkbox"
-                    checked={confirmPagesChecked}
-                    onChange={(event) => setConfirmPagesChecked(event.target.checked)}
-                    className="mt-0.5"
-                  />
-                  <span>Я перевірила головну, ігри та проєкти.</span>
-                </label>
-                <label className="flex items-start gap-3 text-sm text-slate-800">
-                  <input
-                    type="checkbox"
-                    checked={confirmTextChecked}
-                    onChange={(event) => setConfirmTextChecked(event.target.checked)}
-                    className="mt-0.5"
-                  />
-                  <span>Я перевірила тексти, дати та фото.</span>
-                </label>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <a href={previewRunUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
-                  Відкрити Preview
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setWizardStep(3)}
-                  disabled={!previewChecklistComplete}
-                  className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
-                >
-                  Далі: фінальна перевірка
-                </button>
-              </div>
-            </div>
-          ) : null}
-
-          {wizardStep === 3 ? (
-            <div className="space-y-3">
-              <p className="text-slate-700">Переконайтеся, що автоматичні перевірки пройшли без помилки.</p>
-              <label className="flex items-start gap-3 text-sm text-slate-800 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <input
-                  type="checkbox"
-                  checked={confirmStatusChecked}
-                  onChange={(event) => setConfirmStatusChecked(event.target.checked)}
-                  className="mt-0.5"
-                />
-                <span>У блоці “Стан перевірок” `Quality Gate` успішний.</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
-                <a href={checksUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
-                  Відкрити Quality Gate
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setWizardStep(4)}
-                  disabled={!confirmStatusChecked}
-                  className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
-                >
-                  Далі: публікація
-                </button>
-              </div>
-            </div>
-          ) : null}
-
-          {wizardStep === 4 ? (
-            <div className="space-y-3">
-              <p className="text-slate-700">Фінальний крок: відкрийте вікно публікації та оберіть Preview або Publish.</p>
-              <button
-                type="button"
-                onClick={() => setDecisionOpen(true)}
-                disabled={!checklistComplete}
-                className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
-              >
-                Відкрити вікно публікації
-              </button>
-              <p className="text-xs text-slate-500">
-                Якщо кнопка неактивна, поверніться до попередніх кроків і завершіть чекліст.
-              </p>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Швидка перевірка контенту</h2>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <Link href="/igry" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
-              Перевірити каталог ігор
-            </Link>
-            <Link href="/kik/proekty" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
-              Перевірити проєкти KIK
-            </Link>
+          <div className="grid sm:grid-cols-2 gap-3 mt-5">
+            <button
+              type="button"
+              onClick={() => setMode('basic')}
+              className={`px-4 py-3 rounded-xl text-sm font-semibold border ${
+                mode === 'basic'
+                  ? 'bg-slate-900 text-white border-slate-900'
+                  : 'bg-white text-slate-700 border-slate-300'
+              }`}
+            >
+              Базовий режим (щоденна робота)
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('full')}
+              className={`px-4 py-3 rounded-xl text-sm font-semibold border ${
+                mode === 'full'
+                  ? 'bg-slate-900 text-white border-slate-900'
+                  : 'bg-white text-slate-700 border-slate-300'
+              }`}
+            >
+              Повний режим (100% контенту)
+            </button>
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Стан перевірок</h2>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <p className="font-semibold text-slate-900">Quality Gate</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${statusClass(qualityRun)}`}>
-                  {statusLabel(qualityRun)}
-                </span>
-              </div>
-                <p className="text-sm text-slate-600 mb-3">
-                  {qualityRun
-                    ? `Гілка: ${qualityRun.head_branch} • ${new Date(qualityRun.created_at).toLocaleString('uk-UA')}`
-                    : 'Не вдалося отримати дані workflow.'}
-                </p>
-                <a
-                href={checksUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-slate-900 underline"
-              >
-                Відкрити workflow
-              </a>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <p className="font-semibold text-slate-900">Staging Preview</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${statusClass(stagingRun)}`}>
-                  {statusLabel(stagingRun)}
-                </span>
-              </div>
-                <p className="text-sm text-slate-600 mb-3">
-                {stagingRun
-                  ? `Гілка: ${stagingRun.head_branch} • ${new Date(stagingRun.created_at).toLocaleString('uk-UA')}`
-                  : 'Не вдалося отримати дані workflow.'}
-              </p>
-              <a
-                href={previewRunUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-slate-900 underline"
-              >
-                Відкрити preview run
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Останні зміни контенту</h2>
-          {recentContentCommits === null ? (
-            <p className="text-slate-500 text-sm">Завантаження...</p>
-          ) : recentContentCommits.length === 0 ? (
-            <p className="text-slate-500 text-sm">Не вдалося отримати історію змін або змін у `src/content` поки немає.</p>
-          ) : (
-            <div className="space-y-3">
-              {recentContentCommits.map((commit) => (
-                <div key={commit.sha} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="font-semibold text-slate-900">{commit.message}</p>
-                  <p className="text-sm text-slate-600 mt-1">
-                    {commit.author} •{' '}
-                    {commit.createdAt
-                      ? new Date(commit.createdAt).toLocaleString('uk-UA')
-                      : 'без дати'}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-2">
-                    {commit.files.length > 0
-                      ? `Файли: ${commit.files.slice(0, 4).join(', ')}${commit.files.length > 4 ? ` +${commit.files.length - 4}` : ''}`
-                      : 'Файли контенту не визначені'}
-                  </p>
-                  <a
-                    href={commit.htmlUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-semibold text-slate-900 underline mt-2 inline-block"
+        {mode === 'basic' ? (
+          <>
+            <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Щоденна робота (4 кроки)</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+                {[1, 2, 3, 4].map((step) => (
+                  <button
+                    key={step}
+                    type="button"
+                    onClick={() => setWizardStep(step as 1 | 2 | 3 | 4)}
+                    className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
+                      wizardStep === step
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-700 border-slate-300'
+                    }`}
                   >
-                    Відкрити коміт
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">SEO-помічник для тексту</h2>
-          <p className="text-sm text-slate-600">
-            Вставте фінальні `title` і `description` перед публікацією. Блок покаже, чи довжина в безпечному діапазоні.
-          </p>
-          <input
-            type="text"
-            value={seoTitle}
-            onChange={(event) => setSeoTitle(event.target.value)}
-            placeholder="SEO Title"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3"
-          />
-          <textarea
-            value={seoDescription}
-            onChange={(event) => setSeoDescription(event.target.value)}
-            placeholder="SEO Description"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[100px]"
-          />
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm text-slate-700">Title: {seoTitle.trim().length} символів</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${seoTitleInfo.className}`}>
-                  {seoTitleInfo.label}
-                </span>
-              </div>
-            </div>
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm text-slate-700">Description: {seoDescription.trim().length} символів</p>
-                <span className={`text-xs px-2 py-1 rounded-full ${seoDescriptionInfo.className}`}>
-                  {seoDescriptionInfo.label}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">Додати нову гру безпечно</h2>
-          <p className="text-sm text-slate-600">
-            Заповніть мінімальні поля. Система автоматично перевірить контент, згенерує `id/slug` і дасть готову картку значень для вставки у CMS.
-          </p>
-
-          <div className="grid sm:grid-cols-2 gap-3">
-            <input
-              type="text"
-              value={newGameName}
-              onChange={(event) => setNewGameName(event.target.value)}
-              placeholder="Назва гри"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-            <input
-              type="text"
-              value={newGameSlogan}
-              onChange={(event) => setNewGameSlogan(event.target.value)}
-              placeholder="Слоган (опціонально)"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-          </div>
-
-          <textarea
-            value={newGameShortDescription}
-            onChange={(event) => setNewGameShortDescription(event.target.value)}
-            placeholder="Короткий опис (10-260 символів)"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
-          />
-          <textarea
-            value={newGameAbout}
-            onChange={(event) => setNewGameAbout(event.target.value)}
-            placeholder="Повний опис (опціонально, 20-1500 символів)"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
-          />
-
-          <div className="grid sm:grid-cols-2 gap-3">
-            <input
-              type="text"
-              value={newGameHeroImage}
-              onChange={(event) => setNewGameHeroImage(event.target.value)}
-              placeholder="Hero image, напр. /uploads/games/new-game-hero.webp"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-            <input
-              type="text"
-              value={newGameCoverImage}
-              onChange={(event) => setNewGameCoverImage(event.target.value)}
-              placeholder="Cover image (опціонально)"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-          </div>
-
-          <div className="grid sm:grid-cols-4 gap-3">
-            <select
-              value={newGameStatus}
-              onChange={(event) => setNewGameStatus(event.target.value as 'announcement' | 'production' | 'preorder' | 'onsale')}
-              className="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white"
-            >
-              <option value="announcement">announcement</option>
-              <option value="production">production</option>
-              <option value="preorder">preorder</option>
-              <option value="onsale">onsale</option>
-            </select>
-            <input
-              type="number"
-              min="0"
-              value={newGamePrice}
-              onChange={(event) => setNewGamePrice(event.target.value)}
-              placeholder="Ціна"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-            <input
-              type="text"
-              value={newGamePalette}
-              onChange={(event) => setNewGamePalette(event.target.value)}
-              placeholder="Palette #RRGGBB"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-            <input
-              type="text"
-              value={newGameAccent}
-              onChange={(event) => setNewGameAccent(event.target.value)}
-              placeholder="Accent #RRGGBB"
-              className="w-full border border-slate-300 rounded-xl px-4 py-3"
-            />
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <p className="text-xs text-slate-500 mb-1">Авто ID</p>
-              <p className="font-mono text-slate-900">{generatedNewGameId || '—'}</p>
-            </div>
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <p className="text-xs text-slate-500 mb-1">Авто Slug</p>
-              <p className="font-mono text-slate-900">{generatedNewGameSlug || '—'}</p>
-            </div>
-          </div>
-
-          <div className={`rounded-xl border px-4 py-3 ${canPrepareNewGame ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
-            <p className={`font-semibold mb-2 ${canPrepareNewGame ? 'text-emerald-800' : 'text-rose-800'}`}>
-              {canPrepareNewGame ? 'Готово: можна додавати гру в CMS.' : 'Виправте перед додаванням:'}
-            </p>
-            {canPrepareNewGame ? (
-              <p className="text-sm text-emerald-800">Валідація пройдена. Дублів ID/slug не знайдено.</p>
-            ) : (
-              <ul className="list-disc pl-5 text-sm text-rose-800 space-y-1">
-                {newGameErrors.map((error) => (
-                  <li key={error}>{error}</li>
+                    Крок {step}
+                  </button>
                 ))}
-              </ul>
-            )}
-          </div>
+              </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
-            <p className="text-sm font-semibold text-slate-900">Як додати гру в CMS без ризику:</p>
-            <p className="text-sm text-slate-700">1. Додайте запис у `Адмін (розширений режим) → Ігри (товари)`.</p>
-            <p className="text-sm text-slate-700">2. Додайте запис у `Менеджер (базовий режим) → Ігри (базово)` з тим самим ID.</p>
-            <p className="text-sm text-slate-700">3. Скопіюйте авто `ID` і `Slug` звідси, не придумуйте вручну.</p>
-          </div>
+              {wizardStep === 1 ? (
+                <div className="space-y-3">
+                  <p className="text-slate-700">Відкрийте CMS і внесіть зміни в секції <strong>Менеджер (базовий режим)</strong>.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold">
+                      Відкрити CMS
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setWizardStep(2)}
+                      className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold"
+                    >
+                      Далі: перевірка
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => void copyToClipboard(generatedNewGameId, 'ID скопійовано')}
-              disabled={!generatedNewGameId}
-              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
-            >
-              Скопіювати ID
-            </button>
-            <button
-              type="button"
-              onClick={() => void copyToClipboard(generatedNewGameSlug, 'Slug скопійовано')}
-              disabled={!generatedNewGameSlug}
-              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
-            >
-              Скопіювати Slug
-            </button>
-            <button
-              type="button"
-              onClick={() => void copyToClipboard(newGameCard, 'Картку значень скопійовано')}
-              disabled={!canPrepareNewGame}
-              className="px-4 py-2 rounded-xl bg-slate-900 text-white disabled:opacity-50"
-            >
-              Скопіювати картку значень
-            </button>
-          </div>
-          {copyFeedback ? <p className="text-xs text-slate-600">{copyFeedback}</p> : null}
-        </div>
+              {wizardStep === 2 ? (
+                <div className="space-y-3">
+                  <p className="text-slate-700">Поставте галочки перед preview.</p>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                    <label className="flex items-start gap-3 text-sm text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={confirmSavedChecked}
+                        onChange={(event) => setConfirmSavedChecked(event.target.checked)}
+                        className="mt-0.5"
+                      />
+                      <span>Я натиснула `Save changes` у CMS.</span>
+                    </label>
+                    <label className="flex items-start gap-3 text-sm text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={confirmPagesChecked}
+                        onChange={(event) => setConfirmPagesChecked(event.target.checked)}
+                        className="mt-0.5"
+                      />
+                      <span>Я перевірила головну, ігри та проєкти.</span>
+                    </label>
+                    <label className="flex items-start gap-3 text-sm text-slate-800">
+                      <input
+                        type="checkbox"
+                        checked={confirmTextChecked}
+                        onChange={(event) => setConfirmTextChecked(event.target.checked)}
+                        className="mt-0.5"
+                      />
+                      <span>Я перевірила тексти, дати та фото.</span>
+                    </label>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={previewRunUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
+                      Відкрити Preview
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setWizardStep(3)}
+                      disabled={!previewChecklistComplete}
+                      className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+                    >
+                      Далі: фінальна перевірка
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">Slug генератор</h2>
-          <input
-            type="text"
-            value={gameName}
-            onChange={(event) => setGameName(event.target.value)}
-            placeholder="Введіть назву гри"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3"
-          />
-          <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-            <p className="text-sm text-slate-500 mb-1">Згенерований slug:</p>
-            <p className="font-mono text-slate-900">{generatedSlug || '—'}</p>
-          </div>
-        </div>
+              {wizardStep === 3 ? (
+                <div className="space-y-3">
+                  <p className="text-slate-700">Переконайтеся, що автоматичні перевірки пройшли без помилки.</p>
+                  <label className="flex items-start gap-3 text-sm text-slate-800 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <input
+                      type="checkbox"
+                      checked={confirmStatusChecked}
+                      onChange={(event) => setConfirmStatusChecked(event.target.checked)}
+                      className="mt-0.5"
+                    />
+                    <span>У блоці “Стан перевірок” `Quality Gate` успішний.</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={checksUrl} target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold">
+                      Відкрити Quality Gate
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setWizardStep(4)}
+                      disabled={!confirmStatusChecked}
+                      className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+                    >
+                      Далі: публікація
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
-        <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">Превʼю метаданих</h2>
-
-          <input
-            type="text"
-            value={projectName}
-            onChange={(event) => setProjectName(event.target.value)}
-            placeholder="Назва проєкту"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3"
-          />
-          <textarea
-            value={customDescription}
-            onChange={(event) => setCustomDescription(event.target.value)}
-            placeholder="Короткий опис (description)"
-            className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[100px]"
-          />
-
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <p className="text-sm text-slate-500 mb-1">Title для гри</p>
-              <p className="text-slate-900">{gameMetaTitle}</p>
+              {wizardStep === 4 ? (
+                <div className="space-y-3">
+                  <p className="text-slate-700">Фінальний крок: відкрийте вікно публікації та оберіть Preview або Publish.</p>
+                  <button
+                    type="button"
+                    onClick={() => setDecisionOpen(true)}
+                    disabled={!checklistComplete}
+                    className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold disabled:opacity-50"
+                  >
+                    Відкрити вікно публікації
+                  </button>
+                  <p className="text-xs text-slate-500">
+                    Якщо кнопка неактивна, поверніться до попередніх кроків і завершіть чекліст.
+                  </p>
+                </div>
+              ) : null}
             </div>
-            <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-              <p className="text-sm text-slate-500 mb-1">Title для проєкту</p>
-              <p className="text-slate-900">{projectMetaTitle}</p>
-            </div>
-          </div>
 
-          <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
-            <p className="text-sm text-slate-500 mb-1">Description превʼю</p>
-            <p className="text-slate-900">
-              {customDescription || 'Додайте короткий опис, який менеджер вставить у відповідне поле.'}
-            </p>
-          </div>
-        </div>
+            <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Швидка перевірка сайту</h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <Link href="/igry" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
+                  Перевірити каталог ігор
+                </Link>
+                <Link href="/kik/proekty" className="px-4 py-3 rounded-xl border border-slate-300 text-slate-800 text-center font-semibold">
+                  Перевірити проєкти KIK
+                </Link>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMode('full')}
+                className="mt-4 px-4 py-3 rounded-xl border border-slate-300 text-slate-800 font-semibold"
+              >
+                Перейти в Повний режим (100% контенту)
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Повний режим (100% редагування)</h2>
+              <p className="text-sm text-slate-600 mb-4">
+                Редагування всіх текстів і фото виконується в Pages CMS. Тут ви обираєте потрібну категорію і переходите в CMS.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFullTab('editing')}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
+                    fullTab === 'editing'
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-700 border-slate-300'
+                  }`}
+                >
+                  100% Редагування
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFullTab('quality')}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
+                    fullTab === 'quality'
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-700 border-slate-300'
+                  }`}
+                >
+                  Контроль якості
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFullTab('tools')}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border ${
+                    fullTab === 'tools'
+                      ? 'bg-slate-900 text-white border-slate-900'
+                      : 'bg-white text-slate-700 border-slate-300'
+                  }`}
+                >
+                  Додаткові інструменти
+                </button>
+              </div>
+            </div>
+
+            {fullTab === 'editing' ? (
+              <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+                <h3 className="text-lg font-bold text-slate-900">Де редагується 100% контенту</h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="font-semibold text-slate-900 mb-1">Менеджер (базовий режим)</p>
+                    <p className="text-sm text-slate-600">Щоденний контент: назви, описи, статуси, фото, оновлення ігор/проєктів.</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="font-semibold text-slate-900 mb-1">Адмін (розширений режим)</p>
+                    <p className="text-sm text-slate-600">Детальні поля товарів і проєктів, які рідко змінюються.</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="font-semibold text-slate-900 mb-1">Основний контент сайту (`siteContent`)</p>
+                    <p className="text-sm text-slate-600">Тексти блоків бренду, сторінок, контактів, CTA.</p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="font-semibold text-slate-900 mb-1">UI тексти (`uiContent`)</p>
+                    <p className="text-sm text-slate-600">Кнопки, підписи, мета-тексти, системні повідомлення.</p>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                  <p className="text-sm text-emerald-800">
+                    Так, редагування 100% текстового та фото-контенту доступне через ці секції в CMS.
+                  </p>
+                </div>
+                <a href={pagesCmsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold">
+                  Відкрити Pages CMS
+                </a>
+              </div>
+            ) : null}
+
+            {fullTab === 'quality' ? (
+              <>
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Стан перевірок</h3>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <p className="font-semibold text-slate-900">Quality Gate</p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${statusClass(qualityRun)}`}>
+                          {statusLabel(qualityRun)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-600 mb-3">
+                        {qualityRun
+                          ? `Гілка: ${qualityRun.head_branch} • ${new Date(qualityRun.created_at).toLocaleString('uk-UA')}`
+                          : 'Не вдалося отримати дані workflow.'}
+                      </p>
+                      <a
+                        href={checksUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-slate-900 underline"
+                      >
+                        Відкрити workflow
+                      </a>
+                    </div>
+
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <p className="font-semibold text-slate-900">Staging Preview</p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${statusClass(stagingRun)}`}>
+                          {statusLabel(stagingRun)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-600 mb-3">
+                        {stagingRun
+                          ? `Гілка: ${stagingRun.head_branch} • ${new Date(stagingRun.created_at).toLocaleString('uk-UA')}`
+                          : 'Не вдалося отримати дані workflow.'}
+                      </p>
+                      <a
+                        href={previewRunUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-slate-900 underline"
+                      >
+                        Відкрити preview run
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Останні зміни контенту</h3>
+                  {recentContentCommits === null ? (
+                    <p className="text-slate-500 text-sm">Завантаження...</p>
+                  ) : recentContentCommits.length === 0 ? (
+                    <p className="text-slate-500 text-sm">Не вдалося отримати історію змін або змін у `src/content` поки немає.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {recentContentCommits.map((commit) => (
+                        <div key={commit.sha} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                          <p className="font-semibold text-slate-900">{commit.message}</p>
+                          <p className="text-sm text-slate-600 mt-1">
+                            {commit.author} •{' '}
+                            {commit.createdAt
+                              ? new Date(commit.createdAt).toLocaleString('uk-UA')
+                              : 'без дати'}
+                          </p>
+                          <p className="text-xs text-slate-500 mt-2">
+                            {commit.files.length > 0
+                              ? `Файли: ${commit.files.slice(0, 4).join(', ')}${commit.files.length > 4 ? ` +${commit.files.length - 4}` : ''}`
+                              : 'Файли контенту не визначені'}
+                          </p>
+                          <a
+                            href={commit.htmlUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-semibold text-slate-900 underline mt-2 inline-block"
+                          >
+                            Відкрити коміт
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Фінальна публікація</h3>
+                  <button
+                    type="button"
+                    onClick={() => setDecisionOpen(true)}
+                    className="px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold"
+                  >
+                    Відкрити вікно публікації
+                  </button>
+                </div>
+              </>
+            ) : null}
+
+            {fullTab === 'tools' ? (
+              <>
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+                  <h3 className="text-lg font-bold text-slate-900">Додати нову гру безпечно</h3>
+                  <p className="text-sm text-slate-600">
+                    Заповніть мінімальні поля. Система перевірить контент, згенерує `id/slug` і дасть готову картку значень.
+                  </p>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={newGameName}
+                      onChange={(event) => setNewGameName(event.target.value)}
+                      placeholder="Назва гри"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                    <input
+                      type="text"
+                      value={newGameSlogan}
+                      onChange={(event) => setNewGameSlogan(event.target.value)}
+                      placeholder="Слоган (опціонально)"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                  </div>
+
+                  <textarea
+                    value={newGameShortDescription}
+                    onChange={(event) => setNewGameShortDescription(event.target.value)}
+                    placeholder="Короткий опис (10-260 символів)"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
+                  />
+                  <textarea
+                    value={newGameAbout}
+                    onChange={(event) => setNewGameAbout(event.target.value)}
+                    placeholder="Повний опис (опціонально, 20-1500 символів)"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[96px]"
+                  />
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={newGameHeroImage}
+                      onChange={(event) => setNewGameHeroImage(event.target.value)}
+                      placeholder="Hero image, напр. /uploads/games/new-game-hero.webp"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                    <input
+                      type="text"
+                      value={newGameCoverImage}
+                      onChange={(event) => setNewGameCoverImage(event.target.value)}
+                      placeholder="Cover image (опціонально)"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                  </div>
+
+                  <div className="grid sm:grid-cols-4 gap-3">
+                    <select
+                      value={newGameStatus}
+                      onChange={(event) => setNewGameStatus(event.target.value as 'announcement' | 'production' | 'preorder' | 'onsale')}
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white"
+                    >
+                      <option value="announcement">announcement</option>
+                      <option value="production">production</option>
+                      <option value="preorder">preorder</option>
+                      <option value="onsale">onsale</option>
+                    </select>
+                    <input
+                      type="number"
+                      min="0"
+                      value={newGamePrice}
+                      onChange={(event) => setNewGamePrice(event.target.value)}
+                      placeholder="Ціна"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                    <input
+                      type="text"
+                      value={newGamePalette}
+                      onChange={(event) => setNewGamePalette(event.target.value)}
+                      placeholder="Palette #RRGGBB"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                    <input
+                      type="text"
+                      value={newGameAccent}
+                      onChange={(event) => setNewGameAccent(event.target.value)}
+                      placeholder="Accent #RRGGBB"
+                      className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                    />
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <p className="text-xs text-slate-500 mb-1">Авто ID</p>
+                      <p className="font-mono text-slate-900">{generatedNewGameId || '—'}</p>
+                    </div>
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <p className="text-xs text-slate-500 mb-1">Авто Slug</p>
+                      <p className="font-mono text-slate-900">{generatedNewGameSlug || '—'}</p>
+                    </div>
+                  </div>
+
+                  <div className={`rounded-xl border px-4 py-3 ${canPrepareNewGame ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}`}>
+                    <p className={`font-semibold mb-2 ${canPrepareNewGame ? 'text-emerald-800' : 'text-rose-800'}`}>
+                      {canPrepareNewGame ? 'Готово: можна додавати гру в CMS.' : 'Виправте перед додаванням:'}
+                    </p>
+                    {canPrepareNewGame ? (
+                      <p className="text-sm text-emerald-800">Валідація пройдена. Дублів ID/slug не знайдено.</p>
+                    ) : (
+                      <ul className="list-disc pl-5 text-sm text-rose-800 space-y-1">
+                        {newGameErrors.map((error) => (
+                          <li key={error}>{error}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+                    <p className="text-sm font-semibold text-slate-900">Як додати гру в CMS без ризику:</p>
+                    <p className="text-sm text-slate-700">1. Додайте запис у `Адмін (розширений режим) → Ігри (товари)`.</p>
+                    <p className="text-sm text-slate-700">2. Додайте запис у `Менеджер (базовий режим) → Ігри (базово)` з тим самим ID.</p>
+                    <p className="text-sm text-slate-700">3. Скопіюйте авто `ID` і `Slug` звідси, не придумуйте вручну.</p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void copyToClipboard(generatedNewGameId, 'ID скопійовано')}
+                      disabled={!generatedNewGameId}
+                      className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
+                    >
+                      Скопіювати ID
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void copyToClipboard(generatedNewGameSlug, 'Slug скопійовано')}
+                      disabled={!generatedNewGameSlug}
+                      className="px-4 py-2 rounded-xl border border-slate-300 text-slate-800 disabled:opacity-50"
+                    >
+                      Скопіювати Slug
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void copyToClipboard(newGameCard, 'Картку значень скопійовано')}
+                      disabled={!canPrepareNewGame}
+                      className="px-4 py-2 rounded-xl bg-slate-900 text-white disabled:opacity-50"
+                    >
+                      Скопіювати картку значень
+                    </button>
+                  </div>
+                  {copyFeedback ? <p className="text-xs text-slate-600">{copyFeedback}</p> : null}
+                </div>
+
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+                  <h3 className="text-lg font-bold text-slate-900">SEO-помічник для тексту</h3>
+                  <p className="text-sm text-slate-600">
+                    Вставте фінальні `title` і `description` перед публікацією. Блок покаже, чи довжина в безпечному діапазоні.
+                  </p>
+                  <input
+                    type="text"
+                    value={seoTitle}
+                    onChange={(event) => setSeoTitle(event.target.value)}
+                    placeholder="SEO Title"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                  />
+                  <textarea
+                    value={seoDescription}
+                    onChange={(event) => setSeoDescription(event.target.value)}
+                    placeholder="SEO Description"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[100px]"
+                  />
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm text-slate-700">Title: {seoTitle.trim().length} символів</p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${seoTitleInfo.className}`}>
+                          {seoTitleInfo.label}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm text-slate-700">Description: {seoDescription.trim().length} символів</p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${seoDescriptionInfo.className}`}>
+                          {seoDescriptionInfo.label}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 space-y-4">
+                  <h3 className="text-lg font-bold text-slate-900">Slug генератор і превʼю метаданих</h3>
+                  <input
+                    type="text"
+                    value={gameName}
+                    onChange={(event) => setGameName(event.target.value)}
+                    placeholder="Введіть назву гри"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                  />
+                  <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                    <p className="text-sm text-slate-500 mb-1">Згенерований slug:</p>
+                    <p className="font-mono text-slate-900">{generatedSlug || '—'}</p>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={projectName}
+                    onChange={(event) => setProjectName(event.target.value)}
+                    placeholder="Назва проєкту"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3"
+                  />
+                  <textarea
+                    value={customDescription}
+                    onChange={(event) => setCustomDescription(event.target.value)}
+                    placeholder="Короткий опис (description)"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 min-h-[100px]"
+                  />
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <p className="text-sm text-slate-500 mb-1">Title для гри</p>
+                      <p className="text-slate-900">{gameMetaTitle}</p>
+                    </div>
+                    <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                      <p className="text-sm text-slate-500 mb-1">Title для проєкту</p>
+                      <p className="text-slate-900">{projectMetaTitle}</p>
+                    </div>
+                  </div>
+                  <div className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-3">
+                    <p className="text-sm text-slate-500 mb-1">Description превʼю</p>
+                    <p className="text-slate-900">
+                      {customDescription || 'Додайте короткий опис, який менеджер вставить у відповідне поле.'}
+                    </p>
+                  </div>
+                </div>
+              </>
+            ) : null}
+          </>
+        )}
       </div>
 
       {decisionOpen ? (
