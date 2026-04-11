@@ -23,9 +23,28 @@ export async function generateMetadata({
   const project = getProject(id);
   if (!project) return { title: uiContent.projectSupportPage.fallbackTitle };
 
+  const canonical = `/kik/proekty/${project.id}/pidtrymaty/`;
+  const description = uiContent.projectSupportPage.fallbackDescriptionTemplate.replace('{name}', project.name);
+
   return {
     title: uiContent.metadata.projectSupportTitleTemplate.replace('{name}', project.name),
-    description: uiContent.projectSupportPage.fallbackDescriptionTemplate.replace('{name}', project.name),
+    description,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title: uiContent.metadata.projectSupportTitleTemplate.replace('{name}', project.name),
+      description,
+      url: canonical,
+      type: 'article',
+      images: project.coverImage ? [project.coverImage] : ['/logo-kik-color.png'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: uiContent.metadata.projectSupportTitleTemplate.replace('{name}', project.name),
+      description,
+      images: project.coverImage ? [project.coverImage] : ['/logo-kik-color.png'],
+    },
   };
 }
 

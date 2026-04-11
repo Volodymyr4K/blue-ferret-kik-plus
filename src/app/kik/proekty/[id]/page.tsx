@@ -61,9 +61,27 @@ export async function generateMetadata({
   const project = getProject(id);
   if (!project) return { title: uiContent.projectDetails.notFoundTitle };
 
+  const canonical = `/kik/proekty/${project.id}/`;
+
   return {
     title: uiContent.metadata.projectTitleTemplate.replace('{name}', project.name),
     description: project.shortDescription,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title: uiContent.metadata.projectTitleTemplate.replace('{name}', project.name),
+      description: project.shortDescription,
+      url: canonical,
+      type: 'article',
+      images: project.coverImage ? [project.coverImage] : ['/logo-kik-color.png'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: uiContent.metadata.projectTitleTemplate.replace('{name}', project.name),
+      description: project.shortDescription,
+      images: project.coverImage ? [project.coverImage] : ['/logo-kik-color.png'],
+    },
   };
 }
 

@@ -5,6 +5,9 @@ import KikNav from '@/components/KikNav';
 export const metadata: Metadata = {
   title: uiContent.metadata.kikTitle,
   description: uiContent.metadata.kikDescription,
+  alternates: {
+    canonical: '/kik/',
+  },
 };
 
 export default function KikLayout({
