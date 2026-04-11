@@ -44,7 +44,7 @@ type ContentCommitSummary = {
   files: string[];
 };
 
-const REPO_OWNER = 'Volodymyr4K';
+const REPO_OWNER = 'teacheddoc';
 const REPO_NAME = 'blue-ferret-kik-plus';
 const PLACEHOLDER_VALUES = new Set(['test', 'testing', 'lorem', 'lorem ipsum', 'todo', 'tbd', 'n/a', 'na', 'none', '-', '--', '...']);
 

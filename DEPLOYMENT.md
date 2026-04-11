@@ -10,7 +10,7 @@
 
 1. Відкрити Cloudflare Dashboard → `Workers & Pages`.
 2. Натиснути `Create` → `Pages` → `Connect to Git`.
-3. Підключити GitHub-репозиторій `Volodymyr4K/blue-ferret-kik-plus`.
+3. Підключити GitHub-репозиторій `teacheddoc/blue-ferret-kik-plus`.
 4. Для проєкту Pages вказати:
    - Production branch: `main`
    - Build command: `npm ci && npm run check`
@@ -29,7 +29,6 @@
 
 - `.github/workflows/quality.yml` — quality gate (валідації + typecheck + lint + build).
 - `.github/workflows/staging-preview.yml` — preview build-артефакт для staging/PR.
-- `.github/workflows/deploy-pages.yml` — legacy workflow для GitHub Pages, залишений лише як manual fallback.
 
 ## 5) Важливо про оплату (відкладено)
 

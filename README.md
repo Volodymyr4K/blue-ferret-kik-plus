@@ -61,7 +61,7 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 
 Базові налаштування в Cloudflare:
 1. `Workers & Pages` → `Create` → `Pages` → `Connect to Git`
-2. Репозиторій: `Volodymyr4K/blue-ferret-kik-plus`
+2. Репозиторій: `teacheddoc/blue-ferret-kik-plus`
 3. Production branch: `main`
 4. Build command: `npm ci && npm run check`
 5. Build output directory: `out`
@@ -85,7 +85,7 @@ npm run check    # Повна перевірка: content schema + typecheck + l
 Підключення:
 
 1. Відкрити `https://app.pagescms.org`
-2. Увійти через GitHub і вибрати репозиторій `Volodymyr4K/blue-ferret-kik-plus`
+2. Увійти через GitHub і вибрати репозиторій `teacheddoc/blue-ferret-kik-plus`
 3. Редагувати контент переважно в секції `Менеджер (базовий режим)`
 4. Натиснути `Save changes` у CMS
 5. Перейти на `/admin-guide` і натиснути `Я зберегла зміни`
